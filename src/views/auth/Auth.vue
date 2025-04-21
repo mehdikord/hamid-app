@@ -28,7 +28,7 @@ export default {
           <v-card-item>
             <v-row>
               <v-col md="6" xs="12" sm="12" class="text-center">
-                <v-card  class="color-dark-bg mt-lg-10 rounded-xl">
+                <v-card  class="color-dark-bg rounded-xl">
                   <v-card-item>
                     <div class="mt-14 mb-6">
                       <strong class="color-orange-text font-20">ورود به حساب کاربری</strong>

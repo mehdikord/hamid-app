@@ -10,16 +10,16 @@ const router = createRouter({
 
   ],
 })
-router.beforeEach((to, from, next) => {
-    // trying to access a restricted page + not logged in
-    // redirect to login page
-    if (to.path !== '/auth' && !Stores_Auth().AuthGetCheckAuth) {
-        next('/auth');
-    }else if (to.path === '/auth' && Stores_Auth().AuthGetCheckAuth){
-        next('/');
-    }
-    else {
-        next();
-    }
-});
+// router.beforeEach((to, from, next) => {
+//     // trying to access a restricted page + not logged in
+//     // redirect to login page
+//     if (to.path !== '/auth' && !Stores_Auth().AuthGetCheckAuth) {
+//         next('/auth');
+//     }else if (to.path === '/auth' && Stores_Auth().AuthGetCheckAuth){
+//         next('/');
+//     }
+//     else {
+//         next();
+//     }
+// });
 export default router

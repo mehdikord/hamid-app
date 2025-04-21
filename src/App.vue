@@ -9,27 +9,17 @@ export default {
     <v-locale-provider rtl>
     <v-main>
       <v-container >
+        dtdjru
         <router-view />
 
-<!--        <v-bottom-navigation :elevation="8" grow>-->
-<!--          <v-btn value="recent">-->
-<!--            <v-icon>mdi-history</v-icon>-->
+      <div class="footer">
+        <v-container>
+          <div class="footer-menu">
+            jerhjesil
+          </div>
+        </v-container>
 
-<!--            <span>Recent</span>-->
-<!--          </v-btn>-->
-
-<!--          <v-btn value="favorites">-->
-<!--            <v-icon>mdi-heart</v-icon>-->
-
-<!--            <span>Favorites</span>-->
-<!--          </v-btn>-->
-
-<!--          <v-btn value="nearby">-->
-<!--            <v-icon>mdi-map-marker</v-icon>-->
-
-<!--            <span>Nearby</span>-->
-<!--          </v-btn>-->
-<!--        </v-bottom-navigation>-->
+      </div>
       </v-container>
     </v-main>
     </v-locale-provider>
@@ -37,5 +27,19 @@ export default {
 </template>
 
 <style scoped>
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.footer-menu{
+  padding: 15px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 27, 46, 0.3);
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
 
 </style>
