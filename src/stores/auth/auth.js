@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 export const Stores_Auth = defineStore('auth',{
+
     state : ()=>({
         user : null,
         token : null
     }),
+
     actions : {
         AuthLoginRequest(params){
             return new Promise((resolve, reject) => {
-                this.$axios.post('admins/auth/login',params).then(response =>{
+                this.$axios.post('users/auth/login',params).then(response =>{
                     return resolve(response);
                 }).catch(error =>{
                     return reject(error);
@@ -20,6 +22,7 @@ export const Stores_Auth = defineStore('auth',{
             localStorage.setItem('crm_users_token', token)
             localStorage.setItem('crm_users_user', JSON.stringify(user));
         },
+
         AuthSyncData(){
             if (localStorage.getItem('crm_users_token')){
                 this.token = localStorage.getItem('crm_users_token');
@@ -34,6 +37,7 @@ export const Stores_Auth = defineStore('auth',{
             window.location.reload();
         }
     },
+
     getters :{
         AuthGetUser(){
             return this.user;
@@ -49,8 +53,5 @@ export const Stores_Auth = defineStore('auth',{
 
 
     }
-
-
-
 
 })

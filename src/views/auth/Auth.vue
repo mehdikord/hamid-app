@@ -1,4 +1,6 @@
 <script>
+import {Stores_Auth} from "@/stores/auth/auth.js";
+
 export default {
   name: "Auth",
   data() {
@@ -12,7 +14,22 @@ export default {
   },
   methods: {
     Login(){
+      if (!this.login.phone || !this.login.password) {
+        this.Notify_Error('اطلاعات ورود را وارد کنید');
+        return;
+      }
       this.loading = true;
+      Stores_Auth().AuthLoginRequest(this.login).then(res => {
+        Stores_Auth().AuthLogin(res.data.result.user,res.data.result.token)
+        this.Notify_Success('خوش اومدی ' + res.data.result.user.name + ' جان !');
+        this.loading = false;
+        location.reload();
+      }).catch(error => {
+        if (error.response.status === 409){
+          this.Notify_Error('اطلاعات ورود صحیح نمی باشد');
+        }
+        this.loading = false;
+      });
     }
   }
 
@@ -39,10 +56,10 @@ export default {
                   </v-card-item>
                   <v-card-item class="px-lg-12">
                     <div class="mt-4">
-                      <v-text-field type="number" label="شماره موبایل" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-cellphone font-30" icon-color="deep-orange-lighten-1"></v-text-field>
+                      <v-text-field v-model="login.phone" type="number" label="شماره موبایل" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-cellphone font-30" icon-color="deep-orange-lighten-1"></v-text-field>
                     </div>
                     <div class="mt-3">
-                      <v-text-field type="password" label="گذرواژه" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-lock font-30" icon-color="deep-orange-lighten-1"></v-text-field>
+                      <v-text-field v-model="login.password" type="password" label="گذرواژه" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-lock font-30" icon-color="deep-orange-lighten-1"></v-text-field>
                     </div>
                     <div class="mt-4 mb-5">
                       <v-btn variant="flat" :loading="loading" @click="Login" color="deep-orange" class="font-15 px-12" size="large" rounded append-icon="mdi-check">ورود به حساب</v-btn>

@@ -1,6 +1,19 @@
 <script>
+import Template_Menu from "@/components/template/Template_Menu.vue";
+import Template_App_Bar from "@/components/template/Template_App_Bar.vue";
+import {Stores_Auth} from "@/stores/auth/auth.js";
+
 export default {
   name: "App",
+  data(){
+    return {
+      user_check : Stores_Auth().AuthGetCheckAuth,
+    }
+  },
+  components:{
+    'template_menu' : Template_Menu,
+    'template_appbar' : Template_App_Bar
+  }
 }
 </script>
 
@@ -9,17 +22,10 @@ export default {
     <v-locale-provider rtl>
     <v-main>
       <v-container >
-        dtdjru
+        <template_appbar v-if="user_check" ></template_appbar>
         <router-view />
+        <template_menu v-if="user_check"></template_menu>
 
-      <div class="footer">
-        <v-container>
-          <div class="footer-menu">
-            jerhjesil
-          </div>
-        </v-container>
-
-      </div>
       </v-container>
     </v-main>
     </v-locale-provider>
@@ -27,19 +33,7 @@ export default {
 </template>
 
 <style scoped>
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-.footer-menu{
-  padding: 15px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 27, 46, 0.3);
-  background-color: rgba(255, 255, 255, 0.28);
-}
+
 
 
 </style>

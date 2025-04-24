@@ -12,9 +12,17 @@ import '@/assets/css/font.css'
 import '@/assets/css/colors.css'
 import moment from "moment-jalaali";
 import axiosInstance from "@/mixin/axios/axios";
+import notifyInstance from "@/mixin/helpers/notify.js";
 import App from './App.vue'
 import router from './router'
 import {Stores_Auth} from "@/stores/auth/auth.js";
+import Swal from 'sweetalert2';
+
+const notify = {
+    install(app) {
+        app.config.globalProperties.$swal = Swal.mixin();
+    }
+};
 
 const app = createApp(App)
 const vuetify = createVuetify({
@@ -31,6 +39,24 @@ pinia.use(({ store }) => {
     store.$axios = axiosInstance;
 });
 window.moment = moment;
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Globals Components
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import Global_No_Items from "@/components/global/Global_No_Items.vue";
+
+
+app.component('no_items',Global_No_Items)
+
+
+
+
+
+
+
+
+
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,4 +82,6 @@ app.use(pinia)
 Stores_Auth().AuthSyncData();
 app.use(router)
 app.use(vuetify)
+app.use(notify)
+app.mixin(notifyInstance)
 app.mount('#app')
