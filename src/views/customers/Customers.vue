@@ -15,6 +15,7 @@ export default {
   data(){
     return {
       items_loading:true,
+      add_report_dialog:[],
       query_params:{
         sort_by : 'id',
         sort_type : 'desc',
@@ -64,6 +65,14 @@ export default {
         this.items_loading=false;
       })
     },
+    Change_Status(item){
+      this.items = this.items.map(customer => {
+        if (item.id === customer.id){
+          return item;
+        }
+        return customer;
+      })
+    }
 
 
   }
@@ -95,7 +104,22 @@ export default {
                   density="comfortable"
                   clearable
               >
-
+              </v-select>
+            </v-col>
+            <v-col lg="3" md="3">
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="statuses"
+                  v-model="status_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب پروژه"
+                  variant="outlined"
+                  density="comfortable"
+                  clearable
+              >
               </v-select>
             </v-col>
           </v-row>
@@ -107,6 +131,9 @@ export default {
 
   <v-card flat border rounded class="mt-4">
     <v-card-item>
+      <v-alert class="animate__animated animate__bounce" rounded variant="tonal" text="برای تغییر وضعیت مشتری روی وضعیت آن کلیک کنید و برای مشاهده اطلاعات کامل مشتری با کلیلک شماره آن وارد پروفایل شوید" type="info" closable></v-alert>
+    </v-card-item>
+    <v-card-item>
       <template v-if="items_loading">
         <v-row  class="mt-2">
           <v-col v-for="i in 6" xl="4" lg="6" md="6" sm="12" cols="12">
@@ -114,21 +141,93 @@ export default {
           </v-col>
         </v-row>
       </template>
-      <div v-else class="mt-3">
+      <div v-else class="mt-2">
         <div v-if ="items.length < 1">
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
-        <div v-else>
-          <v-row  class="mt-2">
-            <v-col class="animate__animated animate__bounceInDown" v-for="item in items" xl="4" lg="6" md="6" sm="12" cols="12">
-              <customer_item :customer="item"></customer_item>
+        <div v-else style="margin-bottom: 120px">
+          <v-table class="table-responsive" hover style="border-radius: 10px">
+            <thead>
+              <tr class="bg-blue-grey-darken-3">
+                <th>
+                  مشتری
+                </th>
+                <th>وضعیت</th>
+                <th>پروژه</th>
+                <th>اطلاعات</th>
+                <th>آخرین گزارش</th>
+                <th class="text-center">عملیات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in items" >
+                <td class="pa-2">
+                  <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
+                  <strong class="font-16">{{ item.customer.phone}}</strong>
+                  <template v-if=" item.customer.name">
+                    <span class="ms-1">( {{item.customer.name}} )</span>
+                  </template>
+                </td>
+                <td class="pa-2">
+                  <actions_customer_status @Changed="(item) => Change_Status(item)" :customer="item"></actions_customer_status>
+                </td>
+                <td class="pa-2">
+                  <strong>{{ item.project.name }}</strong>
+                </td>
+                <td class="pa-2">
+                  <span>
+                    <span>فاکتورها : </span>
+                    <strong class="text-blue-darken-2 font-18">15</strong>
+                  </span>
+                  <span class="ms-5">
+                    <span>گزارشات : </span>
+                    <strong class="text-teal font-18">15</strong>
+                  </span>
+                </td>
+                <td class="pa-2">
+                  -----
+                </td>
+                <td class="pa-2 text-center">
+                  <v-btn @click="add_report_dialog[item.id] = true" color="teal" variant="flat" rounded append-icon="mdi-text-box-edit">ثبت گزارش</v-btn>
+                  <v-dialog
+                      v-model="add_report_dialog[item.id]"
+                      max-width="960"
+                      transition="dialog-top-transition"
+
+                  >
+                    <v-card variant="flat" rounded>
+                      <v-card-item>
+                        <v-btn @click="add_report_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
+                        <h3>ثبت گزارش جدید برای مشتری</h3>
+                      </v-card-item>
+                      <v-divider/>
+                      <v-card-item>
+                        <actions_customer_report_create></actions_customer_report_create>
+                      </v-card-item>
+                    </v-card>
+                  </v-dialog>
+
+
+                  <v-btn class="ms-2" color="blue-darken-2" variant="flat" rounded append-icon="mdi-currency-usd">ثبت فاکتور</v-btn>
+                </td>
+              </tr>
+            </tbody>
+
+          </v-table>
+
+
+
+
+
+          <v-row  class="hidden-xl mt-2 mb-16">
+            <v-col class="animate__animated animate__bounceInDown" v-for="item in items" cols="12">
+              <customer_item @Emit_Change_Status="(item) => Change_Status(item)" :customer="item"></customer_item>
             </v-col>
           </v-row>
 
         </div>
 
       </div>
-
     </v-card-item>
   </v-card>
 

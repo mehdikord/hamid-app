@@ -45,9 +45,14 @@ window.moment = moment;
 // Globals Components
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import Global_No_Items from "@/components/global/Global_No_Items.vue";
+import Actions_Customer_Status from "@/components/actions/Actions_Customer_Status.vue";
+import Action_Customer_Report_Create from "@/components/actions/Action_Customer_Report_Create.vue";
+import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 
-
+app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
+app.component('actions_customer_status',Actions_Customer_Status)
+app.component('actions_customer_report_create',Action_Customer_Report_Create)
 
 
 

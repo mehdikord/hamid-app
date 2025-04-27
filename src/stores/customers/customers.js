@@ -11,6 +11,15 @@ export const Stores_Customer = defineStore('customers',{
                 })
             })
         },
+        Statuses_Store(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.post('users/customers/'+params.customer_id+'/statuses',params).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        }
 
     },
 

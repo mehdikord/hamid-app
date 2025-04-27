@@ -16,7 +16,7 @@ export default {
 
 <template>
 
-  <div class="text-center mt-5 mb-5">
+  <div class="text-center mt-5 mb-5 animate__animated animate__bounceInDown">
     <img src="@/assets/images/icons/no-items.svg" :width="width" alt="">
     <div class="mt-2">
       <strong class="text-red">{{text}}</strong>

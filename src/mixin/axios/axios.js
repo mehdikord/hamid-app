@@ -4,7 +4,7 @@ import {Stores_Auth} from "@/stores/auth/auth";
 
 // ایجاد instance سفارشی
 const axiosInstance = axios.create({
-    baseURL:  import.meta.env.VUE_APP_API_URL, // آدرس پایه از .env
+    baseURL:  import.meta.env.VITE_API_URL, // آدرس پایه از .env
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
