@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import {da} from "vuetify/locale";
 export const Stores_Customer = defineStore('customers',{
 
     actions : {
@@ -19,7 +20,25 @@ export const Stores_Customer = defineStore('customers',{
                     return reject(error);
                 })
             })
+        },
+        //Reports
+        Reports_Store(params){
+            return new Promise((resolve, reject) => {
+
+                let data = new FormData();
+                if(params.report){data.append('report',params.report);}
+                if(params.file){data.append('file',params.file,params.file.name);}
+                if(params.date){data.append('date',params.date);}
+                this.$axios.post('users/customers/'+params.customer_id+'/reports',data,{
+                    headers: {'Content-Type': 'multipart/form-data'}
+                }).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
         }
+
 
     },
 

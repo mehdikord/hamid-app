@@ -16,6 +16,7 @@ export default {
     return {
       items_loading:true,
       add_report_dialog:[],
+      add_invoice_dialog:[],
       query_params:{
         sort_by : 'id',
         sort_type : 'desc',
@@ -72,6 +73,18 @@ export default {
         }
         return customer;
       })
+    },
+    Create_Report(item){
+      if (item.project_customer_id){
+        this.items = this.items.map(customer => {
+          if (customer.id === item.project_customer_id){
+            customer.last_report = item;
+          }
+          return customer;
+        })
+      }
+      this.add_report_dialog[item.project_customer_id] = false;
+      this.Notify_Success('گزارش با موفقیت ثبت گردید');
     }
 
 
@@ -185,7 +198,10 @@ export default {
                   </span>
                 </td>
                 <td class="pa-2">
-                  -----
+                  <template v-if="item.last_report">
+                    {{ this.Helper_Text_Shorter(item.last_report.report,50) }}
+
+                  </template>
                 </td>
                 <td class="pa-2 text-center">
                   <v-btn @click="add_report_dialog[item.id] = true" color="teal" variant="flat" rounded append-icon="mdi-text-box-edit">ثبت گزارش</v-btn>
@@ -202,13 +218,38 @@ export default {
                       </v-card-item>
                       <v-divider/>
                       <v-card-item>
-                        <actions_customer_report_create></actions_customer_report_create>
+                        <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
                       </v-card-item>
                     </v-card>
                   </v-dialog>
 
 
-                  <v-btn class="ms-2" color="blue-darken-2" variant="flat" rounded append-icon="mdi-currency-usd">ثبت فاکتور</v-btn>
+                  <v-btn @click="add_invoice_dialog[item.id] = true" class="ms-2" color="blue-darken-2" variant="flat" rounded append-icon="mdi-currency-usd">ثبت فاکتور</v-btn>
+
+                  <v-dialog
+                      v-model="add_invoice_dialog[item.id]"
+                      max-width="960"
+                      transition="dialog-top-transition"
+
+                  >
+                    <v-card variant="flat" rounded>
+                      <v-card-item>
+                        <v-btn @click="add_invoice_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
+                        <h3>ثبت فاکتور جدید برای مشتری</h3>
+                      </v-card-item>
+                      <v-divider/>
+                      <v-card-item>
+                        <template v-if="!item.target_price">
+
+                        </template>
+                        <template v-else>
+
+                        </template>
+
+                      </v-card-item>
+                    </v-card>
+                  </v-dialog>
+
                 </td>
               </tr>
             </tbody>

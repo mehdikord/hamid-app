@@ -17,6 +17,8 @@ import App from './App.vue'
 import router from './router'
 import {Stores_Auth} from "@/stores/auth/auth.js";
 import Swal from 'sweetalert2';
+import validations from "@/mixin/helpers/validations.js";
+import helpers from "@/mixin/helpers/helpers.js";
 
 const notify = {
     install(app) {
@@ -48,11 +50,13 @@ import Global_No_Items from "@/components/global/Global_No_Items.vue";
 import Actions_Customer_Status from "@/components/actions/Actions_Customer_Status.vue";
 import Action_Customer_Report_Create from "@/components/actions/Action_Customer_Report_Create.vue";
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
+import Global_Validation_Errors from "@/components/global/Global_Validation_Errors.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
 app.component('actions_customer_status',Actions_Customer_Status)
 app.component('actions_customer_report_create',Action_Customer_Report_Create)
+app.component('validation_errors',Global_Validation_Errors)
 
 
 
@@ -89,4 +93,6 @@ app.use(router)
 app.use(vuetify)
 app.use(notify)
 app.mixin(notifyInstance)
+app.mixin(validations)
+app.mixin(helpers)
 app.mount('#app')

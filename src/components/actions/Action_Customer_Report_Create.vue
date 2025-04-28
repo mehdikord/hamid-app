@@ -1,15 +1,58 @@
 <script>
+
+import {Stores_Customer} from "@/stores/customers/customers.js";
+
 export default {
   name: "Action_Customer_Report_Create",
+  props:{
+    customer : {
+      type: Object,
+      required: true
+    }
+  },
+  mounted() {
+    const now = moment();
+    this.date = now.format("YYYY-MM-DD HH:mm");
+
+
+  },
   data(){
     return {
       loading:false,
       report:null,
       date:null,
-      file:null
+      file:null,
+      errors:[]
+
+    }
+  },
+  methods:{
+    Create_Report(){
+      this.loading=true;
+      let params = {
+        customer_id : this.customer.id,
+        date : this.date,
+        report : this.report,
+        file : this.file,
+      }
+      Stores_Customer().Reports_Store(params).then(res=>{
+        this.loading=false;
+        this.$emit('Created',res.data.result);
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors=error.response.data;
+          this.Notify_Error_Validation()
+        }else {
+          this.Notify_Error_Server()
+
+        }
+
+        this.loading=false;
+      })
 
     }
   }
+
 }
 </script>
 
@@ -21,15 +64,24 @@ export default {
       rows="3"
       label="متن گزارش"
       v-model="report"
-      color="deep-orange-darken-2"
+      color="blue"
+      :error="Validation_Check(errors,'report')"
       >
       </v-textarea>
+      <validation_errors :errors="Validation_Errors(errors,'report')"></validation_errors>
     </div>
     <div class="mb-3">
-      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="deep-orange-darken-2" clearable label="انتخاب فایل" variant="outlined" density="comfortable" prepend-icon="mdi-attachment"></v-file-input>
+      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" prepend-icon="mdi-attachment"></v-file-input>
+      <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
+
     </div>
     <div class="mb-3">
-      <date-picker compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
+      <date-picker   :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
+      <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
+
+    </div>
+    <div class="mt-4 text-end">
+      <v-btn color="success" append-icon="mdi-check" text="ثبت گزارش"  rounded @click="Create_Report"></v-btn>
     </div>
 
   </div>

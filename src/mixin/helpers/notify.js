@@ -36,8 +36,11 @@ export default {
         Notify_Warning(message){
             this.Notify_Generator('warning',message,'#212121','#FFA725')
         },
-        Notify_Error_Server(message){
+        Notify_Error_Server(){
             this.Notify_Error('خطا در دریافت اطلاعات');
+        },
+        Notify_Error_Validation(){
+            this.Notify_Error('اطلاعات ارسالی ناقص است !');
         },
   }
 }
