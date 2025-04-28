@@ -2,11 +2,13 @@
 import {Stores_Statuses} from "@/stores/customers/statuses.js";
 import {Stores_Customer} from "@/stores/customers/customers.js";
 import Customers_Item from "@/views/customers/components/Customers_Item.vue";
+import Customer_Price_Target from "@/views/customers/components/Customer_Price_Target.vue";
 
 export default {
   name: "Customers",
   components:{
-    'customer_item' : Customers_Item
+    'customer_item' : Customers_Item,
+    'customer_price_target' : Customer_Price_Target
   },
   mounted() {
     this.Get_Statuses();
@@ -85,6 +87,29 @@ export default {
       }
       this.add_report_dialog[item.project_customer_id] = false;
       this.Notify_Success('گزارش با موفقیت ثبت گردید');
+    },
+    Create_Invoice(item){
+      if (item.project_customer_id){
+        this.items = this.items.map(customer => {
+          if (customer.id === item.project_customer_id){
+            customer.invoices_count+=1;
+          }
+          return customer;
+        })
+      }
+      this.add_invoice_dialog[item.project_customer_id] = false;
+      this.Notify_Success('فاکتور با موفقیت ثبت گردید');
+    },
+    Update_Target_Price(item){
+      if (item.project_customer_id){
+        this.items = this.items.map(customer => {
+          if (customer.id === item.project_customer_id){
+            customer = item;
+          }
+          return customer;
+        })
+      }
+      this.Notify_Success('مبلغ معامله با موفقیت ثبت گردید');
     }
 
 
@@ -159,7 +184,7 @@ export default {
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
         <div v-else style="margin-bottom: 120px">
-          <v-table class="table-responsive" hover style="border-radius: 10px">
+          <v-table class="table-responsive animate__animated animate__zoomInUp" hover style="border-radius: 10px">
             <thead>
               <tr class="bg-blue-grey-darken-3">
                 <th>
@@ -190,11 +215,11 @@ export default {
                 <td class="pa-2">
                   <span>
                     <span>فاکتورها : </span>
-                    <strong class="text-blue-darken-2 font-18">15</strong>
+                    <strong class="text-blue-darken-2 font-18">{{ item.invoices_count }}</strong>
                   </span>
                   <span class="ms-5">
                     <span>گزارشات : </span>
-                    <strong class="text-teal font-18">15</strong>
+                    <strong class="text-teal font-18">{{ item.reports_count }}</strong>
                   </span>
                 </td>
                 <td class="pa-2">
@@ -240,10 +265,10 @@ export default {
                       <v-divider/>
                       <v-card-item>
                         <template v-if="!item.target_price">
-
+                          <customer_price_target @Updated="(item) => Update_Target_Price(item)" :customer="item"></customer_price_target>
                         </template>
                         <template v-else>
-
+                          <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item"></actions_customer_invoice_create>
                         </template>
 
                       </v-card-item>
@@ -253,18 +278,11 @@ export default {
                 </td>
               </tr>
             </tbody>
-
           </v-table>
-
-
-
-
-
-          <v-row  class="hidden-xl mt-2 mb-16">
-            <v-col class="animate__animated animate__bounceInDown" v-for="item in items" cols="12">
-              <customer_item @Emit_Change_Status="(item) => Change_Status(item)" :customer="item"></customer_item>
-            </v-col>
-          </v-row>
+          <v-divider class="mt-3"/>
+          <div class="mt-8">
+            <actions_data_pagination :data="pagination"></actions_data_pagination>
+          </div>
 
         </div>
 

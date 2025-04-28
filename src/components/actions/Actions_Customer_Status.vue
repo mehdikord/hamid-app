@@ -41,7 +41,7 @@ name: "Actions_Customer_Status",
       }
       this.change_loading = true;
       let params = {
-        customer_id : this.customer.id,
+        customer_id : this.customer.project_customer_id,
         status_id : this.status_id,
         description : this.description,
       }
@@ -117,7 +117,7 @@ name: "Actions_Customer_Status",
                 item-title="name"
                 item-value="id"
                 rounded
-                color="deep-orange-darken-2"
+                color="blue"
                 variant="outlined"
                 density="comfortable"
             >
@@ -130,7 +130,7 @@ name: "Actions_Customer_Status",
              rounded
              variant="outlined"
              density="comfortable"
-             color="deep-orange-darken-2"
+             color="blue"
              rows="3"
              v-model="description"
              >

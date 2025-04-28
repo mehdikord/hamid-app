@@ -51,11 +51,15 @@ import Actions_Customer_Status from "@/components/actions/Actions_Customer_Statu
 import Action_Customer_Report_Create from "@/components/actions/Action_Customer_Report_Create.vue";
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 import Global_Validation_Errors from "@/components/global/Global_Validation_Errors.vue";
+import Action_Customer_Invoice_Create from "@/components/actions/Action_Customer_Invoice_Create.vue";
+import Action_Data_Table_Pagination from "@/components/actions/data/Action_Data_Table_Pagination.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
 app.component('actions_customer_status',Actions_Customer_Status)
 app.component('actions_customer_report_create',Action_Customer_Report_Create)
+app.component('actions_customer_invoice_create',Action_Customer_Invoice_Create)
+app.component('actions_data_pagination',Action_Data_Table_Pagination)
 app.component('validation_errors',Global_Validation_Errors)
 
 

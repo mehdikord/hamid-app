@@ -37,6 +37,28 @@ export const Stores_Customer = defineStore('customers',{
                     return reject(error);
                 })
             })
+        },
+
+        //Invoices
+
+        Invoices_Store(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.post('users/customers/'+params.customer_id+'/invoices',params).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
+        Invoices_Target_Price(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.post('users/customers/'+params.customer_id+'/invoices/target',params).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
         }
 
 
