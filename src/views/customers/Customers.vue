@@ -264,12 +264,8 @@ export default {
                       </v-card-item>
                       <v-divider/>
                       <v-card-item>
-                        <template v-if="!item.target_price">
-                          <customer_price_target @Updated="(item) => Update_Target_Price(item)" :customer="item"></customer_price_target>
-                        </template>
-                        <template v-else>
-                          <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item"></actions_customer_invoice_create>
-                        </template>
+                        <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item"></actions_customer_invoice_create>
+
 
                       </v-card-item>
                     </v-card>

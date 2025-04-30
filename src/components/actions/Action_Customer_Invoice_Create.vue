@@ -24,6 +24,7 @@ export default {
     return {
       loading:false,
       price:null,
+      target_price:null,
       date:null,
       description:null,
       errors:[]
@@ -33,6 +34,15 @@ export default {
   methods:{
     Create_Invoice(){
       this.loading=true;
+      if (!this.customer.target_price){
+        if (!this.target_price){
+          return this.Notify_Error('مبلغ معامله را وارد کنید !');
+        }
+        Stores_Customer().Invoices_Target_Price({customer_id : this.customer.project_customer_id,price:this.target_price}).then((res)=>{
+        }).catch((error)=>{
+          return this.Notify_Error('خطا در ثبت مبلغ معامله !');
+        })
+      }
       let params = {
         customer_id : this.customer.project_customer_id,
         date : this.date,
@@ -60,14 +70,35 @@ export default {
 
 <template>
   <div class="mt-2">
-    <div class="mb-4">
-      <span>مبلغ معامله ثبت شده برای مشتری : </span> <strong class="text-indigo font-16">{{ this.$filters.number_format(this.customer.target_price) }}</strong> <span class="text-grey font-13">تومان</span>
-    </div>
+    <template v-if="customer.target_price">
+      <div class="mb-4">
+        <span>مبلغ معامله ثبت شده برای مشتری : </span> <strong class="text-indigo font-16">{{ this.$filters.number_format(this.customer.target_price) }}</strong> <span class="text-grey font-13">تومان</span>
+      </div>
+      <div class="mb-4">
+        <span>مجموع فاکتور های ثبت شده : </span> <strong class="text-success font-16">{{ this.$filters.number_format(this.customer.sum_invoices) }}</strong> <span class="text-grey font-13">تومان</span>
+      </div>
+      <div class="mb-6">
+        <span>مبلغ باقیمانده : </span> <strong class="text-error font-16">{{ this.$filters.number_format(this.customer.target_price - this.customer.sum_invoices) }}</strong> <span class="text-grey font-13">تومان</span>
+      </div>
+    </template>
+    <template v-else>
+      <v-alert
+          color="deep-orange-darken-1"
+          icon="mdi-alert"
+          theme="dark"
+          border
+      >
+        برای ثبت فاکتور برای مشتری ، ابتدا باید مبلغ معامله مشتری را مشخص کنید و سپس فاکتور های مورد نظر را ثبت کنید
+      </v-alert>
+      <div class="mt-6">
+        <v-text-field v-model="target_price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="وارد کردن مبلغ معامله ( تومان )" placeholder="1,500,000" />
+      </div>
+    </template>
     <div class="mb-3">
       <v-text-field   :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="مبلغ فاکتور ( تومان )" />
       <validation_errors :errors="Validation_Errors(errors,'price')"></validation_errors>
-
     </div>
+    
     <div class="mb-3">
       <v-textarea
       variant="outlined"
