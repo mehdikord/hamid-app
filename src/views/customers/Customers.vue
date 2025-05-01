@@ -13,6 +13,7 @@ export default {
   mounted() {
     this.Get_Statuses();
     this.Get_Items();
+
   },
   data(){
     return {
@@ -81,11 +82,12 @@ export default {
         this.items = this.items.map(customer => {
           if (customer.id === item.project_customer_id){
             customer.last_report = item;
+            this.add_report_dialog[customer.id] = false;
+
           }
           return customer;
         })
       }
-      this.add_report_dialog[item.project_customer_id] = false;
       this.Notify_Success('گزارش با موفقیت ثبت گردید');
     },
     Create_Invoice(item){
@@ -200,11 +202,13 @@ export default {
             <tbody>
               <tr v-for="item in items" >
                 <td class="pa-2">
-                  <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
-                  <strong class="font-16">{{ item.customer.phone}}</strong>
-                  <template v-if=" item.customer.name">
-                    <span class="ms-1">( {{item.customer.name}} )</span>
-                  </template>
+                  <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
+                    <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
+                    <strong class="font-16 text-black">{{ item.customer.phone}}</strong>
+                    <template v-if=" item.customer.name">
+                      <span class="ms-2 text-grey-darken-4">( {{item.customer.name}} )</span>
+                    </template>
+                  </router-link>
                 </td>
                 <td class="pa-2">
                   <actions_customer_status @Changed="(item) => Change_Status(item)" :customer="item"></actions_customer_status>
@@ -224,6 +228,7 @@ export default {
                 </td>
                 <td class="pa-2">
                   <template v-if="item.last_report">
+                    <chips_date :date="item.last_report.created_at"></chips_date> :
                     {{ this.Helper_Text_Shorter(item.last_report.report,50) }}
 
                   </template>

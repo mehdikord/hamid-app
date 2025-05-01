@@ -73,12 +73,10 @@ export default {
     <div class="mb-3">
       <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" ></v-file-input>
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
-
     </div>
     <div class="mb-3">
       <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
-
     </div>
     <div class="mt-6 mb-2 text-end">
       <v-btn :loading="loading" color="success" append-icon="mdi-check" text="ثبت گزارش" flat  rounded @click="Create_Report"></v-btn>

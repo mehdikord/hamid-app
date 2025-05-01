@@ -27,6 +27,7 @@ export default {
       target_price:null,
       date:null,
       description:null,
+      file:null,
       errors:[]
 
     }
@@ -47,6 +48,7 @@ export default {
         customer_id : this.customer.project_customer_id,
         date : this.date,
         price : this.price,
+        file : this.file,
         description : this.description,
       }
       Stores_Customer().Invoices_Store(params).then(res=>{
@@ -56,7 +58,12 @@ export default {
         if (error.response.status === 422) {
           this.errors=error.response.data;
           this.Notify_Error_Validation()
-        }else {
+        }
+        else if (error.response.status === 409) {
+          this.Notify_Error(error.response.data.error);
+
+        }
+        else {
           this.Notify_Error_Server()
         }
         this.loading=false;
@@ -95,7 +102,7 @@ export default {
       </div>
     </template>
     <div class="mb-3">
-      <v-text-field   :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="مبلغ فاکتور ( تومان )" />
+      <v-text-field color="blue" :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="مبلغ واریزی ( تومان )" />
       <validation_errors :errors="Validation_Errors(errors,'price')"></validation_errors>
     </div>
     
@@ -113,9 +120,14 @@ export default {
       <validation_errors :errors="Validation_Errors(errors,'description')"></validation_errors>
     </div>
     <div class="mb-3">
+      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded ></v-file-input>
+      <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
+    </div>
+    <div class="mb-3">
       <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
+
     <div class="mt-6 mb-2 text-end">
       <v-btn :loading="loading" color="success" append-icon="mdi-check" text="ثبت گزارش" flat  rounded @click="Create_Invoice"></v-btn>
     </div>
