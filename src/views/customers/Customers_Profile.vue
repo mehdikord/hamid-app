@@ -2,9 +2,13 @@
 import {Stores_Customer} from "@/stores/customers/customers.js";
 import profileBg from '@/assets/images/backgrounds/custoemer-bg.png';
 import Profile from '@/assets/images/icons/customer.svg'
+import Customer_Profile_Summery from "@/views/customers/components/Customer_Profile_Summery.vue";
 
 export default {
   name: "Customers_Profile",
+  components:{
+    'profile_summery' : Customer_Profile_Summery,
+  },
   mounted() {
     this.Get_Customer();
   },
@@ -87,24 +91,19 @@ export default {
                 <strong>{{ customer.email ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-card-account-details" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">کد ملی : </span>
-                <strong>{{ customer.national_code ?? '---' }}</strong>
+                <v-icon icon="mdi-briefcase" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <span class="text-grey-darken-2">شغل : </span>
+                <strong>{{ customer.job ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-phone" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">تلفن ثابت : </span>
-                <strong>{{ customer.tel ?? '---' }}</strong>
+                <v-icon icon="mdi-note-check" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <span class="text-grey-darken-2">علت ثبت : </span>
+                <strong>{{ customer.register_reason ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-mailbox" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">کد پستی : </span>
-                <strong>{{ customer.postal_code ?? '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-map-marker" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">آدرس : </span>
-                <strong>{{ customer.address ?? '---' }}</strong>
+                <v-icon icon="mdi-alert" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <span class="text-grey-darken-2">موانع : </span>
+                <strong>{{ customer.obstacles ?? '---' }}</strong>
               </div>
               <div class="mt-7 text-center">
                 <v-btn prepend-icon="mdi-pen" @click="edit_dialog = true" variant="flat" color="blue-darken-3" rounded class="w-100 pb-8 pt-3" >ویرایش اطلاعات مشتری</v-btn>
@@ -133,12 +132,39 @@ export default {
 
       </v-col>
       <v-col xs="12" md="8" lg="8" xl="9" sm="12" cols="12">
-        <v-card flat border rounded >
+
+        <v-row>
+          <v-col class="animate__animated animate__flipInY" >
+            <v-card rounded color="indigo" variant="tonal">
+              <v-card-item class="pa-5">
+                <v-icon icon="mdi-view-dashboard" class="font-40"></v-icon>
+                <strong class="ms-2">خلاصه اطلاعات </strong>
+              </v-card-item>
+            </v-card>
+          </v-col>
+          <v-col class="animate__animated animate__flipInY" >
+            <v-card rounded color="teal" variant="tonal">
+              <v-card-item class="pa-5">
+                <v-icon icon="mdi-text-box-edit-outline" class="font-40"></v-icon>
+                <strong class="ms-2">لیست گزارشات </strong>
+              </v-card-item>
+            </v-card>
+          </v-col>
+          <v-col class="animate__animated animate__flipInY" >
+            <v-card rounded color="deep-orange-darken-2" variant="tonal">
+              <v-card-item class="pa-5">
+                <v-icon icon="mdi-currency-usd" class="font-40"></v-icon>
+                <strong class="ms-2">لیست فاکتور ها </strong>
+              </v-card-item>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <v-card flat border class="mt-6" style="margin-bottom: 120px">
           <v-card-item>
-            test info
+            <profile_summery v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
           </v-card-item>
         </v-card>
-
       </v-col>
     </v-row>
 

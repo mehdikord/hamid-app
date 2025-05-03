@@ -57,7 +57,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-3">
+  <div class="mt-3" >
     <div class="mb-3">
       <v-textarea
       variant="outlined"
@@ -78,7 +78,7 @@ export default {
       <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
-    <div class="mt-6 mb-2 text-end">
+    <div class="mt-6 mb-2 text-end" @keyup.enter="Create_Report">
       <v-btn :loading="loading" color="success" append-icon="mdi-check" text="ثبت گزارش" flat  rounded @click="Create_Report"></v-btn>
     </div>
 

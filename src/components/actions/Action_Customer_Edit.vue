@@ -41,7 +41,7 @@ export default {
 
 <template>
   <template v-if="customer">
-    <div class="mt-3">
+    <div class="mt-3" @keyup.enter="Edit_Customer">
       <v-row>
         <v-col md="6" cols="12" class="pb-0">
           <v-text-field :error="Validation_Check(errors,'name')" v-model="item.name" append-inner-icon="mdi-account" rounded variant="outlined" type="text" label="نام کامل" />
@@ -60,12 +60,24 @@ export default {
           <validation_errors :errors="Validation_Errors(errors,'national_code')"></validation_errors>
         </v-col>
         <v-col md="6" cols="12">
+          <v-text-field :error="Validation_Check(errors,'job')" v-model="item.job" append-inner-icon="mdi-briefcase" rounded variant="outlined" type="text" label="شغل" />
+          <validation_errors :errors="Validation_Errors(errors,'job')"></validation_errors>
+        </v-col>
+        <v-col md="6" cols="12">
+          <v-text-field :error="Validation_Check(errors,'register_reason')" v-model="item.register_reason" append-inner-icon="mdi-note-check" rounded variant="outlined" type="text" label="علت ثبت نام" />
+          <validation_errors :errors="Validation_Errors(errors,'register_reason')"></validation_errors>
+        </v-col>
+        <v-col md="6" cols="12">
           <v-text-field :error="Validation_Check(errors,'tel')" v-model="item.tel" append-inner-icon="mdi-phone" rounded variant="outlined" type="number" label="تلفن ثابت" />
           <validation_errors :errors="Validation_Errors(errors,'tel')"></validation_errors>
         </v-col>
         <v-col md="6" cols="12">
           <v-text-field :error="Validation_Check(errors,'postal_code')" v-model="item.postal_code" append-inner-icon="mdi-mailbox" rounded variant="outlined" type="number" label="کد پستی" />
           <validation_errors :errors="Validation_Errors(errors,'postal_code')"></validation_errors>
+        </v-col>
+        <v-col cols="12">
+          <v-text-field :error="Validation_Check(errors,'obstacles')" v-model="item.obstacles" append-inner-icon="mdi-alert" rounded variant="outlined" type="text" label="موانع شروع به کار" />
+          <validation_errors :errors="Validation_Errors(errors,'obstacles')"></validation_errors>
         </v-col>
         <v-col cols="12">
           <v-text-field :error="Validation_Check(errors,'address')" v-model="item.address" append-inner-icon="mdi-map-marker" rounded variant="outlined" type="text" label="آدرس" />

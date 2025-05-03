@@ -55,6 +55,8 @@ import Action_Customer_Invoice_Create from "@/components/actions/Action_Customer
 import Action_Data_Table_Pagination from "@/components/actions/data/Action_Data_Table_Pagination.vue";
 import Action_Customer_Edit from "@/components/actions/Action_Customer_Edit.vue";
 import Global_Chip_Date from "@/components/global/Chips/Global_Chip_Date.vue";
+import Report_Single from "@/components/reports/Report_Single.vue";
+import Global_Chips_User from "@/components/global/Chips/Global_Chips_User.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
@@ -65,6 +67,8 @@ app.component('actions_customer_edit',Action_Customer_Edit)
 app.component('actions_data_pagination',Action_Data_Table_Pagination)
 app.component('validation_errors',Global_Validation_Errors)
 app.component('chips_date',Global_Chip_Date)
+app.component('chips_user',Global_Chips_User)
+app.component('report_single',Report_Single);
 
 
 

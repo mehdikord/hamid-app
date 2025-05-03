@@ -60,8 +60,18 @@ export const Stores_Customer = defineStore('customers',{
             })
         },
 
-        //Invoices
+        Reports_Latest(params){
 
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.id+'/reports/latest',{params : params }).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
+        //Invoices
         Invoices_Store(params){
             return new Promise((resolve, reject) => {
 
