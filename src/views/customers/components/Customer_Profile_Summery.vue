@@ -5,6 +5,7 @@ export default {
   name: "Customer_Profile_Summery",
   mounted() {
     this.Get_Repots();
+    this.Get_Invoices();
   },
   props:{
     customer:{
@@ -35,7 +36,16 @@ export default {
 
       })
 
-    }
+    },
+    Get_Invoices(){
+      Stores_Customer().Invoices_Latest(this.params).then(res => {
+        this.invoices = res.data.result;
+        this.loading_invoices = false;
+      }).catch(error => {
+        this.Notify_Error_Server();
+      })
+
+    },
 
 
 
@@ -66,11 +76,26 @@ export default {
 
         </template>
         <template v-else>
-          <div v-for="report in reports" class="animate__animated animate__zoomInDown">
+          <template v-if="reports.length">
+            <div v-for="report in reports" class="animate__animated animate__zoomInDown">
+              <report_single class="mb-6" :report="report"></report_single>
+            </div>
+          </template>
+          <template v-else>
+            <div class="mb-8 text-center">
+              <v-alert
+                  border="top"
+                  color="teal-darken-2"
+                  variant="tonal"
+                  prominent
+              >
+                <strong>
+                  هنوز هیچ گزارشی برای این مشتری ثبت نگردیده است !
+                </strong>
+              </v-alert>
+            </div>
+          </template>
 
-            <report_single class="mb-6" :report="report"></report_single>
-
-          </div>
 
         </template>
       </div>
@@ -79,6 +104,43 @@ export default {
       <div>
         <v-icon icon="mdi-currency-usd" color="orange-darken-4" class="font-32"></v-icon>
         <strong class="ms-2 text-deep-orange-darken-2">آخرین فاکتور های ثبت شده برای مشتری</strong>
+      </div>
+      <div class="mt-6">
+        <template v-if="loading_invoices">
+          <v-skeleton-loader
+              v-for="i in 3"
+              class="mx-auto mb-4"
+              elevation="0"
+              type="article,actions"
+
+          ></v-skeleton-loader>
+
+        </template>
+        <template v-else>
+          <template v-if="invoices.length">
+            <div v-for="invoice in invoices" class="animate__animated animate__zoomInDown">
+
+              <invoice_single class="mb-6" :invoice="invoice"></invoice_single>
+
+            </div>
+
+          </template>
+          <template v-else>
+            <div class="mb-8 text-center">
+              <v-alert
+                  border="top"
+                  color="orange-darken-4"
+                  variant="tonal"
+                  prominent
+              >
+                <strong>
+                  هنوز هیچ فاکتوری برای این مشتری ثبت نگردیده است !
+                </strong>
+              </v-alert>
+            </div>
+          </template>
+
+        </template>
       </div>
 
     </div>

@@ -1,6 +1,7 @@
 <script>
 
 import {Stores_Customer} from "@/stores/customers/customers.js";
+import {Stores_Statuses} from "@/stores/customers/statuses.js";
 
 export default {
   name: "Action_Customer_Report_Create",
@@ -13,7 +14,10 @@ export default {
   mounted() {
     const now = moment();
     this.date = now.format("YYYY-MM-DD HH:mm");
-
+    if(this.customer.status){
+      this.status_id = this.customer.status.id;
+    }
+    this.Get_Statuses();
 
   },
   data(){
@@ -22,6 +26,8 @@ export default {
       report:null,
       date:null,
       file:null,
+      status_id:null,
+      statuses : [],
       errors:[]
 
     }
@@ -32,6 +38,7 @@ export default {
       let params = {
         customer_id : this.customer.project_customer_id,
         date : this.date,
+        status_id : this.status_id,
         report : this.report,
         file : this.file,
       }
@@ -50,7 +57,14 @@ export default {
         this.loading=false;
       })
 
-    }
+    },
+    Get_Statuses(){
+      Stores_Statuses().All().then(res =>{
+        this.statuses = res.data.result;
+      }).catch(error =>{
+
+      })
+    },
   }
 
 }
@@ -69,6 +83,21 @@ export default {
       >
       </v-textarea>
       <validation_errors :errors="Validation_Errors(errors,'report')"></validation_errors>
+    </div>
+    <div class="mb-3">
+      <v-select
+          class="mt-3"
+          :items="statuses"
+          v-model="status_id"
+          item-title="name"
+          item-value="id"
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب وضعیت جدید"
+      >
+
+      </v-select>
     </div>
     <div class="mb-3">
       <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" ></v-file-input>

@@ -1,13 +1,22 @@
 <script>
 export default {
   name: "Global_Chip_Date",
-  props:['date']
+  props: {
+    date:{
+      type:String,
+      default:""
+    },
+    format:{
+      type:String,
+      default:"jYYYY/jM/jD"
+    }
+  }
 }
 </script>
 
 <template>
   <v-chip density="comfortable" variant="outlined" color="indigo"  v-if="date">
-    {{ this.$filters.date_jalali(date,'jYYYY/jM/jD') }}
+    {{ this.$filters.date_jalali(date,format) }}
   </v-chip>
 
 </template>

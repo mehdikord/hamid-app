@@ -48,6 +48,7 @@ export const Stores_Customer = defineStore('customers',{
 
                 let data = new FormData();
                 if(params.report){data.append('report',params.report);}
+                if(params.status_id){data.append('status_id',params.status_id);}
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
                 this.$axios.post('users/customers/'+params.customer_id+'/reports',data,{
@@ -88,6 +89,17 @@ export const Stores_Customer = defineStore('customers',{
                     return reject(error);
                 })
 
+            })
+        },
+
+        Invoices_Latest(params){
+
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.id+'/invoices/latest',{params : params }).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
             })
         },
 

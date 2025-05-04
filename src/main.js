@@ -57,6 +57,7 @@ import Action_Customer_Edit from "@/components/actions/Action_Customer_Edit.vue"
 import Global_Chip_Date from "@/components/global/Chips/Global_Chip_Date.vue";
 import Report_Single from "@/components/reports/Report_Single.vue";
 import Global_Chips_User from "@/components/global/Chips/Global_Chips_User.vue";
+import Invoice_Single from "@/components/invoices/Invoice_Single.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
@@ -69,6 +70,7 @@ app.component('validation_errors',Global_Validation_Errors)
 app.component('chips_date',Global_Chip_Date)
 app.component('chips_user',Global_Chips_User)
 app.component('report_single',Report_Single);
+app.component('invoice_single',Invoice_Single);
 
 
 
@@ -96,6 +98,8 @@ app.config.globalProperties.$filters={
     },
 
 }
+app.config.globalProperties.$api_assets = import.meta.env.VITE_API_URL
+
 
 
 app.config.globalProperties.$axios = axiosInstance;

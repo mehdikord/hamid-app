@@ -11,6 +11,7 @@ export default {
   },
   mounted() {
     this.Get_Customer();
+
   },
   data(){
     return {
@@ -84,11 +85,6 @@ export default {
                 <v-icon icon="mdi-instagram" color="deep-orange-darken-2" class="font-28 me-2"/>
                 <span class="text-grey-darken-2">اینستاگرام : </span>
                 <strong>{{ customer.instagram_id ?? '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-email" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">ایمیل : </span>
-                <strong>{{ customer.email ?? '---' }}</strong>
               </div>
               <div class="mt-6">
                 <v-icon icon="mdi-briefcase" color="deep-orange-darken-2" class="font-28 me-2"/>

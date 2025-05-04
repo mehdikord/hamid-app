@@ -52,6 +52,7 @@ export default {
       })
     },
     Get_Items(){
+      this.items_loading=true;
       Stores_Customer().Index(this.query_params).then(res => {
         this.items = res.data.result.data
         if (res.data.result){
@@ -112,9 +113,20 @@ export default {
         })
       }
       this.Notify_Success('مبلغ معامله با موفقیت ثبت گردید');
+    },
+    Change_Per_Page(page){
+      this.query_params.per_page = page;
+      this.query_params.page = 1;
+      this.Get_Items();
+    },
+    Change_Page(page){
+      this.query_params.page = page;
+      this.Get_Items();
+    },
+    Do_Search(){
+      this.query_params.search.status_id = this.status_id;
+      this.Get_Items();
     }
-
-
   }
 }
 </script>
@@ -143,27 +155,14 @@ export default {
                   variant="outlined"
                   density="comfortable"
                   clearable
+                  @update:model-value="Do_Search"
               >
               </v-select>
             </v-col>
             <v-col lg="3" md="3">
-              <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="statuses"
-                  v-model="status_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب پروژه"
-                  variant="outlined"
-                  density="comfortable"
-                  clearable
-              >
-              </v-select>
+
             </v-col>
           </v-row>
-
         </div>
       </div>
     </v-card-item>
@@ -185,8 +184,11 @@ export default {
         <div v-if ="items.length < 1">
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
-        <div v-else style="margin-bottom: 120px">
-          <v-table class="table-responsive animate__animated animate__zoomInUp" hover style="border-radius: 10px">
+        <div v-else style="margin-bottom: 100px">
+          <div class="mb-3">
+            <strong class="text-grey-darken-1">تعداد کل آیتم ها : </strong><strong class="ms-1 font-18 text-indigo">{{ this.$filters.number_format(this.pagination.total )}}</strong>
+          </div>
+          <v-table class="table-responsive" hover style="border-radius: 10px">
             <thead>
               <tr class="bg-blue-grey-darken-3">
                 <th>
@@ -200,7 +202,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in items" >
+              <tr v-for="item in items" class="animate__animated animate__fadeIn" >
                 <td class="pa-2">
                   <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
                     <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
@@ -282,7 +284,7 @@ export default {
           </v-table>
           <v-divider class="mt-3"/>
           <div class="mt-8">
-            <actions_data_pagination :data="pagination"></actions_data_pagination>
+            <actions_data_pagination @PerPageChange="(page) => Change_Per_Page(page)" @ChangePage="(page) => Change_Page(page)" :data="pagination"></actions_data_pagination>
           </div>
 
         </div>
