@@ -38,8 +38,26 @@ export default {
       },
 
       status_id:null,
+      search_phone:null,
       statuses : [],
       items:[],
+
+    }
+  },
+  watch: {
+    search_phone(newValue, oldValue) {
+
+      newValue.replace(/\s/g, '');
+      if (/^[0-9]+$/.test(newValue) && newValue.length >= 4) {
+        this.items_loading = true;
+        setTimeout(() => {
+          this.query_params.search.phone = newValue;
+          this.Get_Items();
+        },500);
+      }else {
+
+
+      }
 
     }
   },
@@ -126,6 +144,11 @@ export default {
     Do_Search(){
       this.query_params.search.status_id = this.status_id;
       this.Get_Items();
+    },
+    Clear_phone(){
+      this.search_phone = null;
+      this.query_params.search.phone = null;
+      this.Get_Items();
     }
   }
 }
@@ -160,6 +183,7 @@ export default {
               </v-select>
             </v-col>
             <v-col lg="3" md="3">
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
 
             </v-col>
           </v-row>

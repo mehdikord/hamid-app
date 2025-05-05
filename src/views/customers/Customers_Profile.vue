@@ -93,7 +93,7 @@ export default {
               </div>
               <div class="mt-6">
                 <v-icon icon="mdi-note-check" color="deep-orange-darken-2" class="font-28 me-2"/>
-                <span class="text-grey-darken-2">علت ثبت : </span>
+                <span class="text-grey-darken-2">هدف از دریافت نمایندگی : </span>
                 <strong>{{ customer.register_reason ?? '---' }}</strong>
               </div>
               <div class="mt-6">
@@ -103,6 +103,17 @@ export default {
               </div>
               <div class="mt-7 text-center">
                 <v-btn prepend-icon="mdi-pen" @click="edit_dialog = true" variant="flat" color="blue-darken-3" rounded class="w-100 pb-8 pt-3" >ویرایش اطلاعات مشتری</v-btn>
+                <div class="mt-3">
+                  <v-row>
+                    <v-col class="px-2">
+                      <v-btn prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
+                    </v-col>
+                    <v-col class="px-2">
+                      <v-btn prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
+                    </v-col>
+
+                  </v-row>
+                </div>
               </div>
 
             </div>
