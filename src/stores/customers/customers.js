@@ -64,7 +64,7 @@ export const Stores_Customer = defineStore('customers',{
         Reports_Latest(params){
 
             return new Promise((resolve, reject) => {
-                this.$axios.get('users/customers/'+params.id+'/reports/latest',{params : params }).then(response =>{
+                this.$axios.get('users/customers/'+params.id+'/reports/latest').then(response =>{
                     return resolve(response);
                 }).catch(error =>{
                     return reject(error);
@@ -95,7 +95,7 @@ export const Stores_Customer = defineStore('customers',{
         Invoices_Latest(params){
 
             return new Promise((resolve, reject) => {
-                this.$axios.get('users/customers/'+params.id+'/invoices/latest',{params : params }).then(response =>{
+                this.$axios.get('users/customers/'+params.id+'/invoices/latest').then(response =>{
                     return resolve(response);
                 }).catch(error =>{
                     return reject(error);
@@ -111,7 +111,19 @@ export const Stores_Customer = defineStore('customers',{
                     return reject(error);
                 })
             })
-        }
+        },
+
+        Projects_Index(params){
+
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.id+'/projects').then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
 
 
     },

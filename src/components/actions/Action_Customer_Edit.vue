@@ -10,9 +10,18 @@ export default {
       required: true
     }
   },
+  mounted() {
+    if (this.customer){
+      this.Get_Projects();
+    }
+  },
   data(){
     return {
       item : this.customer,
+      project_id : null,
+      projects : [],
+      fields : [],
+      final_fields:[],
       errors : [],
       loading : false,
     }
@@ -20,6 +29,16 @@ export default {
   methods:{
     Edit_Customer(){
       this.loading = true;
+      const output = {};
+      for (let key in this.final_fields) {
+        if (this.final_fields[key] !== null) {
+          output[key] = this.final_fields[key];
+        }
+      }
+
+      this.item.fields = output;
+      this.item.project_id = this.project_id;
+
       Stores_Customer().Edit(this.item).then(res=>{
         this.loading = false;
         this.$emit('Updated',res.data.result);
@@ -34,6 +53,20 @@ export default {
       })
 
 
+    },
+    Get_Projects(){
+      Stores_Customer().Projects_Index({id : this.customer.id}).then(res => {
+        this.projects = res.data.result;
+        if (this.projects){
+          this.project_id  = this.projects[0].id;
+          this.fields = this.projects[0].fields;
+          if (this.fields.length > 0){
+            this.fields.forEach(field => {
+              this.final_fields[field.id] = null;
+            })
+          }
+        }
+      })
     }
   }
 }
@@ -64,7 +97,7 @@ export default {
           <validation_errors :errors="Validation_Errors(errors,'job')"></validation_errors>
         </v-col>
         <v-col md="6" cols="12">
-          <v-text-field :error="Validation_Check(errors,'register_reason')" v-model="item.register_reason" append-inner-icon="mdi-note-check" rounded variant="outlined" type="text" label="علت ثبت نام" />
+          <v-text-field :error="Validation_Check(errors,'register_reason')" v-model="item.register_reason" append-inner-icon="mdi-note-check" rounded variant="outlined" type="text" label="هدف از دریافت نمایندگی" />
           <validation_errors :errors="Validation_Errors(errors,'register_reason')"></validation_errors>
         </v-col>
         <v-col md="6" cols="12">
@@ -79,10 +112,17 @@ export default {
           <v-text-field :error="Validation_Check(errors,'obstacles')" v-model="item.obstacles" append-inner-icon="mdi-alert" rounded variant="outlined" type="text" label="موانع شروع به کار" />
           <validation_errors :errors="Validation_Errors(errors,'obstacles')"></validation_errors>
         </v-col>
-        <v-col cols="12">
-          <v-text-field :error="Validation_Check(errors,'address')" v-model="item.address" append-inner-icon="mdi-map-marker" rounded variant="outlined" type="text" label="آدرس" />
-          <validation_errors :errors="Validation_Errors(errors,'address')"></validation_errors>
+        <v-col cols="12" >
+          <strong class="text-blue-darken-2">اطلاعات مشتری در پروژه </strong>
+          <div class="mt-2">
+          </div>
         </v-col>
+        <template v-if="fields.length">
+          <v-col v-for="field in fields" md="6" cols="12">
+            <v-text-field v-model="final_fields[field.id]"  rounded variant="outlined" type="text" :label="field.title" />
+          </v-col>
+        </template>
+
       </v-row>
       <div class="mt-4 mb-4 text-end">
         <v-btn @click="Edit_Customer" :loading="loading" color="success" text="ثبت اطلاعات مشتری" class="font-15" append-icon="mdi-check" flat rounded></v-btn>
