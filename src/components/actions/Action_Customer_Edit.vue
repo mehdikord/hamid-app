@@ -93,14 +93,6 @@ export default {
           <validation_errors :errors="Validation_Errors(errors,'national_code')"></validation_errors>
         </v-col>
         <v-col md="6" cols="12">
-          <v-text-field :error="Validation_Check(errors,'job')" v-model="item.job" append-inner-icon="mdi-briefcase" rounded variant="outlined" type="text" label="شغل" />
-          <validation_errors :errors="Validation_Errors(errors,'job')"></validation_errors>
-        </v-col>
-        <v-col md="6" cols="12">
-          <v-text-field :error="Validation_Check(errors,'register_reason')" v-model="item.register_reason" append-inner-icon="mdi-note-check" rounded variant="outlined" type="text" label="هدف از دریافت نمایندگی" />
-          <validation_errors :errors="Validation_Errors(errors,'register_reason')"></validation_errors>
-        </v-col>
-        <v-col md="6" cols="12">
           <v-text-field :error="Validation_Check(errors,'tel')" v-model="item.tel" append-inner-icon="mdi-phone" rounded variant="outlined" type="number" label="تلفن ثابت" />
           <validation_errors :errors="Validation_Errors(errors,'tel')"></validation_errors>
         </v-col>
@@ -108,10 +100,7 @@ export default {
           <v-text-field :error="Validation_Check(errors,'postal_code')" v-model="item.postal_code" append-inner-icon="mdi-mailbox" rounded variant="outlined" type="number" label="کد پستی" />
           <validation_errors :errors="Validation_Errors(errors,'postal_code')"></validation_errors>
         </v-col>
-        <v-col cols="12">
-          <v-text-field :error="Validation_Check(errors,'obstacles')" v-model="item.obstacles" append-inner-icon="mdi-alert" rounded variant="outlined" type="text" label="موانع شروع به کار" />
-          <validation_errors :errors="Validation_Errors(errors,'obstacles')"></validation_errors>
-        </v-col>
+
         <v-col cols="12" >
           <strong class="text-blue-darken-2">اطلاعات مشتری در پروژه </strong>
           <div class="mt-2">

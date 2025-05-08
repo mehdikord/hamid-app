@@ -97,12 +97,12 @@ export default {
       })
     },
     Create_Report(item){
+      console.log(item);
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
-          if (customer.id === item.project_customer_id){
+          if (customer.project_customer_id === item.project_customer_id){
             customer.last_report = item;
             this.add_report_dialog[customer.id] = false;
-
           }
           return customer;
         })
@@ -112,19 +112,20 @@ export default {
     Create_Invoice(item){
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
-          if (customer.id === item.project_customer_id){
+          if (customer.project_customer_id === item.project_customer_id){
             customer.invoices_count+=1;
+            this.add_invoice_dialog[customer.id] = false;
+
           }
           return customer;
         })
       }
-      this.add_invoice_dialog[item.project_customer_id] = false;
       this.Notify_Success('فاکتور با موفقیت ثبت گردید');
     },
     Update_Target_Price(item){
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
-          if (customer.id === item.project_customer_id){
+          if (customer.project_customer_id === item.project_customer_id){
             customer = item;
           }
           return customer;
@@ -215,6 +216,7 @@ export default {
           <v-table class="table-responsive" hover style="border-radius: 10px">
             <thead>
               <tr class="bg-blue-grey-darken-3">
+                <th>تاریخ تخصیص</th>
                 <th>
                   مشتری
                 </th>
@@ -227,12 +229,15 @@ export default {
             </thead>
             <tbody>
               <tr v-for="item in items" class="animate__animated animate__fadeIn" >
+                <td>
+                  <chips_date :date="item.start_at"></chips_date>
+                </td>
                 <td class="pa-2">
                   <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
                     <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
                     <strong class="font-16 text-black">{{ item.customer.phone}}</strong>
                     <template v-if=" item.customer.name">
-                      <span class="ms-2 text-grey-darken-4">( {{item.customer.name}} )</span>
+                      <span class="ms-2 text-grey-darken-4 font-16">( {{item.customer.name}} )</span>
                     </template>
                   </router-link>
                 </td>
@@ -265,7 +270,6 @@ export default {
                       v-model="add_report_dialog[item.id]"
                       max-width="960"
                       transition="dialog-top-transition"
-
                   >
                     <v-card variant="flat" rounded>
                       <v-card-item>

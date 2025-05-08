@@ -136,13 +136,12 @@ export default {
             </v-dialog>
           </div>
         </v-card>
-
       </v-col>
       <v-col xs="12" md="8" lg="8" xl="9" sm="12" cols="12">
 
         <v-row>
           <v-col class="animate__animated animate__flipInY" >
-            <v-card rounded color="indigo" variant="tonal">
+            <v-card :to="{name : 'customers_profile',params:{id : customer.id}}" rounded color="indigo" variant="tonal">
               <v-card-item class="pa-5">
                 <v-icon icon="mdi-view-dashboard" class="font-40"></v-icon>
                 <strong class="ms-2">خلاصه اطلاعات </strong>
@@ -150,7 +149,7 @@ export default {
             </v-card>
           </v-col>
           <v-col class="animate__animated animate__flipInY" >
-            <v-card rounded color="teal" variant="tonal">
+            <v-card :to="{name:'customers_profile_reports',params:{id : customer.id}}" rounded color="teal" variant="tonal">
               <v-card-item class="pa-5">
                 <v-icon icon="mdi-text-box-edit-outline" class="font-40"></v-icon>
                 <strong class="ms-2">لیست گزارشات </strong>

@@ -11,6 +11,11 @@ const Customers_Routes = [
         path : "/customers/profile/:id",
         name : 'customers_profile',
         component : Customers_Profile
+    },
+    {
+        path : "/customers/profile/:id/reports",
+        name : 'customers_profile_reports',
+        component : Customers_Profile
     }
 ];
 
