@@ -20,6 +20,7 @@ export default {
       loading: true,
       customer:null,
       edit_dialog:false,
+      report_dialog:false
     }
   },
   methods:{
@@ -106,10 +107,30 @@ export default {
                 <div class="mt-3">
                   <v-row>
                     <v-col class="px-2">
-                      <v-btn prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
+                      <v-btn @click="report_dialog = true" prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
+
+                      <v-dialog
+                          v-model="report_dialog"
+                          max-width="960"
+                          transition="dialog-top-transition"
+                      >
+                        <v-card variant="flat" rounded>
+                          <v-card-item>
+                            <v-btn @click="report_dialog = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
+                            <h3>ثبت گزارش جدید برای مشتری</h3>
+                          </v-card-item>
+                          <v-divider/>
+                          <v-card-item>
+                            <actions_customer_project_report_create :customer="customer"></actions_customer_project_report_create>
+                          </v-card-item>
+                        </v-card>
+                      </v-dialog>
+
+
                     </v-col>
                     <v-col class="px-2">
                       <v-btn prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
+
                     </v-col>
 
                   </v-row>

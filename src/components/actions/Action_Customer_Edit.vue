@@ -65,6 +65,16 @@ export default {
               this.final_fields[field.id] = null;
             })
           }
+          Stores_Customer().Projects_Fields({id : this.customer.id,project_id:this.project_id}).then(res=>{
+            if (res.data.result){
+              res.data.result.forEach(item => {
+                console.log(item)
+                this.final_fields[item.field_id] = item.val;
+              })
+            }
+
+          })
+
         }
       })
     }

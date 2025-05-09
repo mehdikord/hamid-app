@@ -5,11 +5,6 @@ import {de} from "vuetify/locale";
 
 export default {
   name: "Action_Customer_Invoice_Create",
-  computed: {
-    de() {
-      return de
-    }
-  },
   props:{
     customer : {
       type: Object,

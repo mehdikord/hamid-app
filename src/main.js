@@ -58,11 +58,13 @@ import Global_Chip_Date from "@/components/global/Chips/Global_Chip_Date.vue";
 import Report_Single from "@/components/reports/Report_Single.vue";
 import Global_Chips_User from "@/components/global/Chips/Global_Chips_User.vue";
 import Invoice_Single from "@/components/invoices/Invoice_Single.vue";
+import Action_Customer_Project_Report_Create from "@/components/actions/Action_Customer_Project_Report_Create.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
 app.component('actions_customer_status',Actions_Customer_Status)
 app.component('actions_customer_report_create',Action_Customer_Report_Create)
+app.component('actions_customer_project_report_create',Action_Customer_Project_Report_Create)
 app.component('actions_customer_invoice_create',Action_Customer_Invoice_Create)
 app.component('actions_customer_edit',Action_Customer_Edit)
 app.component('actions_data_pagination',Action_Data_Table_Pagination)
