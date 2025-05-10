@@ -62,7 +62,7 @@ export default {
     <div class="mt-5">
       <div>
         <v-icon icon="mdi-text-box-edit-outline" color="teal-darken-3" class="font-32"></v-icon>
-        <strong class="ms-2 text-teal-darken-2">آخرین گزارشات ثبت شده برای مشتری</strong>
+        <strong class="ms-2 text-teal-darken-2">آخرین گزارشات ثبت شده برای مشتری ( 5 گزارش )</strong>
       </div>
       <div class="mt-6">
         <template v-if="loading_reports">
@@ -103,7 +103,7 @@ export default {
     <div class="mt-7">
       <div>
         <v-icon icon="mdi-currency-usd" color="orange-darken-4" class="font-32"></v-icon>
-        <strong class="ms-2 text-deep-orange-darken-2">آخرین فاکتور های ثبت شده برای مشتری</strong>
+        <strong class="ms-2 text-deep-orange-darken-2">آخرین فاکتور های ثبت شده برای مشتری ( 5 فاکتور )</strong>
       </div>
       <div class="mt-6">
         <template v-if="loading_invoices">

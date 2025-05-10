@@ -124,6 +124,54 @@ export const Stores_Customer = defineStore('customers',{
             })
         },
 
+        Projects_Own(params){
+
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.customer_id+'/projects/own/'+params.project_id).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
+        Projects_Reports_Store(params){
+            return new Promise((resolve, reject) => {
+
+                let data = new FormData();
+                if(params.report){data.append('report',params.report);}
+                if(params.status_id){data.append('status_id',params.status_id);}
+                if(params.file){data.append('file',params.file,params.file.name);}
+                if(params.date){data.append('date',params.date);}
+                this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/reports',data,{
+                    headers: {'Content-Type': 'multipart/form-data'}
+                }).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+
+        },
+
+        Projects_Invoices_Store(params){
+            return new Promise((resolve, reject) => {
+                let data = new FormData();
+                if(params.price){data.append('price',params.price);}
+                if(params.file){data.append('file',params.file,params.file.name);}
+                if(params.date){data.append('date',params.date);}
+                if(params.description){data.append('description',params.description);}
+                this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/invoices',data,{
+                    headers: {'Content-Type': 'multipart/form-data'}
+                }).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+
+        },
+
         Projects_Fields(params){
 
             return new Promise((resolve, reject) => {

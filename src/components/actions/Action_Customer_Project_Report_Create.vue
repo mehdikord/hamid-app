@@ -46,14 +46,18 @@ export default {
 
     Create_Report(){
       this.loading=true;
+      if (!this.project_id){
+        return this.Notify_Error('پروژه مورد نظر را انتخاب کنید')
+      }
       let params = {
-        customer_id : this.customer.project_customer_id,
+        customer_id : this.customer.id,
+        project_id : this.project_id,
         date : this.date,
         status_id : this.status_id,
         report : this.report,
         file : this.file,
       }
-      Stores_Customer().Reports_Store(params).then(res=>{
+      Stores_Customer().Projects_Reports_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
       }).catch(error => {

@@ -20,7 +20,9 @@ export default {
       loading: true,
       customer:null,
       edit_dialog:false,
-      report_dialog:false
+      report_dialog:false,
+      invoice_dialog:false,
+      summery_key:0,
     }
   },
   methods:{
@@ -37,6 +39,17 @@ export default {
       this.customer = item;
       this.edit_dialog = false;
       this.Notify_Success('اطلاعات مشتری با موفقیت ویراش گردید')
+    },
+    Create_Report(){
+      this.summery_key ++;
+      this.report_dialog=false;
+      this.Notify_Success('گزارش مورد نظر باموفقیت ثبت گردید')
+
+    },
+    Create_Invoice(){
+      this.summery_key ++;
+      this.invoice_dialog=false;
+      this.Notify_Success('فاکتور مورد نظر باموفقیت ثبت گردید')
     }
   }
 }
@@ -108,7 +121,6 @@ export default {
                   <v-row>
                     <v-col class="px-2">
                       <v-btn @click="report_dialog = true" prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
-
                       <v-dialog
                           v-model="report_dialog"
                           max-width="960"
@@ -121,15 +133,29 @@ export default {
                           </v-card-item>
                           <v-divider/>
                           <v-card-item>
-                            <actions_customer_project_report_create :customer="customer"></actions_customer_project_report_create>
+                            <actions_customer_project_report_create @Created="Create_Report" :customer="customer"></actions_customer_project_report_create>
                           </v-card-item>
                         </v-card>
                       </v-dialog>
-
-
                     </v-col>
                     <v-col class="px-2">
-                      <v-btn prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
+                      <v-btn @click="invoice_dialog = true" prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
+                      <v-dialog
+                          v-model="invoice_dialog"
+                          max-width="960"
+                          transition="dialog-top-transition"
+                      >
+                        <v-card variant="flat" rounded>
+                          <v-card-item>
+                            <v-btn @click="invoice_dialog = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
+                            <h3>ثبت فاکتور جدید برای مشتری</h3>
+                          </v-card-item>
+                          <v-divider/>
+                          <v-card-item>
+                            <actions_customer_project_invoice_create  @Created="Create_Invoice" :customer="customer"></actions_customer_project_invoice_create>
+                          </v-card-item>
+                        </v-card>
+                      </v-dialog>
 
                     </v-col>
 
@@ -189,7 +215,7 @@ export default {
 
         <v-card flat border class="mt-6" style="margin-bottom: 120px">
           <v-card-item>
-            <profile_summery v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
+            <profile_summery :key="summery_key" v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
           </v-card-item>
         </v-card>
       </v-col>
