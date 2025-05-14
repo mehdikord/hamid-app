@@ -8,7 +8,9 @@ export default {
 <template>
 
   <ul v-if="errors">
+
     <li v-for="error in errors"><small class="text-red">{{error}}</small></li>
+
   </ul>
 </template>
 

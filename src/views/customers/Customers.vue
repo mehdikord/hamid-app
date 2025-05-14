@@ -266,6 +266,7 @@ export default {
                 </td>
                 <td class="pa-2 text-center">
                   <v-btn @click="add_report_dialog[item.id] = true" color="teal" variant="flat" rounded append-icon="mdi-text-box-edit">ثبت گزارش</v-btn>
+
                   <v-dialog
                       v-model="add_report_dialog[item.id]"
                       max-width="960"

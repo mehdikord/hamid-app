@@ -43,7 +43,9 @@ name: "Actions_Customer_Status",
         project_id: this.customer.project.id,
       }
       Stores_Customer().Projects_Levels(params).then(res =>{
-        this.levels = res.data.result;
+        if (res.data.result){
+          this.levels = res.data.result;
+        }
       }).catch(error =>{
         return this.Notify_Error('خطا در دریافت مراحل')
 
@@ -129,7 +131,6 @@ name: "Actions_Customer_Status",
                 variant="outlined"
                 density="comfortable"
             >
-
             </v-select>
           </div>
           <div class="mt-4">

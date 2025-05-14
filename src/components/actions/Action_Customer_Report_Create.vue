@@ -18,6 +18,7 @@ export default {
       this.status_id = this.customer.status.id;
     }
     this.Get_Statuses();
+    this.Get_Levels();
 
   },
   data(){
@@ -26,8 +27,10 @@ export default {
       report:null,
       date:null,
       file:null,
+      project_level_id:null,
       status_id:null,
       statuses : [],
+      levels : [],
       errors:[]
 
     }
@@ -47,9 +50,11 @@ export default {
         this.$emit('Created',res.data.result);
       }).catch(error => {
         if (error.response.status === 422) {
+
           this.errors=error.response.data;
-          this.Notify_Error_Validation()
+          this.Notify_Error_Validation();
         }else {
+
           this.Notify_Error_Server()
 
         }
@@ -65,6 +70,21 @@ export default {
 
       })
     },
+    Get_Levels(){
+      let params = {
+        id : this.customer.customer.id,
+        project_id: this.customer.project.id,
+      }
+      Stores_Customer().Projects_Levels(params).then(res =>{
+        if (res.data.result){
+          this.levels = res.data.result;
+        }
+      }).catch(error =>{
+        return this.Notify_Error('خطا در دریافت مراحل')
+
+      })
+    },
+
   }
 
 }
@@ -97,6 +117,21 @@ export default {
           label="انتخاب وضعیت جدید"
       >
 
+      </v-select>
+    </div>
+    <div class="mb-3">
+      <v-select
+          class="mt-3"
+          :items="levels"
+          v-model="project_level_id"
+          item-title="name"
+          item-value="id"
+          rounded
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب مرحله مذاکره"
+      >
       </v-select>
     </div>
     <div class="mb-3">
