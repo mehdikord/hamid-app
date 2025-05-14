@@ -221,6 +221,7 @@ export default {
                   مشتری
                 </th>
                 <th>وضعیت</th>
+                <th>مرحله</th>
                 <th>پروژه</th>
                 <th>اطلاعات</th>
                 <th>آخرین گزارش</th>
@@ -243,6 +244,11 @@ export default {
                 </td>
                 <td class="pa-2">
                   <actions_customer_status @Changed="(item) => Change_Status(item)" :customer="item"></actions_customer_status>
+                </td>
+                <td class="pa-2">
+                  <template v-if="item.level">
+                    <strong class="text-red-darken-1 font-15">{{item.level.name}}</strong>
+                  </template>
                 </td>
                 <td class="pa-2">
                   <strong>{{ item.project.name }}</strong>

@@ -71,6 +71,16 @@ export const Stores_Customer = defineStore('customers',{
                 })
             })
         },
+        Reports_Index(params){
+
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.id+'/reports').then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
 
         //Invoices
         Invoices_Store(params){

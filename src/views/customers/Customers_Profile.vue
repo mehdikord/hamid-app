@@ -3,11 +3,13 @@ import {Stores_Customer} from "@/stores/customers/customers.js";
 import profileBg from '@/assets/images/backgrounds/custoemer-bg.png';
 import Profile from '@/assets/images/icons/customer.svg'
 import Customer_Profile_Summery from "@/views/customers/components/Customer_Profile_Summery.vue";
+import Customer_Profile_Reports from "@/views/customers/components/Customer_Profile_Reports.vue";
 
 export default {
   name: "Customers_Profile",
   components:{
     'profile_summery' : Customer_Profile_Summery,
+    'profile_reports' : Customer_Profile_Reports,
   },
   mounted() {
     this.Get_Customer();
@@ -216,6 +218,7 @@ export default {
         <v-card flat border class="mt-6" style="margin-bottom: 120px">
           <v-card-item>
             <profile_summery :key="summery_key" v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
+            <profile_reports :key="summery_key" v-if="this.$route.name === 'customers_profile_reports'" :customer="customer"></profile_reports>
           </v-card-item>
         </v-card>
       </v-col>

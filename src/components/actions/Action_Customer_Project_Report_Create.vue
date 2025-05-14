@@ -25,7 +25,9 @@ export default {
       date:null,
       file:null,
       status_id:null,
+      project_level_id:null,
       statuses : [],
+      levels : [],
       projects:[],
       project_id:null,
       errors:[]
@@ -39,6 +41,8 @@ export default {
         this.projects = res.data.result;
         if (this.projects){
           this.project_id = this.projects[0].id;
+          this.Get_Levels();
+
         }
       })
 
@@ -79,6 +83,22 @@ export default {
 
       })
     },
+
+    Get_Levels(){
+      let params = {
+        id : this.customer.id,
+        project_id: this.project_id
+      }
+      Stores_Customer().Projects_Levels(params).then(res =>{
+        if (res.data.result){
+          this.levels = res.data.result;
+        }
+      }).catch(error =>{
+        return this.Notify_Error('خطا در دریافت مراحل')
+
+      })
+    },
+
   }
 
 }
@@ -114,6 +134,21 @@ export default {
       </v-textarea>
       <validation_errors :errors="Validation_Errors(errors,'report')"></validation_errors>
     </div>
+    <div class="mb-3">
+      <v-select
+          class="mt-3"
+          :items="levels"
+          v-model="project_level_id"
+          item-title="name"
+          item-value="id"
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب مرحله مذاکره"
+      >
+      </v-select>
+    </div>
+
     <div class="mb-3">
       <v-select
           class="mt-3"

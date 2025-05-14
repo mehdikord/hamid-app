@@ -17,6 +17,9 @@ export default {
     if(this.customer.status){
       this.status_id = this.customer.status.id;
     }
+    if(this.customer.level){
+      this.project_level_id = this.customer.level.id;
+    }
     this.Get_Statuses();
     this.Get_Levels();
 
@@ -107,6 +110,20 @@ export default {
     <div class="mb-3">
       <v-select
           class="mt-3"
+          :items="levels"
+          v-model="project_level_id"
+          item-title="name"
+          item-value="id"
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب مرحله مذاکره"
+      >
+      </v-select>
+    </div>
+    <div class="mb-3">
+      <v-select
+          class="mt-3"
           :items="statuses"
           v-model="status_id"
           item-title="name"
@@ -117,21 +134,6 @@ export default {
           label="انتخاب وضعیت جدید"
       >
 
-      </v-select>
-    </div>
-    <div class="mb-3">
-      <v-select
-          class="mt-3"
-          :items="levels"
-          v-model="project_level_id"
-          item-title="name"
-          item-value="id"
-          rounded
-          color="blue"
-          variant="outlined"
-          density="comfortable"
-          label="انتخاب مرحله مذاکره"
-      >
       </v-select>
     </div>
     <div class="mb-3">

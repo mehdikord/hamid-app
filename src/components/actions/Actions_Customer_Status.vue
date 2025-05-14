@@ -12,6 +12,9 @@ name: "Actions_Customer_Status",
   if(this.customer.status){
     this.status_id = this.customer.status.id;
   }
+  if (this.customer.level){
+    this.project_level_id = this.customer.level.id;
+  }
   },
   data(){
     return {
@@ -26,13 +29,15 @@ name: "Actions_Customer_Status",
   },
   methods:{
     Open_Dialog(){
-      this.change_dialog = true;
       this.Get_Statuses();
       this.Get_Levels();
+      this.change_dialog = true;
     },
     Get_Statuses(){
       Stores_Statuses().All().then(res =>{
-        this.statuses = res.data.result;
+        if(res.data.result.length){
+          this.statuses = res.data.result;
+        }
       }).catch(error =>{
 
       })
@@ -43,7 +48,7 @@ name: "Actions_Customer_Status",
         project_id: this.customer.project.id,
       }
       Stores_Customer().Projects_Levels(params).then(res =>{
-        if (res.data.result){
+        if (res.data.result.length){
           this.levels = res.data.result;
         }
       }).catch(error =>{
@@ -60,6 +65,7 @@ name: "Actions_Customer_Status",
       let params = {
         customer_id : this.customer.project_customer_id,
         status_id : this.status_id,
+        project_level_id : this.project_level_id,
         description : this.description,
       }
       console.log(params);
@@ -118,7 +124,7 @@ name: "Actions_Customer_Status",
               </div>
             </v-col>
           </v-row>
-          <div class="mt-4">
+          <div class="mt-6">
             <label>انتخاب مرحله مذاکره</label>
             <v-select
                 class="mt-3"
@@ -133,7 +139,7 @@ name: "Actions_Customer_Status",
             >
             </v-select>
           </div>
-          <div class="mt-4">
+          <div>
             <label>انتخاب وضعیت جدید</label>
             <v-select
                 class="mt-3"
