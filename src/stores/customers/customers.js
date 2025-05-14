@@ -183,6 +183,16 @@ export const Stores_Customer = defineStore('customers',{
             })
         },
 
+        Projects_Levels(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/'+params.id+'/projects/levels/'+params.project_id).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
 
 
     },

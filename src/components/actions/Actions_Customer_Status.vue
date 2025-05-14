@@ -18,19 +18,34 @@ name: "Actions_Customer_Status",
       change_dialog : false,
       change_loading: false,
       status_id:null,
+      project_level_id:null,
       description:null,
       statuses : [],
+      levels : [],
   }
   },
   methods:{
     Open_Dialog(){
       this.change_dialog = true;
       this.Get_Statuses();
+      this.Get_Levels();
     },
     Get_Statuses(){
       Stores_Statuses().All().then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
+
+      })
+    },
+    Get_Levels(){
+      let params = {
+        id : this.customer.customer.id,
+        project_id: this.customer.project.id,
+      }
+      Stores_Customer().Projects_Levels(params).then(res =>{
+        this.levels = res.data.result;
+      }).catch(error =>{
+        return this.Notify_Error('خطا در دریافت مراحل')
 
       })
     },
@@ -100,14 +115,23 @@ name: "Actions_Customer_Status",
                 <strong>{{ customer.customer.name ?? '---'}}</strong>
               </div>
             </v-col>
-            <v-col cols="12">
-              <div>
-                <v-icon icon="mdi-instagram font-30" color="indigo"></v-icon>
-                <span class="text-grey-darken-3 font-13"> اینستاگرام : </span>
-                <strong>{{ customer.customer.instagram_id ?? '---'}}</strong>
-              </div>
-            </v-col>
           </v-row>
+          <div class="mt-4">
+            <label>انتخاب مرحله مذاکره</label>
+            <v-select
+                class="mt-3"
+                :items="levels"
+                v-model="project_level_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="blue"
+                variant="outlined"
+                density="comfortable"
+            >
+
+            </v-select>
+          </div>
           <div class="mt-4">
             <label>انتخاب وضعیت جدید</label>
             <v-select
