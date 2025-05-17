@@ -12,6 +12,7 @@ export default {
   },
   mounted() {
     this.Get_Statuses();
+    this.Get_Levels();
     this.Get_Items();
 
   },
@@ -38,8 +39,10 @@ export default {
       },
 
       status_id:null,
+      level_id:null,
       search_phone:null,
       statuses : [],
+      levels : [],
       items:[],
 
     }
@@ -67,6 +70,12 @@ export default {
         this.statuses = res.data.result;
       }).catch(error =>{
 
+      })
+    },
+    Get_Levels(){
+      Stores_Customer().Levels_All().then(res =>{
+        this.levels = res.data.result;
+      }).catch(error =>{
       })
     },
     Get_Items(){
@@ -144,6 +153,7 @@ export default {
     },
     Do_Search(){
       this.query_params.search.status_id = this.status_id;
+      this.query_params.search.level_id = this.level_id;
       this.Get_Items();
     },
     Clear_phone(){
@@ -167,6 +177,10 @@ export default {
         <div class="mt-4">
           <v-row>
             <v-col lg="3" md="3">
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
+
+            </v-col>
+            <v-col lg="3" md="3">
               <v-select
                   class="animate__animated animate__zoomIn"
                   :items="statuses"
@@ -184,8 +198,21 @@ export default {
               </v-select>
             </v-col>
             <v-col lg="3" md="3">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
-
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="levels"
+                  v-model="level_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب مرحله مذاکره"
+                  variant="outlined"
+                  density="comfortable"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
             </v-col>
           </v-row>
         </div>
