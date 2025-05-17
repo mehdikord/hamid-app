@@ -235,10 +235,10 @@ export default {
                 </td>
                 <td class="pa-2">
                   <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
-                    <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
-                    <strong class="font-16 text-black">{{ item.customer.phone}}</strong>
+                    <v-icon icon="mdi-account font-30" color="deep-orange-darken-3"></v-icon>
+                    <strong class="font-15 text-black">{{ item.customer.phone}}</strong>
                     <template v-if=" item.customer.name">
-                      <span class="ms-2 text-grey-darken-4 font-16">( {{item.customer.name}} )</span>
+                      <span class="ms-2 text-grey-darken-4 font-15">( {{item.customer.name}} )</span>
                     </template>
                   </router-link>
                 </td>
@@ -247,7 +247,7 @@ export default {
                 </td>
                 <td class="pa-2">
                   <template v-if="item.level">
-                    <strong class="text-red-darken-1 font-15">{{item.level.name}}</strong>
+                    <v-chip color="red" density="comfortable" variant="flat">{{item.level.name}}</v-chip>
                   </template>
                 </td>
                 <td class="pa-2">
@@ -266,8 +266,7 @@ export default {
                 <td class="pa-2">
                   <template v-if="item.last_report">
                     <chips_date :date="item.last_report.created_at"></chips_date> :
-                    {{ this.Helper_Text_Shorter(item.last_report.report,50) }}
-
+                    {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
                   </template>
                 </td>
                 <td class="pa-2 text-center">

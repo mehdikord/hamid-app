@@ -4,12 +4,14 @@ import profileBg from '@/assets/images/backgrounds/custoemer-bg.png';
 import Profile from '@/assets/images/icons/customer.svg'
 import Customer_Profile_Summery from "@/views/customers/components/Customer_Profile_Summery.vue";
 import Customer_Profile_Reports from "@/views/customers/components/Customer_Profile_Reports.vue";
+import Customer_Profile_Invoices from "@/views/customers/components/Customer_Profile_Invoices.vue";
 
 export default {
   name: "Customers_Profile",
   components:{
     'profile_summery' : Customer_Profile_Summery,
     'profile_reports' : Customer_Profile_Reports,
+    'profile_invoices' : Customer_Profile_Invoices,
   },
   mounted() {
     this.Get_Customer();
@@ -206,7 +208,7 @@ export default {
             </v-card>
           </v-col>
           <v-col class="animate__animated animate__flipInY" >
-            <v-card rounded color="deep-orange-darken-2" variant="tonal">
+            <v-card :to="{name:'customers_profile_invoices',params:{id : customer.id}}" rounded color="deep-orange-darken-2" variant="tonal">
               <v-card-item class="pa-5">
                 <v-icon icon="mdi-currency-usd" class="font-40"></v-icon>
                 <strong class="ms-2">لیست فاکتور ها </strong>
@@ -219,6 +221,7 @@ export default {
           <v-card-item>
             <profile_summery :key="summery_key" v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
             <profile_reports :key="summery_key" v-if="this.$route.name === 'customers_profile_reports'" :customer="customer"></profile_reports>
+            <profile_invoices :key="summery_key" v-if="this.$route.name === 'customers_profile_invoices'" :customer="customer"></profile_invoices>
           </v-card-item>
         </v-card>
       </v-col>

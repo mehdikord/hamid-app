@@ -83,11 +83,9 @@
 }
 .footer-item-margin{
   margin: 0 48px;
-
 }
 .menu-svg{
   width: 45px;
-
 }
 .menu-active{
   filter: grayscale(0%) !important;
@@ -101,5 +99,15 @@ img {
 img:hover {
   filter: grayscale(0%);
   opacity: 1;
+}
+
+@media only screen and (max-width: 768px) {
+  .footer-item-margin{
+    margin: 0 10px;
+  }
+
+  .menu-svg{
+    width: 30px;
+  }
 }
 </style>

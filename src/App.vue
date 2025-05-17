@@ -8,6 +8,7 @@ export default {
   data(){
     return {
       user_check : Stores_Auth().AuthGetCheckAuth,
+      drawer : true
     }
   },
   components:{
@@ -19,9 +20,20 @@ export default {
 
 <template>
   <v-app>
+    <v-layout>
     <v-locale-provider rtl>
     <v-main>
-      <v-container >
+      <v-container style="max-width: 100%!important;" >
+
+        <v-navigation-drawer
+            v-model="drawer"
+            location="start"
+            :mobile="true"
+        >
+          <div>
+
+          </div>
+        </v-navigation-drawer>
         <template_appbar v-if="user_check" ></template_appbar>
         <router-view />
         <template_menu v-if="user_check"></template_menu>
@@ -29,6 +41,7 @@ export default {
       </v-container>
     </v-main>
     </v-locale-provider>
+    </v-layout>
   </v-app>
 </template>
 

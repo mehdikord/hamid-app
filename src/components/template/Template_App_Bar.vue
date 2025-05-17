@@ -8,7 +8,8 @@ export default {
       user: Stores_Auth().AuthGetUser,
       time: '',
       date: '',
-      timer: null
+      timer: null,
+      drawer: true,
     }
   },
 
@@ -47,8 +48,11 @@ export default {
         {{ user.name }}
       </strong>
     </v-app-bar-title>
+
+
+
     <template v-slot:append>
-      <div class="me-3">
+      <div class="me-3 hidden-xs">
         <v-btn icon="mdi-magnify font-32" color="deep-orange"></v-btn>
         <v-btn icon="mdi-heart font-32" color="deep-orange"></v-btn>
         <span class="text-dark">
@@ -56,7 +60,6 @@ export default {
           <strong class="text-white ma-2">-</strong>
           <strong class="text-white">{{time}}</strong>
           <v-icon icon="mdi-calendar font-30" color="deep-orange" class="ms-1"></v-icon>
-
         </span>
       </div>
 
