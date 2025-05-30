@@ -6,7 +6,7 @@ export default {
 </script>
 
 <template>
-  <v-chip v-if="user" density="comfortable" color="deep-orange-darken-3"  prepend-icon="mdi-account font-24">
+  <v-chip v-if="user" density="comfortable" color="deep-orange-darken-3"  prepend-icon="mdi-account font-23">
     <strong class="mt-1 text-black">{{ user.name }}</strong>
   </v-chip>
 </template>

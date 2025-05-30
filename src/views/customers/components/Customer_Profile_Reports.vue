@@ -59,7 +59,7 @@ export default {
 <template>
   <div>
     <div class="mb-4 mt-2">
-      <strong class="font-16">لیست گزارشات ثبت شده برای مشتری</strong>
+      <strong class="font-15">لیست گزارشات ثبت شده برای مشتری</strong>
     </div>
     <div>
       <template v-if="loading">

@@ -91,8 +91,8 @@ name: "Actions_Customer_Status",
 <template>
 
   <template v-if="customer">
-    <v-btn v-if="!customer.status" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-14 mt-2" rounded>بدون وضعیت</v-btn>
-    <v-btn v-else @click="Open_Dialog" variant="flat" :style="{'backgroundColor' : customer.status.color,'color' : 'white' }" size="small" class="font-14 mt-2" rounded>{{ customer.status.name }}</v-btn>
+    <v-btn v-if="!customer.status" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-13 mt-2" rounded>بدون وضعیت</v-btn>
+    <v-btn v-else @click="Open_Dialog" variant="flat" :style="{'backgroundColor' : customer.status.color,'color' : 'white' }" size="small" class="font-13 mt-2" rounded>{{ customer.status.name }}</v-btn>
 
 
     <v-dialog
@@ -111,15 +111,15 @@ name: "Actions_Customer_Status",
           <v-row>
             <v-col>
               <div>
-                <v-icon icon="mdi-cellphone font-30" color="indigo"></v-icon>
-                <span class="text-grey-darken-3 font-13">شماره موبایل : </span>
+                <v-icon icon="mdi-cellphone font-29" color="indigo"></v-icon>
+                <span class="text-grey-darken-3 font-12">شماره موبایل : </span>
                 <strong>{{ customer.customer.phone}}</strong>
               </div>
             </v-col>
             <v-col>
               <div>
-                <v-icon icon="mdi-account font-30" color="indigo"></v-icon>
-                <span class="text-grey-darken-3 font-13"> نام مشتری : </span>
+                <v-icon icon="mdi-account font-29" color="indigo"></v-icon>
+                <span class="text-grey-darken-3 font-12"> نام مشتری : </span>
                 <strong>{{ customer.customer.name ?? '---'}}</strong>
               </div>
             </v-col>

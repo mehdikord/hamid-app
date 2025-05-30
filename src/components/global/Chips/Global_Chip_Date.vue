@@ -15,7 +15,7 @@ export default {
 </script>
 
 <template>
-  <v-chip density="comfortable" variant="outlined" color="indigo" class="font-12" v-if="date">
+  <v-chip density="comfortable" variant="outlined" color="indigo" class="font-11" v-if="date">
     {{ this.$filters.date_jalali(date,format) }}
   </v-chip>
 

@@ -28,8 +28,8 @@ export default {
       <v-card-item class="pa-6">
         <v-row>
           <v-col md="3" cols="12">
-            <v-icon icon="mdi-account font-45" color="deep-orange-darken-3"></v-icon>
-            <strong class="font-16">{{ customer.customer.phone}}</strong>
+            <v-icon icon="mdi-account font-44" color="deep-orange-darken-3"></v-icon>
+            <strong class="font-15">{{ customer.customer.phone}}</strong>
             <template v-if="customer.customer.name">
               <span class="ms-1">( {{customer.customer.name}} )</span>
             </template>
@@ -47,11 +47,11 @@ export default {
             <div class="mt-2">
               <span>
                 <span>فاکتورها : </span>
-                <strong class="text-blue-darken-2 font-18">15</strong>
+                <strong class="text-blue-darken-2 font-17">15</strong>
               </span>
               <span class="ms-5">
                 <span>گزارشات : </span>
-                <strong class="text-teal font-18">15</strong>
+                <strong class="text-teal font-17">15</strong>
               </span>
 
             </div>

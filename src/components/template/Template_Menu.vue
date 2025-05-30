@@ -10,27 +10,27 @@
           <div class="text-center footer-item-margin">
             <router-link :to="{name: 'profile'}">
               <img src="@/assets/images/menu/profile.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'profile'}" alt="" />
-              <div class="text-white font-13 font-weight-600">
+              <div class="text-white font-12 font-weight-600">
                  پروفایل
               </div>
           </router-link>
           </div>
           <div class="text-center footer-item-margin">
             <img src="@/assets/images/menu/notifications.svg" class="menu-svg" alt="">
-            <div class="text-white font-13 font-weight-600">
+            <div class="text-white font-12 font-weight-600">
                اعلانات
             </div>
           </div>
           <div class="text-center footer-item-margin">
             <img src="@/assets/images/menu/projects.svg" class="menu-svg" alt="">
-            <div class="text-white font-13 font-weight-600">
+            <div class="text-white font-12 font-weight-600">
                پروژه ها
             </div>
           </div>
           <div class="text-center footer-item-margin">
             <router-link :to="{name: 'index'}">
               <img src="@/assets/images/menu/home.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'index'}" alt="">
-              <div class="text-white font-13 font-weight-600">
+              <div class="text-white font-12 font-weight-600">
                 داشبورد
               </div>
             </router-link>
@@ -38,20 +38,20 @@
           <div class="text-center footer-item-margin">
             <router-link :to="{name: 'customers'}">
               <img src="@/assets/images/menu/customers.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'customers'}" alt="">
-              <div class="text-white font-13 font-weight-600">
+              <div class="text-white font-12 font-weight-600">
                  شماره ها
               </div>
             </router-link>
           </div>
           <div class="text-center footer-item-margin">
             <img src="@/assets/images/menu/reports.svg" class="menu-svg" alt="">
-            <div class="text-white font-13 font-weight-600">
+            <div class="text-white font-12 font-weight-600">
                گزارشات
             </div>
           </div>
           <div class="text-center footer-item-margin">
             <img src="@/assets/images/menu/invoices.svg" class="menu-svg" alt="">
-            <div class="text-white font-13 font-weight-600">
+            <div class="text-white font-12 font-weight-600">
                فاکتور ها
             </div>
           </div>

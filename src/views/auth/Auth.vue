@@ -48,21 +48,21 @@ export default {
                 <v-card  class="color-dark-bg rounded-xl">
                   <v-card-item>
                     <div class="mt-14 mb-6">
-                      <strong class="color-orange-text font-20">ورود به حساب کاربری</strong>
+                      <strong class="color-orange-text font-19">ورود به حساب کاربری</strong>
                     </div>
-                    <div class="text-white font-14">
+                    <div class="text-white font-13">
                       برای ورود شماره موبایل و گذرواژه خود را وارد کنید
                     </div>
                   </v-card-item>
                   <v-card-item @keyup.enter="Login" class="px-lg-12">
                     <div class="mt-4">
-                      <v-text-field v-model="login.phone" type="number" label="شماره موبایل" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-cellphone font-30" icon-color="deep-orange-lighten-1"></v-text-field>
+                      <v-text-field v-model="login.phone" type="number" label="شماره موبایل" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-cellphone font-29" icon-color="deep-orange-lighten-1"></v-text-field>
                     </div>
                     <div class="mt-3">
-                      <v-text-field v-model="login.password" type="password" label="گذرواژه" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-lock font-30" icon-color="deep-orange-lighten-1"></v-text-field>
+                      <v-text-field v-model="login.password" type="password" label="گذرواژه" color="white" style="color: white!important;" base-color="white" variant="outlined" rounded prepend-inner-icon="mdi-lock font-29" icon-color="deep-orange-lighten-1"></v-text-field>
                     </div>
                     <div class="mt-4 mb-5">
-                      <v-btn  variant="flat" :loading="loading" @click="Login" color="deep-orange" class="font-15 px-12" size="large" rounded append-icon="mdi-check">ورود به حساب</v-btn>
+                      <v-btn  variant="flat" :loading="loading" @click="Login" color="deep-orange" class="font-14 px-12" size="large" rounded append-icon="mdi-check">ورود به حساب</v-btn>
                     </div>
                     <div class="mt-6 mb-10">
                       <strong class="text-grey">فراموشی گذرواژه</strong>
