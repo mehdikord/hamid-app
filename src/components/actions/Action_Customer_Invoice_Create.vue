@@ -74,13 +74,13 @@ export default {
   <div class="mt-2">
     <template v-if="customer.target_price">
       <div class="mb-4">
-        <span>مبلغ معامله ثبت شده برای مشتری : </span> <strong class="text-indigo font-16">{{ this.$filters.number_format(this.customer.target_price) }}</strong> <span class="text-grey font-13">تومان</span>
+        <span>مبلغ معامله ثبت شده برای مشتری : </span> <strong class="text-indigo font-15">{{ this.$filters.number_format(this.customer.target_price) }}</strong> <span class="text-grey font-12">تومان</span>
       </div>
       <div class="mb-4">
-        <span>مجموع فاکتور های ثبت شده : </span> <strong class="text-success font-16">{{ this.$filters.number_format(this.customer.sum_invoices) }}</strong> <span class="text-grey font-13">تومان</span>
+        <span>مجموع فاکتور های ثبت شده : </span> <strong class="text-success font-15">{{ this.$filters.number_format(this.customer.sum_invoices) }}</strong> <span class="text-grey font-12">تومان</span>
       </div>
       <div class="mb-6">
-        <span>مبلغ باقیمانده : </span> <strong class="text-error font-16">{{ this.$filters.number_format(this.customer.target_price - this.customer.sum_invoices) }}</strong> <span class="text-grey font-13">تومان</span>
+        <span>مبلغ باقیمانده : </span> <strong class="text-error font-15">{{ this.$filters.number_format(this.customer.target_price - this.customer.sum_invoices) }}</strong> <span class="text-grey font-12">تومان</span>
       </div>
     </template>
     <template v-else>

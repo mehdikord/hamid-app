@@ -42,7 +42,7 @@ export default {
 <template>
 
   <v-app-bar :elevation="0" class="color-dark-bg">
-    <v-icon icon="mdi-account ms-3 font-40" color="deep-orange"></v-icon>
+    <v-icon icon="mdi-account ms-3 font-39" color="deep-orange"></v-icon>
     <v-app-bar-title>
       <strong class="text-grey-lighten-4">
         {{ user.name }}
@@ -53,13 +53,13 @@ export default {
 
     <template v-slot:append>
       <div class="me-3 hidden-xs">
-        <v-btn icon="mdi-magnify font-32" color="deep-orange"></v-btn>
-        <v-btn icon="mdi-heart font-32" color="deep-orange"></v-btn>
+        <v-btn icon="mdi-magnify font-31" color="deep-orange"></v-btn>
+        <v-btn icon="mdi-heart font-31" color="deep-orange"></v-btn>
         <span class="text-dark">
           <strong class=" text-white">{{date}}</strong>
           <strong class="text-white ma-2">-</strong>
           <strong class="text-white">{{time}}</strong>
-          <v-icon icon="mdi-calendar font-30" color="deep-orange" class="ms-1"></v-icon>
+          <v-icon icon="mdi-calendar font-29" color="deep-orange" class="ms-1"></v-icon>
         </span>
       </div>
 

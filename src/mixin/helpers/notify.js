@@ -7,7 +7,7 @@ export default {
                 position: "top",
                 showConfirmButton: false,
                 showCloseButton:true,
-                closeButtonHtml: '<i class="mdi mdi-close font-26"></i>',
+                closeButtonHtml: '<i class="mdi mdi-close font-25"></i>',
                 timer: 3000,
                 color : color,
                 iconColor : color,

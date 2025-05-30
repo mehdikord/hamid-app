@@ -86,7 +86,7 @@ export default {
                 <v-avatar class="avatar-image" :image="Profile" size="80"></v-avatar>
               </v-col>
               <v-col cols="9">
-                <strong class="font-17">{{  customer.phone}}</strong>
+                <strong class="font-16">{{  customer.phone}}</strong>
                 <div class="mt-1">{{ customer.name ?? '---' }}</div>
               </v-col>
             </v-row>
@@ -95,27 +95,27 @@ export default {
                 <strong class="text-primary">اطلاعات حقیقی مشتری : </strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-account" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <v-icon icon="mdi-account" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">نام کامل : </span>
                 <strong>{{ customer.name ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-instagram" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <v-icon icon="mdi-instagram" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">اینستاگرام : </span>
                 <strong>{{ customer.instagram_id ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-briefcase" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <v-icon icon="mdi-briefcase" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">شغل : </span>
                 <strong>{{ customer.job ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-note-check" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <v-icon icon="mdi-note-check" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">هدف از دریافت نمایندگی : </span>
                 <strong>{{ customer.register_reason ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-alert" color="deep-orange-darken-2" class="font-28 me-2"/>
+                <v-icon icon="mdi-alert" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">موانع : </span>
                 <strong>{{ customer.obstacles ?? '---' }}</strong>
               </div>
@@ -194,7 +194,7 @@ export default {
           <v-col class="animate__animated animate__flipInY" >
             <v-card :to="{name : 'customers_profile',params:{id : customer.id}}" rounded color="indigo" variant="tonal">
               <v-card-item class="pa-5">
-                <v-icon icon="mdi-view-dashboard" class="font-40"></v-icon>
+                <v-icon icon="mdi-view-dashboard" class="font-39"></v-icon>
                 <strong class="ms-2">خلاصه اطلاعات </strong>
               </v-card-item>
             </v-card>
@@ -202,7 +202,7 @@ export default {
           <v-col class="animate__animated animate__flipInY" >
             <v-card :to="{name:'customers_profile_reports',params:{id : customer.id}}" rounded color="teal" variant="tonal">
               <v-card-item class="pa-5">
-                <v-icon icon="mdi-text-box-edit-outline" class="font-40"></v-icon>
+                <v-icon icon="mdi-text-box-edit-outline" class="font-39"></v-icon>
                 <strong class="ms-2">لیست گزارشات </strong>
               </v-card-item>
             </v-card>
@@ -210,7 +210,7 @@ export default {
           <v-col class="animate__animated animate__flipInY" >
             <v-card :to="{name:'customers_profile_invoices',params:{id : customer.id}}" rounded color="deep-orange-darken-2" variant="tonal">
               <v-card-item class="pa-5">
-                <v-icon icon="mdi-currency-usd" class="font-40"></v-icon>
+                <v-icon icon="mdi-currency-usd" class="font-39"></v-icon>
                 <strong class="ms-2">لیست فاکتور ها </strong>
               </v-card-item>
             </v-card>

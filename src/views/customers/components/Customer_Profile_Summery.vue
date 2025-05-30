@@ -57,11 +57,11 @@ export default {
   <template v-if="customer">
 
     <div class="mt-2 animate__animated animate__fadeInDown">
-      <strong class="font-16">خلاصه اطلاعات مشتری </strong>
+      <strong class="font-15">خلاصه اطلاعات مشتری </strong>
     </div>
     <div class="mt-5">
       <div>
-        <v-icon icon="mdi-text-box-edit-outline" color="teal-darken-3" class="font-32"></v-icon>
+        <v-icon icon="mdi-text-box-edit-outline" color="teal-darken-3" class="font-31"></v-icon>
         <strong class="ms-2 text-teal-darken-2">آخرین گزارشات ثبت شده برای مشتری ( 5 گزارش )</strong>
       </div>
       <div class="mt-6">
@@ -102,7 +102,7 @@ export default {
     </div>
     <div class="mt-7">
       <div>
-        <v-icon icon="mdi-currency-usd" color="orange-darken-4" class="font-32"></v-icon>
+        <v-icon icon="mdi-currency-usd" color="orange-darken-4" class="font-31"></v-icon>
         <strong class="ms-2 text-deep-orange-darken-2">آخرین فاکتور های ثبت شده برای مشتری ( 5 فاکتور )</strong>
       </div>
       <div class="mt-6">

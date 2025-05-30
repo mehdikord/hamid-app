@@ -123,7 +123,7 @@ export default {
 
       </v-row>
       <div class="mt-4 mb-4 text-end">
-        <v-btn @click="Edit_Customer" :loading="loading" color="success" text="ثبت اطلاعات مشتری" class="font-15" append-icon="mdi-check" flat rounded></v-btn>
+        <v-btn @click="Edit_Customer" :loading="loading" color="success" text="ثبت اطلاعات مشتری" class="font-14" append-icon="mdi-check" flat rounded></v-btn>
       </div>
     </div>
   </template>

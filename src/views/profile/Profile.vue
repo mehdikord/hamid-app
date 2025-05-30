@@ -55,7 +55,7 @@ export default {
               <v-col cols="9">
                 <v-btn variant="flat" icon="mdi-logout" color="red" rounded class="float-start ms-2" size="30"></v-btn>
                 <v-btn variant="flat" icon="mdi-pen" color="blue-darken-3" rounded class="float-start" size="30"></v-btn>
-                <strong class="color-orange-text font-16">{{ user.name }}</strong>
+                <strong class="color-orange-text font-15">{{ user.name }}</strong>
                 <div class="mt-1">{{ user.phone }}</div>
               </v-col>
             </v-row>

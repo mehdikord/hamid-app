@@ -169,11 +169,11 @@ export default {
   <v-card flat border rounded>
     <v-card-item>
       <div>
-        <v-icon icon="mdi-account-multiple font-30" color="deep-orange-darken-1" class="me-2"></v-icon>
-        <strong class="color-dark-text font-16">لیست شماره ها ( مشتریان )</strong>
+        <v-icon icon="mdi-account-multiple font-29" color="deep-orange-darken-1" class="me-2"></v-icon>
+        <strong class="color-dark-text font-15">لیست شماره ها ( مشتریان )</strong>
       </div>
       <div class="mt-3">
-        <strong class="font-14 text-indigo">فیلتر و مرتب سازی : </strong>
+        <strong class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
         <div class="mt-4">
           <v-row>
             <v-col lg="3" md="3">
@@ -238,7 +238,7 @@ export default {
         </div>
         <div v-else style="margin-bottom: 100px">
           <div class="mb-3">
-            <strong class="text-grey-darken-1">تعداد کل آیتم ها : </strong><strong class="ms-1 font-18 text-indigo">{{ this.$filters.number_format(this.pagination.total )}}</strong>
+            <strong class="text-grey-darken-1">تعداد کل آیتم ها : </strong><strong class="ms-1 font-17 text-indigo">{{ this.$filters.number_format(this.pagination.total )}}</strong>
           </div>
           <v-table class="table-responsive" hover style="border-radius: 10px">
             <thead>
@@ -262,10 +262,10 @@ export default {
                 </td>
                 <td class="pa-2">
                   <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
-                    <v-icon icon="mdi-account font-30" color="deep-orange-darken-3"></v-icon>
-                    <strong class="font-15 text-black">{{ item.customer.phone}}</strong>
+                    <v-icon icon="mdi-account font-29" color="deep-orange-darken-3"></v-icon>
+                    <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
                     <template v-if=" item.customer.name">
-                      <span class="ms-2 text-grey-darken-4 font-15">( {{item.customer.name}} )</span>
+                      <span class="ms-2 text-grey-darken-4 font-14">( {{item.customer.name}} )</span>
                     </template>
                   </router-link>
                 </td>
@@ -283,11 +283,11 @@ export default {
                 <td class="pa-2">
                   <span>
                     <span>فاکتورها : </span>
-                    <strong class="text-blue-darken-2 font-18">{{ item.invoices_count }}</strong>
+                    <strong class="text-blue-darken-2 font-17">{{ item.invoices_count }}</strong>
                   </span>
                   <span class="ms-5">
                     <span>گزارشات : </span>
-                    <strong class="text-teal font-18">{{ item.reports_count }}</strong>
+                    <strong class="text-teal font-17">{{ item.reports_count }}</strong>
                   </span>
                 </td>
                 <td class="pa-2">
