@@ -1,113 +1,147 @@
-<script setup>
-
+<script >
+export default {
+  name : "Template_Menu",
+  props:['user']
+}
 </script>
 
 <template>
-  <div class="footer">
-    <v-container>
-      <div class="footer-menu">
-        <v-row justify="center" class="footer-dock">
-          <div class="text-center footer-item-margin">
-            <router-link :to="{name: 'profile'}">
-              <img src="@/assets/images/menu/profile.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'profile'}" alt="" />
-              <div class="text-white font-12 font-weight-600">
-                 پروفایل
-              </div>
-          </router-link>
-          </div>
-          <div class="text-center footer-item-margin">
-            <img src="@/assets/images/menu/notifications.svg" class="menu-svg" alt="">
-            <div class="text-white font-12 font-weight-600">
-               اعلانات
-            </div>
-          </div>
-          <div class="text-center footer-item-margin">
-            <img src="@/assets/images/menu/projects.svg" class="menu-svg" alt="">
-            <div class="text-white font-12 font-weight-600">
-               پروژه ها
-            </div>
-          </div>
-          <div class="text-center footer-item-margin">
-            <router-link :to="{name: 'index'}">
-              <img src="@/assets/images/menu/home.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'index'}" alt="">
-              <div class="text-white font-12 font-weight-600">
-                داشبورد
-              </div>
-            </router-link>
-          </div>
-          <div class="text-center footer-item-margin">
-            <router-link :to="{name: 'customers'}">
-              <img src="@/assets/images/menu/customers.svg" class="menu-svg" :class="{'menu-active' : this.$route.name === 'customers'}" alt="">
-              <div class="text-white font-12 font-weight-600">
-                 شماره ها
-              </div>
-            </router-link>
-          </div>
-          <div class="text-center footer-item-margin">
-            <img src="@/assets/images/menu/reports.svg" class="menu-svg" alt="">
-            <div class="text-white font-12 font-weight-600">
-               گزارشات
-            </div>
-          </div>
-          <div class="text-center footer-item-margin">
-            <img src="@/assets/images/menu/invoices.svg" class="menu-svg" alt="">
-            <div class="text-white font-12 font-weight-600">
-               فاکتور ها
-            </div>
-          </div>
-
-        </v-row>
+  <v-list-item
+  >
+    <template v-slot:prepend>
+      <v-avatar >
+        <img src="/src/assets/images/icons/profile.svg" width="100%" alt="">
+      </v-avatar>
+    </template>
+    <template v-slot:title>
+      <strong class="font-16">{{ user.name }}</strong>
+    </template>
+    <template v-slot:subtitle>
+      <div class="font-13 mt-1">{{ user.phone }}</div>
+    </template>
+  </v-list-item>
+  <v-divider class="mb-2"/>
+  <v-list-item
+      :to="{name : 'index'}"
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-view-dashboard-variant" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">داشبورد</span>
       </div>
-    </v-container>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      :to="{name : 'customers_consultant'}"
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-face-agent" size="30" >
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">مشاوره</span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      :to="{name : 'customers_seller'}"
+      active-color="deep-orange-darken-2"
 
-  </div>
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-account-voice" size="30" >
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">فروش</span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-notebook-edit" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">گزارشات</span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      active-color="deep-orange-darken-2"
+
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-currency-usd" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">فاکتور ها </span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-currency-usd" size="30" >
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">فاکتور ها </span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-account-group" size="30" >
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">شماره ها </span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      :to="{name : 'profile'}"
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-cogs" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">تنظیمات</span>
+      </div>
+    </template>
+  </v-list-item>
 
 </template>
 
 <style scoped>
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-.footer-menu{
-  border-radius: 20px;
-  border: 1px solid rgb(0, 27, 46);
-  background-color: rgba(0, 27, 46, 0.9) !important;
 
-}
-.footer-dock{
-   padding: 15px 2px 18px 2px;
-}
-.footer-item-margin{
-  margin: 0 48px;
-}
-.menu-svg{
-  width: 45px;
-}
-.menu-active{
-  filter: grayscale(0%) !important;
-  opacity: 1;
-}
-img {
-  filter: grayscale(100%);
-  opacity: 0.6;
-  transition: all 0.3s ease;
-}
-img:hover {
-  filter: grayscale(0%);
-  opacity: 1;
-}
-
-@media only screen and (max-width: 768px) {
-  .footer-item-margin{
-    margin: 0 10px;
-  }
-
-  .menu-svg{
-    width: 30px;
-  }
-}
 </style>

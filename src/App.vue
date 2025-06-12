@@ -2,7 +2,7 @@
   <v-app>
     <v-locale-provider rtl>
       <v-app-bar v-if="user_check" elevation="0" class="bg-grey-darken-4" app>
-        <v-app-bar-nav-icon variant="text" @click.stop="rail = !rail"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon variant="text" @click.stop="toggleMenu"></v-app-bar-nav-icon>
         <v-toolbar-title>
 
         </v-toolbar-title>
@@ -11,12 +11,11 @@
           <v-btn icon="mdi-magnify" variant="text"></v-btn>
           <v-btn icon="mdi-filter" variant="text"></v-btn>
         </template>
-
         <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
       </v-app-bar>
 
       <v-navigation-drawer
-          v-if="user_check"
+          v-if="user_check && !isMobile"
           :rail="rail"
           rail-width="65"
           app
@@ -25,40 +24,29 @@
 
       >
         <v-list nav>
-          <v-list-item
-          >
-            <template v-slot:prepend>
-              <v-avatar >
-                <img src="/src/assets/images/icons/profile.svg" width="100%" alt="">
-              </v-avatar>
-            </template>
-            <template v-slot:title>
-              <strong class="font-16">{{ user.name }}</strong>
-            </template>
-            <template v-slot:subtitle>
-              <div class="font-13 mt-1">{{ user.phone }}</div>
-            </template>
-          </v-list-item>
-          <v-divider class="mb-2"/>
-          <v-list-item
-              :to="{name : 'customers'}"
-          >
-            <template v-slot:prepend>
-              <v-icon icon="mdi mdi-account-group" size="30" color="deep-orange-darken-2">
-              </v-icon>
-            </template>
-            <template v-slot:title>
-              <div class="mt-1">
-                <strong class="font-14">شماره ها</strong>
-              </div>
-            </template>
-          </v-list-item>
+          <template_menu :user="user"></template_menu>
 
+        </v-list>
+      </v-navigation-drawer>
 
+      <v-navigation-drawer
+          v-if="user_check && isMobile"
+          v-model="mini"
+          :mini-variant="!isMobile && mini"
+          mini-variant-width="65"
+          width="250"
+          app
+          :permanent="!isMobile"
+          :temporary="isMobile"
+          @click="isMobile && (mini = false)"
+      >
+        <v-list nav>
+          <template_menu :user="user"></template_menu>
         </v-list>
       </v-navigation-drawer>
       <v-main>
         <div class="v-container">
+
           <router-view />
 
         </div>
@@ -68,9 +56,9 @@
 </template>
 
 <script>
-import Template_Menu from "@/components/template/Template_Menu.vue";
-import Template_App_Bar from "@/components/template/Template_App_Bar.vue";
+
 import { Stores_Auth } from "@/stores/auth/auth.js";
+import Template_Menu from "@/components/template/Template_Menu.vue";
 
 export default {
   name: "App",
@@ -79,17 +67,30 @@ export default {
       user_check: Stores_Auth().AuthGetCheckAuth,
       user: Stores_Auth().AuthGetUser,
       rail: true,
+      mini:true,
     };
   },
-  components: {
+  computed: {
+    isMobile() {
+      return !this.$vuetify.display.mdAndUp;
+    }
+  },
+  methods : {
+    toggleMenu() {
+      if (this.isMobile) {
+        this.mini = !this.mini;
+      } else {
+        this.rail = !this.rail
+      }
+    }
 
+  },
+  components: {
+    'template_menu': Template_Menu
   },
 };
 </script>
 
 <style scoped>
-.main-content {
-  overflow-y: auto;
-  height: calc(100vh - 64px); /* بسته به ارتفاع app-bar */
-}
+
 </style>

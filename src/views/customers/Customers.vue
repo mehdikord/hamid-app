@@ -1,18 +1,18 @@
 <script>
 import {Stores_Statuses} from "@/stores/customers/statuses.js";
 import {Stores_Customer} from "@/stores/customers/customers.js";
-import Customers_Item from "@/views/customers/components/Customers_Item.vue";
 import Customer_Price_Target from "@/views/customers/components/Customer_Price_Target.vue";
+import {Stores_Projects} from "@/stores/projects/projects.js";
 
 export default {
   name: "Customers",
   components:{
-    'customer_item' : Customers_Item,
     'customer_price_target' : Customer_Price_Target
   },
   mounted() {
     this.Get_Statuses();
     this.Get_Levels();
+    this.Get_Projects();
     this.Get_Items();
 
   },
@@ -43,6 +43,8 @@ export default {
       search_phone:null,
       statuses : [],
       levels : [],
+      projects:[],
+      project_id:null,
       items:[],
 
     }
@@ -74,6 +76,12 @@ export default {
     },
     Get_Levels(){
       Stores_Customer().Levels_All().then(res =>{
+        this.levels = res.data.result;
+      }).catch(error =>{
+      })
+    },
+    Get_Projects(){
+      Stores_Projects().All().then(res =>{
         this.levels = res.data.result;
       }).catch(error =>{
       })
@@ -183,23 +191,6 @@ export default {
             <v-col lg="3" md="3">
               <v-select
                   class="animate__animated animate__zoomIn"
-                  :items="statuses"
-                  v-model="status_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب وضعیت مشتری"
-                  variant="outlined"
-                  density="comfortable"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
-            </v-col>
-            <v-col lg="3" md="3">
-              <v-select
-                  class="animate__animated animate__zoomIn"
                   :items="levels"
                   v-model="level_id"
                   item-title="name"
@@ -207,6 +198,24 @@ export default {
                   rounded
                   color="deep-orange-darken-2"
                   label="انتخاب مرحله مذاکره"
+                  variant="outlined"
+                  density="comfortable"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+
+            <v-col lg="3" md="3">
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="statuses"
+                  v-model="status_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب وضعیت مشتری"
                   variant="outlined"
                   density="comfortable"
                   clearable
@@ -347,7 +356,6 @@ export default {
           <div class="mt-8">
             <actions_data_pagination @PerPageChange="(page) => Change_Per_Page(page)" @ChangePage="(page) => Change_Page(page)" :data="pagination"></actions_data_pagination>
           </div>
-
         </div>
 
       </div>

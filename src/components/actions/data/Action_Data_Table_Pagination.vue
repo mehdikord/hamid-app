@@ -28,7 +28,7 @@ export default {
 
   <div v-if="pagination">
     <v-row>
-      <v-col cols="4">
+      <v-col md="4" class="py-0">
         <v-select
             :items="show_items"
             rounded
@@ -41,7 +41,7 @@ export default {
         >
         </v-select>
       </v-col>
-      <v-col cols="8">
+      <v-col md="8" class="py-0 pb-4">
         <v-pagination
             class="float-start"
             active-color="deep-orange-darken-3"

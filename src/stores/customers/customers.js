@@ -12,6 +12,37 @@ export const Stores_Customer = defineStore('customers',{
                 })
             })
         },
+        //Seller
+        Index_Seller(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/seller',{params : params}).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
+        //Consultant
+        Index_Consultant(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/consultant',{params : params}).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+        Index_Consultant_Old(params){
+            return new Promise((resolve, reject) => {
+                this.$axios.get('users/customers/consultant/old',{params : params}).then(response =>{
+                    return resolve(response);
+                }).catch(error =>{
+                    return reject(error);
+                })
+            })
+        },
+
         Show(params){
             return new Promise((resolve, reject) => {
                 this.$axios.get('users/customers/'+params.id,).then(response =>{

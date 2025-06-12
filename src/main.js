@@ -60,6 +60,8 @@ import Global_Chips_User from "@/components/global/Chips/Global_Chips_User.vue";
 import Invoice_Single from "@/components/invoices/Invoice_Single.vue";
 import Action_Customer_Project_Report_Create from "@/components/actions/Action_Customer_Project_Report_Create.vue";
 import Action_Customer_Project_Invoice_Create from "@/components/actions/Action_Customer_Project_Invoice_Create.vue";
+import Global_Chip_Customer_Status from "@/components/global/Chips/Global_Chip_Customer_Status.vue";
+import Global_Chip_Customer_Level from "@/components/global/Chips/Global_Chip_Customer_Level.vue";
 
 app.component('DatePicker', Vue3PersianDatetimePicker)
 app.component('no_items',Global_No_Items)
@@ -73,6 +75,8 @@ app.component('actions_data_pagination',Action_Data_Table_Pagination)
 app.component('validation_errors',Global_Validation_Errors)
 app.component('chips_date',Global_Chip_Date)
 app.component('chips_user',Global_Chips_User)
+app.component('chips_customer_status',Global_Chip_Customer_Status)
+app.component('chips_customer_level',Global_Chip_Customer_Level)
 app.component('report_single',Report_Single);
 app.component('invoice_single',Invoice_Single);
 
