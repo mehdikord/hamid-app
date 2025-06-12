@@ -72,7 +72,7 @@ export default {
     search_phone(newValue, oldValue) {
 
       newValue.replace(/\s/g, '');
-      if (/^[0-9]+$/.test(newValue) && newValue.length >= 4) {
+      if (newValue.length >= 4) {
         this.items_loading = true;
         setTimeout(() => {
           this.query_params.search.phone = newValue;
@@ -212,7 +212,7 @@ export default {
         <div class="mt-4 hidden-xs">
           <v-row>
             <v-col lg="3" md="3" cols="12">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
             </v-col>
             <v-col lg="3" md="3" cols="12">
               <v-select
@@ -253,7 +253,7 @@ export default {
         <div v-show="show_filter" class="mt-4">
           <v-row>
             <v-col cols="12" class="pb-0">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="compact" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="compact" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
             </v-col>
             <v-col cols="12" class="py-0">
               <v-select

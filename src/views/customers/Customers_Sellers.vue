@@ -2,11 +2,14 @@
 import {Stores_Statuses} from "@/stores/customers/statuses.js";
 import {Stores_Customer} from "@/stores/customers/customers.js";
 import {Stores_Projects} from "@/stores/projects/projects.js";
+import Customers_Seller_Item from "@/views/customers/components/Customers_Seller_Item.vue";
+import consultant_item from "@/views/customers/components/Customers_Consultant_Item.vue";
 
 export default {
   name: "Customers",
   components:{
-
+    consultant_item,
+    'seller_item' : Customers_Seller_Item,
   },
   mounted() {
     this.Get_Statuses();
@@ -44,13 +47,15 @@ export default {
       projects:[],
       project_id:null,
       items:[],
+      show_filter:false,
+
     }
   },
   watch: {
     search_phone(newValue, oldValue) {
 
       newValue.replace(/\s/g, '');
-      if (/^[0-9]+$/.test(newValue) && newValue.length >= 4) {
+      if (newValue.length >= 4) {
         this.items_loading = true;
         setTimeout(() => {
           this.query_params.search.phone = newValue;
@@ -155,18 +160,20 @@ export default {
   <v-card flat border rounded>
     <v-card-item>
       <div>
-        <v-icon icon="mdi mdi-face-agent" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
-        <strong class="color-dark-text font-15">لیست شماره های در حال مشاوره</strong>
+        <v-icon icon="mdi mdi-account-group" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
+        <strong class="color-dark-text font-15">لیست شماره های در حال فروش</strong>
       </div>
       <div class="mt-4">
-        <strong class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
-        <div class="mt-4">
+        <strong v-if="this.$vuetify.display.mdAndUp" class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
+        <div v-if="!this.$vuetify.display.mdAndUp" class="text-center">
+          <v-btn class="mb-2" color="teal-darken-4" @click="show_filter = !show_filter" density="compact" variant="tonal" rounded>فیلتر و مرتب سازی</v-btn>
+        </div>
+        <div class="mt-4 hidden-xs">
           <v-row>
-            <v-col lg="3" md="3">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ رقم وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل" variant="outlined" rounded />
+            <v-col lg="3" md="3" cols="12">
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
             </v-col>
-
-            <v-col lg="3" md="3">
+            <v-col lg="3" md="3" cols="12">
               <v-select
                   class="animate__animated animate__zoomIn"
                   :items="projects"
@@ -183,25 +190,7 @@ export default {
               >
               </v-select>
             </v-col>
-            <v-col lg="3" md="3">
-              <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="levels"
-                  v-model="level_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب مرحله مذاکره"
-                  variant="outlined"
-                  density="comfortable"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
-            </v-col>
-
-            <v-col lg="3" md="3">
+            <v-col lg="3" md="3" cols="12">
               <v-select
                   class="animate__animated animate__zoomIn"
                   :items="statuses"
@@ -213,6 +202,64 @@ export default {
                   label="انتخاب وضعیت مشتری"
                   variant="outlined"
                   density="comfortable"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-show="show_filter" class="mt-4">
+          <v-row>
+            <v-col cols="12" class="pb-0">
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="compact" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
+            </v-col>
+            <v-col cols="12" class="py-0">
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="projects"
+                  v-model="project_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب پروژه"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="12" class="py-0">
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="levels"
+                  v-model="level_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب مرحله"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="12" class="py-0">
+              <v-select
+                  class="animate__animated animate__zoomIn"
+                  :items="statuses"
+                  v-model="status_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  color="deep-orange-darken-2"
+                  label="انتخاب وضعیت مشتری"
+                  variant="outlined"
+                  density="compact"
                   clearable
                   @update:model-value="Do_Search"
               >
@@ -238,7 +285,7 @@ export default {
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
         <div v-else>
-          <v-table class="table-responsive" hover style="border-radius: 7px">
+          <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
               <th>تاریخ تخصیص</th>
@@ -324,6 +371,11 @@ export default {
             </tr>
             </tbody>
           </v-table>
+          <div v-if="!this.$vuetify.display.mdAndUp" >
+            <div v-for="item in items" class="animate__animated animate__fadeIn mb-6">
+              <seller_item @Set_Report = "(get_item) => Create_Report(get_item)" :customer="item"></seller_item>
+            </div>
+          </div>
           <v-divider class="mt-3"/>
           <div class="mt-8">
             <actions_data_pagination @PerPageChange="(page) => Change_Per_Page(page)" @ChangePage="(page) => Change_Page(page)" :data="pagination"></actions_data_pagination>
