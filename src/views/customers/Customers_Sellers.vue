@@ -123,12 +123,10 @@ export default {
       this.Get_Items();
     },
     Create_Report(item){
-      console.log(item);
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
-            customer.last_report = item;
-            this.add_report_dialog[customer.id] = false;
+            customer = item;
           }
           return customer;
         })

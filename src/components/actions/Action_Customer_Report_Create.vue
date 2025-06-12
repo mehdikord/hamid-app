@@ -45,6 +45,7 @@ export default {
         customer_id : this.customer.project_customer_id,
         date : this.date,
         status_id : this.status_id,
+        project_level_id : this.project_level_id,
         report : this.report,
         file : this.file,
       }
