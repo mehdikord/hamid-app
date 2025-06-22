@@ -97,28 +97,32 @@ export default {
               <div class="mt-6">
                 <v-icon icon="mdi-account" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">نام کامل : </span>
-                <strong>{{ customer.name ?? '---' }}</strong>
+                <strong class="font-weight-500">{{ customer.name ?? '---' }}</strong>
               </div>
               <div class="mt-6">
                 <v-icon icon="mdi-instagram" color="deep-orange-darken-2" class="font-27 me-2"/>
                 <span class="text-grey-darken-2">اینستاگرام : </span>
-                <strong>{{ customer.instagram_id ?? '---' }}</strong>
+                <strong class="font-weight-500">{{ customer.instagram_id ?? '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-briefcase" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">شغل : </span>
-                <strong>{{ customer.job ?? '---' }}</strong>
+                <v-icon icon="mdi-city" color="deep-orange-darken-2" class="font-27 me-2"/>
+                <span class="text-grey-darken-2">استان : </span>
+                <strong class="font-weight-500">{{ customer.province ? customer.province.name : '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-note-check" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">هدف از دریافت نمایندگی : </span>
-                <strong>{{ customer.register_reason ?? '---' }}</strong>
+                <v-icon icon="mdi-city" color="deep-orange-darken-2" class="font-27 me-2"/>
+                <span class="text-grey-darken-2">شهر : </span>
+                <strong class="font-weight-500">{{ customer.city ? customer.city.name : '---' }}</strong>
               </div>
               <div class="mt-6">
-                <v-icon icon="mdi-alert" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">موانع : </span>
-                <strong>{{ customer.obstacles ?? '---' }}</strong>
+                <v-icon icon="mdi-text" color="deep-orange-darken-2" class="font-27 me-2"/>
+                <span class="text-grey-darken-2">توضیحات : </span>
+                <p class="mt-2">{{ customer.description ?? '---' }}</p>
               </div>
+
+
+
+
               <div class="mt-7 text-center">
                 <v-btn prepend-icon="mdi-pen" @click="edit_dialog = true" variant="flat" color="blue-darken-3" rounded class="w-100 pb-8 pt-3" >ویرایش اطلاعات مشتری</v-btn>
                 <div class="mt-3">
