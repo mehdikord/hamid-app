@@ -136,7 +136,6 @@ export default {
           this.pagination_old.last_page = res.data.result.last_page;
           this.pagination_old.links = res.data.result.links;
         }
-        console.log(this.items)
         this.items_loading_old=false;
       }).catch((error) => {
         this.items_loading_old=false;
@@ -418,7 +417,77 @@ export default {
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
         <div v-else>
+          <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
+            <thead>
+            <tr class="bg-grey-darken-3">
+              <th>تاریخ تخصیص</th>
+              <th>
+                مشتری
+              </th>
+              <th>وضعیت</th>
+              <th>پروژه</th>
+              <th>آخرین گزارش</th>
+              <th class="text-center">عملیات</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in items_old" class="animate__animated animate__fadeIn" >
+              <td>
+                <chips_date :date="item.start_at"></chips_date>
+              </td>
+              <td class="pa-2">
+                <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
+                  <v-icon icon="mdi-account font-29" color="deep-orange-darken-3"></v-icon>
+                  <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
+                  <template v-if=" item.customer.name">
+                    <span class="ms-2 text-grey-darken-4 font-14">( {{item.customer.name}} )</span>
+                  </template>
+                </router-link>
+              </td>
+              <td class="pa-2">
+                <chips_customer_status :customer="item"></chips_customer_status>
+              </td>
+              <td class="pa-2">
+                <strong class="text-indigo-darken-1">{{ item.project.name }}</strong>
+              </td>
+              <td class="pa-2">
+                <template v-if="item.last_report">
+                  <chips_date :date="item.last_report.created_at"></chips_date> :
+                  {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
+                </template>
+              </td>
+              <td class="pa-2 text-center">
+                <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
+                <v-dialog
+                    v-model="add_report_dialog[item.id]"
+                    max-width="960"
+                    transition="dialog-top-transition"
+                >
+                  <v-card variant="flat" rounded>
+                    <v-card-item>
+                      <v-btn @click="add_report_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
+                      <h3>ثبت گزارش جدید برای مشتری</h3>
+                    </v-card-item>
+                    <v-divider/>
+                    <v-card-item>
+                      <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
+                    </v-card-item>
+                  </v-card>
+                </v-dialog>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+          <div v-if="!this.$vuetify.display.mdAndUp" >
+            <div v-for="item in items_old" class="animate__animated animate__fadeIn mb-6">
+              <consultant_item @Set_Report = "(item) => Create_Report(item)" :customer="item"></consultant_item>
+            </div>
+          </div>
 
+          <v-divider class="mt-3"/>
+          <div class="mt-8">
+            <actions_data_pagination @PerPageChange="(page) => Change_Per_Page_Old(page)" @ChangePage="(page) => Change_Page_Old(page)" :data="pagination"></actions_data_pagination>
+          </div>
         </div>
       </div>
     </div>
