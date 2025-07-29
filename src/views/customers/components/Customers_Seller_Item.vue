@@ -64,6 +64,10 @@ export default {
           </template>
         </div>
         <div class="mt-2">
+          <span class="text-grey-darken-4 font-13">ثبت : </span>
+          <strong class="font-13 ms-2 font-weight-600 text-grey-darken-3">{{ this.$filters.date_jalali( customer.cretad_at,'jYYYY/jM/jD') }}</strong>
+        </div>
+        <div class="mt-2">
           <span class="text-grey-darken-4 font-13">آخرین گزارش : </span>
           <template v-if="customer.last_report">
             <strong class="font-13 text-blue-darken-3">{{ this.$filters.date_jalali(customer.last_report.created_at,'jYYYY/jM/jD') }}</strong> :

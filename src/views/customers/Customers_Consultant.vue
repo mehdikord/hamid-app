@@ -321,6 +321,7 @@ export default {
           <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
+              <th>تاریخ ثبت</th>
               <th>تاریخ تخصیص</th>
               <th>
                 مشتری
@@ -333,6 +334,9 @@ export default {
             </thead>
             <tbody>
             <tr v-for="item in items" class="animate__animated animate__fadeIn" >
+              <td>
+                <chips_date :date="item.created_at"></chips_date>
+              </td>
               <td>
                 <chips_date :date="item.start_at"></chips_date>
               </td>
