@@ -28,7 +28,7 @@ export default {
       <router-link :to="{name : 'customers_seller'}">
         <v-row class="box">
           <v-col cols="5" lg="4">
-            <img src="@/assets/images/icons/counseling.svg" class="image" alt="">
+            <img src="@/assets/images/icons/sale-team.svg" class="image" alt="">
           </v-col>
           <v-col cols="7" lg="8">
             <div class="mt-3">
@@ -53,11 +53,13 @@ export default {
 }
 .image{
   width: 230px;
+  height: 130px;
 }
 @media screen and (max-width: 600px) {
 
   .image{
     width: 160px;
+    height: 90px;
   }
 }
 
