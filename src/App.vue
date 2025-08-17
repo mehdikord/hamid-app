@@ -48,6 +48,7 @@
         <div class="v-container">
 
           <router-view />
+          <install_prompt></install_prompt>
 
         </div>
       </v-main>
@@ -59,6 +60,7 @@
 
 import { Stores_Auth } from "@/stores/auth/auth.js";
 import Template_Menu from "@/components/template/Template_Menu.vue";
+import InstallPrompt from "@/InstallPrompt.vue";
 
 export default {
   name: "App",
@@ -86,7 +88,8 @@ export default {
 
   },
   components: {
-    'template_menu': Template_Menu
+    'template_menu': Template_Menu,
+    'install_prompt' : InstallPrompt
   },
 };
 </script>
