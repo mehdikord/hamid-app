@@ -9,13 +9,16 @@ export default {
     format:{
       type:String,
       default:"jYYYY/jM/jD"
+    },
+    color : {
+      default:'indigo'
     }
   }
 }
 </script>
 
 <template>
-  <v-chip density="comfortable" variant="outlined" color="indigo" class="font-11" v-if="date">
+  <v-chip density="comfortable" variant="tonal" :color="color" class="font-11 font-weight-600" v-if="date">
     {{ this.$filters.date_jalali(date,format) }}
   </v-chip>
 

@@ -321,8 +321,8 @@ export default {
           <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
-              <th>تاریخ ثبت</th>
-              <th>تاریخ تخصیص</th>
+              <th>تاریخ ها</th>
+              <th>ورود و تگها</th>
               <th>
                 مشتری
               </th>
@@ -335,10 +335,15 @@ export default {
             <tbody>
             <tr v-for="item in items" class="animate__animated animate__fadeIn" >
               <td>
-                <chips_date :date="item.created_at"></chips_date>
+                <div class="mt-3">
+                <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
+                </div>
+                <div class="mt-2 mb-3">
+                    <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
+                </div>
               </td>
               <td>
-                <chips_date :date="item.start_at"></chips_date>
+
               </td>
               <td class="pa-2">
                 <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">

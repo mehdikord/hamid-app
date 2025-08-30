@@ -1,6 +1,7 @@
 <script>
 
 import {Stores_Customer} from "@/stores/customers/customers.js";
+import { Stores_Publics } from "@/stores/Public/public";
 
 export default {
   name: "Action_Customer_Edit",
@@ -11,9 +12,11 @@ export default {
     }
   },
   mounted() {
+
     if (this.customer){
       this.Get_Projects();
     }
+    this.Get_Provinces();
   },
   data(){
     return {
@@ -23,6 +26,8 @@ export default {
       fields : [],
       final_fields:[],
       errors : [],
+      cities : [],
+      provinces:[],
       loading : false,
     }
   },
@@ -76,7 +81,21 @@ export default {
 
         }
       })
+    },
+    Get_Provinces(){
+      Stores_Publics().Provinces().then(res=>{
+        this.provinces = res.data.result;
+      })
+     this.Get_Cities();
+
+    },
+    Get_Cities(){
+      if (this.item.province_id){
+        this.cities = [];
+        this.cities = this.provinces.find(province => province.id === this.item.province_id).cities;
+  
     }
+  }
   }
 }
 </script>
@@ -89,6 +108,40 @@ export default {
           <v-text-field :error="Validation_Check(errors,'name')" v-model="item.name" append-inner-icon="mdi-account" rounded variant="outlined" type="text" label="نام کامل" />
           <validation_errors :errors="Validation_Errors(errors,'name')"></validation_errors>
         </v-col>
+        <v-col md="6" cols="12" class="pb-0">
+          
+          <v-select
+          v-if="provinces.length"
+                  :items="provinces"
+                  v-model="item.province_id"
+                
+                  item-title="name"
+                  item-value="id"
+                  rounded
+                  append-inner-icon="mdi-city"
+                  label="انتخاب استان"
+                  variant= "outlined"
+                @update:model-value="Get_Cities"
+              >
+          </v-select>
+          <validation_errors :errors="Validation_Errors(errors,'province_id')"></validation_errors>
+        </v-col>
+        <v-col md="6" cols="12" class="pb-0">
+            <v-select
+              :items="cities"
+              v-model="item.city_id"
+              item-title="name"
+              item-value="id"
+              rounded
+              append-inner-icon="mdi-city"
+              label="انتخاب شهر"
+              variant= "outlined"
+          >
+          </v-select>
+          <validation_errors :errors="Validation_Errors(errors,'city_id')"></validation_errors>
+        </v-col>
+
+
         <v-col md="6" cols="12" class="pb-0">
           <v-text-field :error="Validation_Check(errors,'instagram_id')" v-model="item.instagram_id" append-inner-icon="mdi-instagram" rounded variant="outlined" type="text" label="اینستاگرام" />
           <validation_errors :errors="Validation_Errors(errors,'instagram_id')"></validation_errors>

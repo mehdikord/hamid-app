@@ -120,9 +120,6 @@ export default {
                 <p class="mt-2">{{ customer.description ?? '---' }}</p>
               </div>
 
-
-
-
               <div class="mt-7 text-center">
                 <v-btn prepend-icon="mdi-pen" @click="edit_dialog = true" variant="flat" color="blue-darken-3" rounded class="w-100 pb-8 pt-3" >ویرایش اطلاعات مشتری</v-btn>
                 <div class="mt-3">
