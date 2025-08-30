@@ -1,7 +1,7 @@
 <script>
 
 import {Stores_Customer} from "@/stores/customers/customers.js";
-import { Stores_Publics } from "@/stores/Public/public";
+import {Stores_Locations} from "@/stores/Public/locations.js";
 
 export default {
   name: "Action_Customer_Edit",
@@ -83,7 +83,7 @@ export default {
       })
     },
     Get_Provinces(){
-      Stores_Publics().Provinces().then(res=>{
+      Stores_Locations().Provinces().then(res=>{
         this.provinces = res.data.result;
       })
      this.Get_Cities();
