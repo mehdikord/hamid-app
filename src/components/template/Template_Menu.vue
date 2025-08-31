@@ -68,7 +68,7 @@ export default {
   </v-list-item>
   <v-spacer class="mt-2 mb-2" />
   <v-list-item
-
+      :to="{name : 'reports'}"
       active-color="deep-orange-darken-2"
   >
     <template v-slot:prepend>
