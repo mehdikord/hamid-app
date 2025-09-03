@@ -10,3 +10,50 @@
 .color-orange-text{
     color: #ff5616 !important;
 }
+
+/* Text Colors - Black variations */
+.text-black-darken-1 {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.text-black-darken-2 {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+.text-black-darken-3 {
+    color: rgba(0, 0, 0, 0.6) !important;
+}
+.text-black-darken-4 {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Text Colors - Grey variations */
+.text-grey-darken-1 {
+    color: rgba(0, 0, 0, 0.6) !important;
+}
+.text-grey-darken-2 {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+.text-grey-darken-3 {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+.text-grey-darken-4 {
+    color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Background Colors - Grey variations */
+.bg-grey-lighten-1 {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+.bg-grey-lighten-2 {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+}
+.bg-grey-lighten-3 {
+    background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Border Colors */
+.border-grey-light {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+.border-grey-medium {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+}

@@ -235,10 +235,10 @@ export default {
       <div class="d-flex align-center justify-space-between">
         <!-- Activity Details (Right side for RTL) -->
         <div class="flex-grow-1 text-right">
-          <h4 class="text-black-darken-1 font-15 font-weight-bold mb-2">
+          <h4 class="text-black-darken-1 font-weight-bold mb-2 font-15">
             {{ activity.title }}
           </h4>
-          <p class="text-black-darken-2 font-13 mb-0">
+          <p class="text-black-darken-2 mb-0 font-13">
             {{ activity.description }}
           </p>
         </div>
@@ -261,7 +261,7 @@ export default {
           
           <!-- Time Badge -->
           <div class="time-badge pa-2 rounded-lg mr-3">
-            <span class="text-black-darken-1 font-14 font-weight-bold">
+            <span class="text-black-darken-1 font-weight-bold font-14">
               {{ activity.time }}
             </span>
           </div>
@@ -319,8 +319,6 @@ export default {
           </v-menu>
         </div>
       </div>
-
-
     </v-card>
 
     <!-- Mobile Version -->
@@ -337,17 +335,17 @@ export default {
       <div class="d-flex align-center justify-space-between">
         <!-- Content -->
         <div class="flex-grow-1 text-right">
-          <h4 class="text-black-darken-1 font-15 font-weight-bold mb-1">
+          <h4 class="text-black-darken-1 font-weight-bold mb-1 font-15">
             {{ activity.title }}
           </h4>
-          <p class="text-black-darken-2 font-13 mb-0 line-clamp-2">
+          <p class="text-black-darken-2 mb-0 font-13 line-clamp-2">
             {{ activity.description }}
           </p>
         </div>
         
         <!-- Time Only -->
         <div class="time-mobile ml-3">
-          <span class="text-grey-darken-1 font-13 font-weight-medium">
+          <span class="text-grey-darken-1 font-weight-medium font-13">
             {{ activity.time }}
           </span>
         </div>
@@ -359,50 +357,50 @@ export default {
       v-if="isSelected && isMobile" 
       class="mobile-actions-row"
     >
-              <div class="actions-container">
-          <!-- Complete Button -->
-          <div class="action-section">
-            <v-btn
-              color="success"
-              size="small"
-              variant="elevated"
-              class="action-btn-circle complete-btn"
-              @click="completeTaskMobile"
-              :loading="completing"
-              icon
-            >
-              <v-icon icon="mdi-check" size="18"></v-icon>
-            </v-btn>
-          </div>
-          
-          <!-- Edit Button -->
-          <div class="action-section">
-            <v-btn
-              color="primary"
-              size="small"
-              variant="outlined"
-              class="action-btn-circle edit-btn"
-              @click="editTaskMobile"
-              icon
-            >
-              <v-icon icon="mdi-pencil" size="18"></v-icon>
-            </v-btn>
-          </div>
-          
-          <!-- Delete Button -->
-          <div class="action-section">
-            <v-btn
-              color="error"
-              size="small"
-              variant="outlined"
-              class="action-btn-circle delete-btn"
-              @click="deleteTaskMobile"
-              icon
-            >
-              <v-icon icon="mdi-delete" size="18"></v-icon>
-            </v-btn>
-          </div>
+      <div class="actions-container">
+        <!-- Complete Button -->
+        <div class="action-section">
+          <v-btn
+            color="success"
+            size="small"
+            variant="elevated"
+            class="action-btn-circle complete-btn"
+            @click="completeTaskMobile"
+            :loading="completing"
+            icon
+          >
+            <v-icon icon="mdi-check" size="18"></v-icon>
+          </v-btn>
         </div>
+        
+        <!-- Edit Button -->
+        <div class="action-section">
+          <v-btn
+            color="primary"
+            size="small"
+            variant="outlined"
+            class="action-btn-circle edit-btn"
+            @click="editTaskMobile"
+            icon
+          >
+            <v-icon icon="mdi-pencil" size="18"></v-icon>
+          </v-btn>
+        </div>
+        
+        <!-- Delete Button -->
+        <div class="action-section">
+          <v-btn
+            color="error"
+            size="small"
+            variant="outlined"
+            class="action-btn-circle delete-btn"
+            @click="deleteTaskMobile"
+            icon
+          >
+            <v-icon icon="mdi-delete" size="18"></v-icon>
+          </v-btn>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -434,21 +432,6 @@ export default {
   border: 2px solid #1976d2 !important;
   box-shadow: 0 4px 16px rgba(25, 118, 210, 0.2) !important;
   transform: translateY(-2px);
-}
-
-.due-time {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-}
-
-.content-section {
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  padding-top: 16px;
-}
-
-.line-height-1-5 {
-  line-height: 1.5;
 }
 
 .complete-btn {
@@ -486,7 +469,7 @@ export default {
   border-top: none;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  margin-top: -1px; /* Connect with card border */
+  margin-top: -1px;
   overflow: hidden;
 }
 
@@ -532,68 +515,4 @@ export default {
 }
 
 
-
-.action-btn {
-  border-radius: 12px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: none !important;
-}
-
-.action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-}
-
-.action-btn.complete-btn:hover {
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3) !important;
-}
-
-.action-btn.edit-btn:hover {
-  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3) !important;
-}
-
-.action-btn.delete-btn:hover {
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3) !important;
-}
-
-
-.font-13 {
-  font-size: 13px;
-}
-.font-14 {
-  font-size: 14px;
-}
-.font-15 {
-  font-size: 15px;
-}
-.font-16 {
-  font-size: 16px;
-}
-.text-black-darken-2 {
-  color: rgba(0, 0, 0, 0.7) !important;
-}
-
-/* Priority and Status Chip Styles */
-.v-chip {
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-/* Hover Effects */
-.activity-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
-}
-
-/* Content Section Improvements */
-.content-section h4 {
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.content-section p {
-  color: rgba(0, 0, 0, 0.7);
-  line-height: 1.5;
-}
 </style>

@@ -106,11 +106,4 @@ export default {
 .activities-container .activity-card:last-child {
   margin-bottom: 0 !important;
 }
-
-.font-14 {
-  font-size: 14px;
-}
-.font-15 {
-  font-size: 15px;
-}
 </style>
