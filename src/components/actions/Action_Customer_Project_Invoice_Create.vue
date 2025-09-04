@@ -96,7 +96,20 @@ export default {
 </script>
 
 <template>
-  <div class="mt-2">
+  <div class="mt-0">
+    <!-- Enhanced Header -->
+    <div class="d-flex align-center mb-6">
+      <v-icon 
+        icon="mdi-currency-usd" 
+        color="orange-darken-2" 
+        size="28"
+        class="me-3"
+      ></v-icon>
+      <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+        ثبت فاکتور جدید
+      </h3>
+    </div>
+
     <div class="mb-3">
       <v-select
           class="mt-3"
@@ -108,6 +121,7 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب پروژه "
+          rounded
       >
 
       </v-select>
@@ -158,17 +172,113 @@ export default {
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
-      <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
+      <date-picker  
+        :error="Validation_Check(errors,'date')" 
+        compact-time 
+        auto-submit 
+        color="#5c6bc0"  
+        type="datetime" 
+        label="انتخاب تاریخ و زمان" 
+        v-model="date" 
+        format="YYYY-MM-DD HH:mm" 
+        display-format="jYYYY-jMM-jDD HH:mm"
+        class="enhanced-date-picker"
+      />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
 
-    <div class="mt-6 mb-2 text-end">
-      <v-btn :loading="loading" color="success" append-icon="mdi-check" text="ثبت گزارش" flat  rounded @click="Create_Invoice"></v-btn>
+    <!-- Footer Actions with Both Buttons -->
+    <div class="mt-8 mb-4">
+      <v-row no-gutters class="button-row">
+        <v-col cols="12" md="6" class="pr-md-2 mb-3 mb-md-0">
+          <v-btn 
+            :loading="loading" 
+            color="orange-darken-2" 
+            prepend-icon="mdi-check" 
+            variant="flat"  
+            rounded 
+            block
+            size="large"
+            @click="Create_Invoice"
+            class="action-button"
+          >
+            ثبت فاکتور
+          </v-btn>
+        </v-col>
+        <v-col cols="12" md="6" class="pl-md-2">
+          <v-btn
+            @click="$emit('Cancel')"
+            variant="outlined"
+            color="grey-darken-1"
+            block
+            size="large"
+            prepend-icon="mdi-close"
+            rounded
+            class="action-button"
+          >
+            انصراف
+          </v-btn>
+        </v-col>
+      </v-row>
     </div>
 
   </div>
 </template>
 
 <style scoped>
+/* Title styling */
+.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
+}
 
+/* Ensure proper spacing */
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mb-6 {
+  margin-bottom: 24px !important;
+}
+
+/* Enhanced input styling */
+.v-select,
+.v-textarea,
+.v-file-input,
+.v-text-field {
+  border-radius: 12px !important;
+}
+
+/* Enhanced date picker styling */
+.enhanced-date-picker {
+  border-radius: 12px !important;
+}
+
+.enhanced-date-picker .v-field {
+  border-radius: 12px !important;
+}
+
+.enhanced-date-picker .v-field__outline {
+  border-radius: 12px !important;
+}
+
+/* Button spacing and mobile optimization */
+.button-row {
+  /* Removed gap to prevent conflicts with Vuetify grid */
+}
+
+.action-button {
+  min-height: 48px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Mobile-specific spacing */
+@media (max-width: 960px) {
+  .action-button {
+    min-height: 52px !important;
+    font-size: 16px !important;
+  }
+}
 </style>

@@ -12,8 +12,14 @@ export default {
     }
   },
   mounted() {
-
     if (this.customer){
+      // Extract province_id and city_id from relationship objects
+      if (this.customer.province) {
+        this.item.province_id = this.customer.province.id;
+      }
+      if (this.customer.city) {
+        this.item.city_id = this.customer.city.id;
+      }
       this.Get_Projects();
     }
     this.Get_Provinces();
@@ -85,17 +91,22 @@ export default {
     Get_Provinces(){
       Stores_Locations().Provinces().then(res=>{
         this.provinces = res.data.result;
+        // Load cities for the customer's current province
+        this.Get_Cities();
       })
-     this.Get_Cities();
-
     },
     Get_Cities(){
-      if (this.item.province_id){
+      if (this.item.province_id && this.provinces.length > 0){
+        const selectedProvince = this.provinces.find(province => province.id === this.item.province_id);
+        if (selectedProvince && selectedProvince.cities) {
+          this.cities = selectedProvince.cities;
+        } else {
+          this.cities = [];
+        }
+      } else {
         this.cities = [];
-        this.cities = this.provinces.find(province => province.id === this.item.province_id).cities;
-  
+      }
     }
-  }
   }
 }
 </script>
@@ -104,11 +115,11 @@ export default {
   <template v-if="customer">
     <div class="mt-3" @keyup.enter="Edit_Customer">
       <v-row>
-        <v-col md="6" cols="12" class="pb-0">
+        <v-col md="4" cols="12" class="pb-0">
           <v-text-field :error="Validation_Check(errors,'name')" v-model="item.name" append-inner-icon="mdi-account" rounded variant="outlined" type="text" label="نام کامل" />
           <validation_errors :errors="Validation_Errors(errors,'name')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12" class="pb-0">
+        <v-col md="4" cols="12" class="pb-0">
           
           <v-select
           v-if="provinces.length"
@@ -126,7 +137,7 @@ export default {
           </v-select>
           <validation_errors :errors="Validation_Errors(errors,'province_id')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12" class="pb-0">
+        <v-col md="4" cols="12" class="pb-0">
             <v-select
               :items="cities"
               v-model="item.city_id"
@@ -136,40 +147,41 @@ export default {
               append-inner-icon="mdi-city"
               label="انتخاب شهر"
               variant= "outlined"
+              no-data-text="لطفا استان را انتخاب کنید"
           >
           </v-select>
           <validation_errors :errors="Validation_Errors(errors,'city_id')"></validation_errors>
         </v-col>
 
 
-        <v-col md="6" cols="12" class="pb-0">
+        <v-col md="4" cols="12" class="pb-0">
           <v-text-field :error="Validation_Check(errors,'instagram_id')" v-model="item.instagram_id" append-inner-icon="mdi-instagram" rounded variant="outlined" type="text" label="اینستاگرام" />
           <validation_errors :errors="Validation_Errors(errors,'instagram_id')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12">
+        <v-col md="4" cols="12">
           <v-text-field :error="Validation_Check(errors,'email')" v-model="item.email" append-inner-icon="mdi-email" rounded variant="outlined" type="email" label="ایمیل" />
           <validation_errors :errors="Validation_Errors(errors,'email')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12">
+        <v-col md="4" cols="12">
           <v-text-field :error="Validation_Check(errors,'national_code')" v-model="item.national_code" append-inner-icon="mdi-card-account-details" rounded variant="outlined" type="number" label="کد ملی" />
           <validation_errors :errors="Validation_Errors(errors,'national_code')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12">
+        <v-col md="4" cols="12">
           <v-text-field :error="Validation_Check(errors,'tel')" v-model="item.tel" append-inner-icon="mdi-phone" rounded variant="outlined" type="number" label="تلفن ثابت" />
           <validation_errors :errors="Validation_Errors(errors,'tel')"></validation_errors>
         </v-col>
-        <v-col md="6" cols="12">
+        <v-col md="4" cols="12">
           <v-text-field :error="Validation_Check(errors,'postal_code')" v-model="item.postal_code" append-inner-icon="mdi-mailbox" rounded variant="outlined" type="number" label="کد پستی" />
           <validation_errors :errors="Validation_Errors(errors,'postal_code')"></validation_errors>
         </v-col>
 
         <v-col cols="12" >
-          <strong class="text-blue-darken-2">اطلاعات مشتری در پروژه </strong>
+          <div class="text-subtitle-1 font-weight-medium text-blue-darken-2">اطلاعات مشتری در پروژه</div>
           <div class="mt-2">
           </div>
         </v-col>
         <template v-if="fields.length">
-          <v-col v-for="field in fields" md="6" cols="12">
+          <v-col v-for="field in fields" md="4" cols="12">
             <v-text-field v-model="final_fields[field.id]"  rounded variant="outlined" type="text" :label="field.title" />
           </v-col>
         </template>

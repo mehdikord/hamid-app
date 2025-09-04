@@ -128,17 +128,29 @@ export default {
                       <v-btn @click="report_dialog = true" prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
                       <v-dialog
                           v-model="report_dialog"
-                          max-width="960"
-                          transition="dialog-top-transition"
+                          :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                          :fullscreen="$vuetify.display.smAndDown"
+                          transition="dialog-bottom-transition"
+                          
                       >
-                        <v-card variant="flat" rounded>
-                          <v-card-item>
-                            <v-btn @click="report_dialog = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                            <h3>ثبت گزارش جدید برای مشتری</h3>
+                        <v-card 
+                          variant="flat" 
+                          rounded
+                          :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                          elevation="8"
+                        >
+                          <!-- Header -->
+                          <v-card-item class="pa-4 pa-sm-6">
+                            <div></div>
                           </v-card-item>
-                          <v-divider/>
-                          <v-card-item>
-                            <actions_customer_project_report_create @Created="Create_Report" :customer="customer"></actions_customer_project_report_create>
+                          
+                          <!-- Content Area -->
+                          <v-card-item class="pa-4 pa-sm-6 pt-0">
+                            <actions_customer_project_report_create 
+                              @Created="Create_Report" 
+                              @Cancel="report_dialog = false"
+                              :customer="customer"
+                            ></actions_customer_project_report_create>
                           </v-card-item>
                         </v-card>
                       </v-dialog>
@@ -147,17 +159,28 @@ export default {
                       <v-btn @click="invoice_dialog = true" prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
                       <v-dialog
                           v-model="invoice_dialog"
-                          max-width="960"
-                          transition="dialog-top-transition"
+                          :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                          :fullscreen="$vuetify.display.smAndDown"
+                          transition="dialog-bottom-transition"
                       >
-                        <v-card variant="flat" rounded>
-                          <v-card-item>
-                            <v-btn @click="invoice_dialog = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                            <h3>ثبت فاکتور جدید برای مشتری</h3>
+                        <v-card 
+                          variant="flat" 
+                          rounded
+                          :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                          elevation="8"
+                        >
+                          <!-- Header -->
+                          <v-card-item class="pa-4 pa-sm-6">
+                            <div></div>
                           </v-card-item>
-                          <v-divider/>
-                          <v-card-item>
-                            <actions_customer_project_invoice_create  @Created="Create_Invoice" :customer="customer"></actions_customer_project_invoice_create>
+                          
+                          <!-- Content Area -->
+                          <v-card-item class="pa-4 pa-sm-6 pt-0">
+                            <actions_customer_project_invoice_create 
+                              @Created="Create_Invoice" 
+                              @Cancel="invoice_dialog = false"
+                              :customer="customer"
+                            ></actions_customer_project_invoice_create>
                           </v-card-item>
                         </v-card>
                       </v-dialog>
@@ -171,18 +194,52 @@ export default {
             </div>
             <v-dialog
                 v-model="edit_dialog"
-                max-width="1280"
-                transition="dialog-top-transition"
-
+                :max-width="$vuetify.display.mdAndUp ? '1280' : '95'"
+                :fullscreen="$vuetify.display.smAndDown"
+                transition="dialog-bottom-transition"
             >
-              <v-card variant="flat" rounded>
-                <v-card-item>
-                  <v-btn @click="edit_dialog = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                  <h3>ویرایش اطلاعات حقیقی مشتری</h3>
+              <v-card 
+                variant="flat" 
+                rounded
+                :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                elevation="8"
+              >
+                <!-- Enhanced Header -->
+                <v-card-item class="pa-4 pa-sm-6">
+                  <div class="d-flex align-center justify-space-between">
+                    <div class="d-flex align-center">
+                      <v-icon 
+                        icon="mdi-account-edit" 
+                        color="blue-darken-2" 
+                        size="28"
+                        class="me-3"
+                      ></v-icon>
+                      <div>
+                        <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                          ویرایش اطلاعات مشتری
+                        </h3>
+                      </div>
+                    </div>
+                    <v-btn 
+                      @click="edit_dialog = false" 
+                      variant="text" 
+                      icon="mdi-close" 
+                      size="small" 
+                      color="grey-darken-1"
+                      class="rounded-circle"
+                    ></v-btn>
+                  </div>
                 </v-card-item>
-                <v-divider/>
-                <v-card-item>
-                  <actions_customer_edit @Updated="(item) => Update_Customer(item)" :customer="customer"></actions_customer_edit>
+                
+                <v-divider class="mx-4 mx-sm-6"></v-divider>
+                
+                <!-- Content Area -->
+                <v-card-item class="pa-4 pa-sm-6 pt-0">
+                  <actions_customer_edit 
+                    @Updated="(item) => Update_Customer(item)" 
+                    @Cancel="edit_dialog = false"
+                    :customer="customer"
+                  ></actions_customer_edit>
                 </v-card-item>
               </v-card>
             </v-dialog>
@@ -235,5 +292,53 @@ export default {
 <style scoped>
 .avatar-image{
   bottom : 50px!important;
+}
+
+/* Enhanced Modal Styles for Mobile */
+
+/* Mobile-specific enhancements */
+@media (max-width: 960px) {
+  .v-dialog .v-card {
+    border-radius: 16px 16px 0 0 !important;
+  }
+  
+  .v-dialog .v-card-item {
+    padding: 16px !important;
+  }
+  
+  .v-dialog .v-card-actions {
+    padding: 16px !important;
+  }
+}
+
+/* Smooth transitions for mobile */
+.v-dialog .v-card {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Enhanced button hover effects */
+.v-btn.rounded-circle:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Better spacing for mobile headers */
+@media (max-width: 600px) {
+  .v-dialog .v-card-item h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+    font-family: inherit !important;
+  }
+  
+  .v-dialog .v-card-item p {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Ensure proper title styling */
+.v-dialog .v-card-item h3.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
 }
 </style>
