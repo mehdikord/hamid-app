@@ -1,8 +1,13 @@
 <template>
   <v-app>
     <v-locale-provider rtl>
-      <v-app-bar v-if="user_check" elevation="0" class="bg-grey-darken-4" app>
-        <v-app-bar-nav-icon variant="text" @click.stop="toggleMenu"></v-app-bar-nav-icon>
+      <v-app-bar v-if="user_check && !isMobile" elevation="0" class="bg-grey-darken-4" app>
+        <!-- Only show menu toggle on desktop -->
+        <v-app-bar-nav-icon 
+          v-if="!isMobile"
+          variant="text" 
+          @click.stop="toggleMenu"
+        ></v-app-bar-nav-icon>
         <v-toolbar-title>
 
         </v-toolbar-title>
@@ -29,22 +34,8 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-navigation-drawer
-          v-if="user_check && isMobile"
-          v-model="mini"
-          :mini-variant="!isMobile && mini"
-          mini-variant-width="65"
-          width="250"
-          app
-          :permanent="!isMobile"
-          :temporary="isMobile"
-          @click="isMobile && (mini = false)"
-      >
-        <v-list nav>
-          <template_menu :user="user"></template_menu>
-        </v-list>
-      </v-navigation-drawer>
-      <v-main>
+      <!-- Mobile navigation drawer removed - using bottom navigation instead -->
+      <v-main :class="{ 'mobile-main': isMobile }">
         <div class="v-container">
 
           <router-view />
@@ -52,6 +43,9 @@
 
         </div>
       </v-main>
+      
+      <!-- Bottom Navigation for Mobile -->
+      <template_bottom_navigation></template_bottom_navigation>
     </v-locale-provider>
   </v-app>
 </template>
@@ -60,6 +54,7 @@
 
 import { Stores_Auth } from "@/stores/auth/auth.js";
 import Template_Menu from "@/components/template/Template_Menu.vue";
+import Template_Bottom_Navigation from "@/components/template/Template_Bottom_Navigation.vue";
 import InstallPrompt from "@/InstallPrompt.vue";
 
 export default {
@@ -89,11 +84,14 @@ export default {
   },
   components: {
     'template_menu': Template_Menu,
+    'template_bottom_navigation': Template_Bottom_Navigation,
     'install_prompt' : InstallPrompt
   },
 };
 </script>
 
 <style scoped>
-
+.mobile-main {
+  padding-bottom: 70px; /* Account for bottom navigation height */
+}
 </style>
