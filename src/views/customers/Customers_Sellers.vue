@@ -48,6 +48,7 @@ export default {
       project_id:null,
       items:[],
       show_filter:false,
+      selected_card_id: null,
 
     }
   },
@@ -100,7 +101,6 @@ export default {
           this.pagination.last_page = res.data.result.last_page;
           this.pagination.links = res.data.result.links;
         }
-        console.log(this.items)
         this.items_loading=false;
       }).catch((error) => {
         this.items_loading=false;
@@ -127,11 +127,34 @@ export default {
       this.query_params.search.phone = null;
       this.Get_Items();
     },
+    Clear_All_Filters(){
+      this.search_phone = null;
+      this.status_id = null;
+      this.level_id = null;
+      this.project_id = null;
+      this.query_params.search = {};
+      this.Get_Items();
+    },
+    Select_Card(card_id){
+      // If clicking the same card, deselect it
+      if (this.selected_card_id === card_id) {
+        this.selected_card_id = null;
+      } else {
+        // Immediately deselect any previously selected card
+        this.selected_card_id = null;
+        // Use a shorter timeout for faster response
+        setTimeout(() => {
+          this.selected_card_id = card_id;
+        }, 50);
+      }
+    },
     Create_Report(item){
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
-            customer = item;
+            // Update only the necessary fields instead of replacing the entire object
+            customer.last_report = item.last_report || customer.last_report;
+            customer.reports_count = (customer.reports_count || 0) + 1;
           }
           return customer;
         })
@@ -142,9 +165,9 @@ export default {
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
-            customer.invoices_count+=1;
+            // Update only the necessary fields instead of replacing the entire object
+            customer.invoices_count = (customer.invoices_count || 0) + 1;
             this.add_invoice_dialog[customer.id] = false;
-
           }
           return customer;
         })
@@ -157,17 +180,53 @@ export default {
 </script>
 
 <template>
-  <v-card flat border rounded>
-    <v-card-item>
-      <div>
-        <v-icon icon="mdi mdi-account-group" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
-        <strong class="color-dark-text font-15">لیست شماره های در حال فروش</strong>
-      </div>
-      <div class="mt-4">
-        <strong v-if="this.$vuetify.display.mdAndUp" class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
-        <div v-if="!this.$vuetify.display.mdAndUp" class="text-center">
-          <v-btn class="mb-2" color="teal-darken-4" @click="show_filter = !show_filter" density="compact" variant="tonal" rounded>فیلتر و مرتب سازی</v-btn>
+  <!-- Enhanced Mobile-Friendly Header -->
+  <v-card flat border rounded class="mobile-header-card">
+    <v-card-item class="pa-4">
+      <!-- Header with Search -->
+      <div class="d-flex align-center justify-space-between mb-4">
+        <div class="d-flex align-center">
+          <v-icon icon="mdi-account-group" size="28" color="deep-orange-darken-2" class="me-3"></v-icon>
+          <div>
+            <h2 class="text-h6 font-weight-bold mb-0">لیست شماره های در حال فروش</h2>
+            <p class="text-caption text-medium-emphasis mb-0">{{ pagination.total }} مشتری</p>
+          </div>
         </div>
+        
+        <!-- Mobile Filter Button -->
+        <v-btn
+          v-if="!this.$vuetify.display.mdAndUp"
+          @click="show_filter = !show_filter"
+          :color="show_filter ? 'primary' : 'grey-lighten-1'"
+          variant="flat"
+          size="small"
+          rounded
+          class="filter-toggle-btn"
+        >
+          <v-icon :icon="show_filter ? 'mdi-close' : 'mdi-filter'" size="18"></v-icon>
+        </v-btn>
+      </div>
+
+      <!-- Quick Search Bar (Mobile Only) -->
+      <v-text-field
+        v-if="!this.$vuetify.display.mdAndUp"
+        clearable
+        @click:clear="Clear_phone"
+        v-model="search_phone"
+        density="compact"
+        color="primary"
+        label="جستجو با شماره موبایل یا نام"
+        variant="outlined"
+        rounded
+        prepend-inner-icon="mdi-magnify"
+        class="search-field"
+        hint="حداقل ۴ کاراکتر وارد کنید"
+        persistent-hint
+      />
+
+      <!-- Desktop Filters -->
+      <div v-if="this.$vuetify.display.mdAndUp" class="mt-4">
+        <strong class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
         <div class="mt-4 hidden-xs">
           <v-row>
             <v-col lg="3" md="3" cols="12">
@@ -209,65 +268,74 @@ export default {
             </v-col>
           </v-row>
         </div>
-        <div v-show="show_filter" class="mt-4">
+      </div>
+
+      <!-- Mobile Filter Panel -->
+      <v-expand-transition>
+        <div v-show="show_filter && !this.$vuetify.display.mdAndUp" class="mobile-filter-panel">
+          <v-divider class="mb-4"></v-divider>
+          <div class="d-flex align-center justify-space-between mb-3">
+            <h3 class="text-subtitle-1 font-weight-bold mb-0">فیلترها</h3>
+            <v-btn
+              @click="Clear_All_Filters"
+              color="grey"
+              variant="text"
+              size="small"
+              class="text-caption"
+            >
+              پاک کردن همه
+            </v-btn>
+          </div>
+          
           <v-row>
-            <v-col cols="12" class="pb-0">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="compact" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
-            </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" class="pb-2">
               <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="projects"
-                  v-model="project_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب پروژه"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
+                :items="projects"
+                v-model="project_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="primary"
+                label="پروژه"
+                variant="outlined"
+                density="compact"
+                clearable
+                @update:model-value="Do_Search"
+              />
             </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" class="py-2">
               <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="levels"
-                  v-model="level_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب مرحله"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
+                :items="levels"
+                v-model="level_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="primary"
+                label="مرحله"
+                variant="outlined"
+                density="compact"
+                clearable
+                @update:model-value="Do_Search"
+              />
             </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" class="pt-2">
               <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="statuses"
-                  v-model="status_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب وضعیت مشتری"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
+                :items="statuses"
+                v-model="status_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="primary"
+                label="وضعیت مشتری"
+                variant="outlined"
+                density="compact"
+                clearable
+                @update:model-value="Do_Search"
+              />
             </v-col>
           </v-row>
         </div>
-      </div>
+      </v-expand-transition>
     </v-card-item>
   </v-card>
 
@@ -297,7 +365,7 @@ export default {
               <th>وضعیت</th>
               <th>پروژه</th>
               <th>آخرین گزارش</th>
-              <th class="text-center">عملیات</th>
+              <th class="text-center" style="min-width: 120px;">عملیات</th>
             </tr>
             </thead>
             <tbody>
@@ -332,41 +400,102 @@ export default {
                   {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
                 </template>
               </td>
-              <td class="pa-2 text-center">
-                <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
+              <td class="pa-2 text-center" style="min-width: 120px;">
+                <div class="d-flex align-center justify-center gap-2">
+                  <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش" size="small"></v-btn>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    max-width="960"
-                    transition="dialog-top-transition"
+                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :fullscreen="$vuetify.display.smAndDown"
+                    transition="dialog-bottom-transition"
+                    persistent
                 >
-                  <v-card variant="flat" rounded>
-                    <v-card-item>
-                      <v-btn @click="add_report_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                      <h3>ثبت گزارش جدید برای مشتری</h3>
+                  <v-card 
+                    variant="flat" 
+                    rounded
+                    :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                    elevation="8"
+                  >
+                    <!-- Enhanced Header -->
+                    <v-card-item class="pa-4 pa-sm-6">
+                      <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center">
+                          <v-icon
+                            icon="mdi-text-box-edit"
+                            color="teal-darken-2"
+                            size="28"
+                            class="me-3"
+                          ></v-icon>
+                          <div>
+                            <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                              ثبت گزارش جدید
+                            </h3>
+                            <p class="text-grey-darken-1 mb-0 mt-1">
+                              گزارش جدید برای مشتری {{ item.customer.name || item.customer.phone }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </v-card-item>
-                    <v-divider/>
-                    <v-card-item>
-                      <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
+                    
+                    <v-divider class="mx-4 mx-sm-6"></v-divider>
+                    
+                    <!-- Content Area -->
+                    <v-card-item class="pa-4 pa-sm-6 pt-0">
+                      <actions_customer_project_report_create 
+                        @Created="(item) => Create_Report(item)" 
+                        :customer="item.customer"
+                        :onCancel="() => add_report_dialog[item.id] = false"
+                      ></actions_customer_project_report_create>
                     </v-card-item>
                   </v-card>
                 </v-dialog>
-                <v-btn @click="add_invoice_dialog[item.id] = true" density="comfortable" class="ms-2" color="blue-darken-2" variant="flat"  icon="mdi-currency-usd" title="ثبت فاکتور"></v-btn>
+                  <v-btn @click="add_invoice_dialog[item.id] = true" density="comfortable" color="blue-darken-2" variant="flat" icon="mdi-currency-usd" title="ثبت فاکتور" size="small"></v-btn>
+                </div>
                 <v-dialog
                     v-model="add_invoice_dialog[item.id]"
-                    max-width="960"
-                    transition="dialog-top-transition"
-
+                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :fullscreen="$vuetify.display.smAndDown"
+                    transition="dialog-bottom-transition"
+                    persistent
                 >
-                  <v-card variant="flat" rounded>
-                    <v-card-item>
-                      <v-btn @click="add_invoice_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                      <h3>ثبت فاکتور جدید برای مشتری</h3>
+                  <v-card 
+                    variant="flat" 
+                    rounded
+                    :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                    elevation="8"
+                  >
+                    <!-- Enhanced Header -->
+                    <v-card-item class="pa-4 pa-sm-6">
+                      <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center">
+                          <v-icon 
+                            icon="mdi-currency-usd" 
+                            color="orange-darken-2" 
+                            size="28"
+                            class="me-3"
+                          ></v-icon>
+                          <div>
+                            <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                              ثبت فاکتور جدید
+                            </h3>
+                            <p class="text-grey-darken-1 mb-0 mt-1">
+                              فاکتور جدید برای مشتری {{ item.customer.name || item.customer.phone }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </v-card-item>
-                    <v-divider/>
-                    <v-card-item>
-                      <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item"></actions_customer_invoice_create>
-
-
+                    
+                    <v-divider class="mx-4 mx-sm-6"></v-divider>
+                    
+                    <!-- Content Area -->
+                    <v-card-item class="pa-4 pa-sm-6 pt-0">
+                      <actions_customer_project_invoice_create 
+                        @Created="(item) => Create_Invoice(item)" 
+                        :customer="item.customer"
+                        :onCancel="() => add_invoice_dialog[item.id] = false"
+                      ></actions_customer_project_invoice_create>
                     </v-card-item>
                   </v-card>
                 </v-dialog>
@@ -377,7 +506,13 @@ export default {
           </v-table>
           <div v-if="!this.$vuetify.display.mdAndUp" >
             <div v-for="item in items" class="animate__animated animate__fadeIn mb-6">
-              <seller_item @Set_Report = "(get_item) => Create_Report(get_item)" :customer="item"></seller_item>
+              <seller_item 
+                @Set_Report = "(get_item) => Create_Report(get_item)" 
+                @Set_Invoice = "(get_item) => Create_Invoice(get_item)"
+                @select = "(card_id) => Select_Card(card_id)"
+                :customer="item"
+                :isSelected="selected_card_id === item.id"
+              ></seller_item>
             </div>
           </div>
           <v-divider class="mt-3"/>
@@ -394,5 +529,122 @@ export default {
 </template>
 
 <style scoped>
+
+/* Enhanced Mobile Header Styles */
+.mobile-header-card {
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Font consistency */
+.mobile-header-card,
+.mobile-header-card *,
+.mobile-header-card h2,
+.mobile-header-card p,
+.mobile-header-card .v-btn,
+.mobile-header-card .v-text-field,
+.mobile-header-card .v-select {
+  font-family: inherit !important;
+}
+
+.filter-toggle-btn {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-toggle-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.search-field {
+  transition: all 0.3s ease !important;
+}
+
+.search-field:focus-within {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.15) !important;
+}
+
+.mobile-filter-panel {
+  background: transparent !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  margin-top: 8px !important;
+  border: 1px solid rgba(var(--v-theme-outline), 0.2) !important;
+}
+
+/* Enhanced Modal Styles for Mobile */
+@media (max-width: 960px) {
+  .v-dialog .v-card {
+    border-radius: 16px 16px 0 0 !important;
+  }
+  
+  .v-dialog .v-card-item {
+    padding: 16px !important;
+  }
+  
+  .v-dialog .v-card-actions {
+    padding: 16px !important;
+  }
+}
+
+/* Smooth transitions for mobile */
+.v-dialog .v-card {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Enhanced button hover effects */
+.v-btn.rounded-circle:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Better spacing for mobile headers */
+@media (max-width: 600px) {
+  .v-dialog .v-card-item h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+    font-family: inherit !important;
+  }
+  
+  .v-dialog .v-card-item p {
+    font-size: 0.875rem !important;
+  }
+  
+  .mobile-header-card .v-card-item {
+    padding: 16px !important;
+  }
+  
+  .mobile-header-card h2 {
+    font-size: 1.1rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* Ensure proper title styling */
+.v-dialog .v-card-item h3.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
+  font-size: 1.5rem !important;
+  line-height: 1.2 !important;
+}
+
+/* Mobile filter panel animations */
+.mobile-filter-panel .v-select {
+  transition: all 0.3s ease !important;
+}
+
+.mobile-filter-panel .v-select:focus-within {
+  transform: translateY(-1px) !important;
+}
+
+/* Active filter indicator */
+.filter-toggle-btn[color="primary"] {
+  box-shadow: 0 2px 8px rgba(var(--v-theme-primary), 0.3) !important;
+}
 
 </style>

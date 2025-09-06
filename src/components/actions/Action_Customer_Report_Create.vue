@@ -9,6 +9,10 @@ export default {
     customer : {
       type: Object,
       required: true
+    },
+    onCancel: {
+      type: Function,
+      required: false
     }
   },
   mounted() {
@@ -95,7 +99,8 @@ export default {
 </script>
 
 <template>
-  <div class="mt-3" >
+  <div class="mt-0">
+
     <div class="mb-3">
       <v-textarea
       variant="outlined"
@@ -104,6 +109,7 @@ export default {
       v-model="report"
       color="blue"
       :error="Validation_Check(errors,'report')"
+      rounded
       >
       </v-textarea>
       <validation_errors :errors="Validation_Errors(errors,'report')"></validation_errors>
@@ -119,6 +125,7 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب مرحله مذاکره"
+          rounded
       >
       </v-select>
     </div>
@@ -133,25 +140,120 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب وضعیت جدید"
+          rounded
       >
 
       </v-select>
     </div>
     <div class="mb-3">
-      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" ></v-file-input>
+      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded></v-file-input>
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
-      <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
+      <date-picker  
+        :error="Validation_Check(errors,'date')" 
+        compact-time 
+        auto-submit 
+        color="#5c6bc0"  
+        type="datetime" 
+        label="انتخاب تاریخ و زمان" 
+        v-model="date" 
+        format="YYYY-MM-DD HH:mm" 
+        display-format="jYYYY-jMM-jDD HH:mm"
+        class="enhanced-date-picker"
+      />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
-    <div class="mt-6 mb-2 text-end" @keyup.enter="Create_Report">
-      <v-btn :loading="loading" color="success" append-icon="mdi-check" text="ثبت گزارش" flat  rounded @click="Create_Report"></v-btn>
+
+    <!-- Footer Actions with Both Buttons -->
+    <div class="mt-8 mb-4">
+      <v-row no-gutters class="button-row">
+        <v-col cols="12" md="6" class="pr-md-2 mb-3 mb-md-0">
+          <v-btn 
+            :loading="loading" 
+            color="teal-darken-2" 
+            prepend-icon="mdi-check" 
+            variant="flat"  
+            rounded 
+            block
+            size="large"
+            @click="Create_Report"
+            class="action-button"
+          >
+            ثبت گزارش
+          </v-btn>
+        </v-col>
+        <v-col cols="12" md="6" class="pl-md-2">
+          <v-btn
+            @click="onCancel && onCancel()"
+            variant="outlined"
+            color="grey-darken-1"
+            block
+            size="large"
+            prepend-icon="mdi-close"
+            rounded
+            class="action-button"
+          >
+            انصراف
+          </v-btn>
+        </v-col>
+      </v-row>
     </div>
 
   </div>
 </template>
 
 <style scoped>
+/* Title styling */
+.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
+}
+
+/* Ensure proper spacing */
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mb-6 {
+  margin-bottom: 24px !important;
+}
+
+/* Enhanced input styling */
+.v-select,
+.v-textarea,
+.v-file-input {
+  border-radius: 12px !important;
+}
+
+/* Enhanced date picker styling */
+.enhanced-date-picker {
+  border-radius: 12px !important;
+}
+
+.enhanced-date-picker .v-field {
+  border-radius: 12px !important;
+}
+
+.enhanced-date-picker .v-field__outline {
+  border-radius: 12px !important;
+}
+
+/* Button spacing and mobile optimization */
+
+.action-button {
+  min-height: 48px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Mobile-specific spacing */
+@media (max-width: 960px) {
+  .action-button {
+    min-height: 52px !important;
+    font-size: 16px !important;
+  }
+}
 
 </style>

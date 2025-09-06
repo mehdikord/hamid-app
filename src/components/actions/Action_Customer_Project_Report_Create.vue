@@ -9,6 +9,10 @@ export default {
     customer : {
       type: Object,
       required: true
+    },
+    onCancel: {
+      type: Function,
+      required: false
     }
   },
   mounted() {
@@ -106,18 +110,6 @@ export default {
 
 <template>
   <div class="mt-0">
-    <!-- Enhanced Header -->
-    <div class="d-flex align-center mb-6">
-      <v-icon 
-        icon="mdi-text-box-edit" 
-        color="teal-darken-2" 
-        size="28"
-        class="me-3"
-      ></v-icon>
-      <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
-        ثبت گزارش جدید
-      </h3>
-    </div>
 
     <div class="mb-3">
       <v-select
@@ -221,7 +213,7 @@ export default {
         </v-col>
         <v-col cols="12" md="6" class="pl-md-2">
           <v-btn
-            @click="$emit('Cancel')"
+            @click="onCancel && onCancel()"
             variant="outlined"
             color="grey-darken-1"
             block
@@ -277,9 +269,6 @@ export default {
 }
 
 /* Button spacing and mobile optimization */
-.button-row {
-  /* Removed gap to prevent conflicts with Vuetify grid */
-}
 
 .action-button {
   min-height: 48px !important;
@@ -294,4 +283,5 @@ export default {
     font-size: 16px !important;
   }
 }
+
 </style>

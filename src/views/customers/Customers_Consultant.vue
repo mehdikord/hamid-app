@@ -370,17 +370,23 @@ export default {
                 <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    max-width="960"
-                    transition="dialog-top-transition"
+                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :fullscreen="$vuetify.display.smAndDown"
+                    transition="dialog-bottom-transition"
+                    persistent
                 >
-                  <v-card variant="flat" rounded>
-                    <v-card-item>
-                      <v-btn @click="add_report_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                      <h3>ثبت گزارش جدید برای مشتری</h3>
-                    </v-card-item>
-                    <v-divider/>
-                    <v-card-item>
-                      <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
+                  <v-card 
+                    variant="flat" 
+                    rounded
+                    :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                    elevation="8"
+                  >
+                    <v-card-item class="pa-4 pa-sm-6">
+                      <actions_customer_report_create 
+                        @Created="(item) => Create_Report(item)" 
+                        :customer="item"
+                        :onCancel="() => add_report_dialog[item.id] = false"
+                      ></actions_customer_report_create>
                     </v-card-item>
                   </v-card>
                 </v-dialog>
@@ -469,17 +475,23 @@ export default {
                 <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    max-width="960"
-                    transition="dialog-top-transition"
+                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :fullscreen="$vuetify.display.smAndDown"
+                    transition="dialog-bottom-transition"
+                    persistent
                 >
-                  <v-card variant="flat" rounded>
-                    <v-card-item>
-                      <v-btn @click="add_report_dialog[item.id] = false" variant="flat" class="float-end" icon="mdi-close" size="xx-small" color="red-darken-1"></v-btn>
-                      <h3>ثبت گزارش جدید برای مشتری</h3>
-                    </v-card-item>
-                    <v-divider/>
-                    <v-card-item>
-                      <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
+                  <v-card 
+                    variant="flat" 
+                    rounded
+                    :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                    elevation="8"
+                  >
+                    <v-card-item class="pa-4 pa-sm-6">
+                      <actions_customer_report_create 
+                        @Created="(item) => Create_Report(item)" 
+                        :customer="item"
+                        :onCancel="() => add_report_dialog[item.id] = false"
+                      ></actions_customer_report_create>
                     </v-card-item>
                   </v-card>
                 </v-dialog>

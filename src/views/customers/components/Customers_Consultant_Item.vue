@@ -80,17 +80,48 @@ export default {
           <v-btn @click="add_report_dialog = true" color="teal" size="30" variant="flat" icon="mdi-text-box-edit font-22" title="ثبت گزارش"></v-btn>
           <v-dialog
               v-model="add_report_dialog"
-              max-width="960"
-              transition="dialog-top-transition"
+              :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+              :fullscreen="$vuetify.display.smAndDown"
+              transition="dialog-bottom-transition"
+              persistent
           >
-            <v-card variant="flat" rounded>
-              <v-card-item>
-                <v-btn @click="add_report_dialog = false" variant="flat" density="compact" class="float-end" icon="mdi-close font-18" size="20" color="red-darken-1"></v-btn>
-                <h4>ثبت گزارش جدید برای مشتری</h4>
+            <v-card 
+              variant="flat" 
+              rounded
+              :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+              elevation="8"
+            >
+              <!-- Enhanced Header -->
+              <v-card-item class="pa-4 pa-sm-6">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-icon
+                      icon="mdi-text-box-edit"
+                      color="teal-darken-2"
+                      size="28"
+                      class="me-3"
+                    ></v-icon>
+                    <div>
+                      <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                        ثبت گزارش جدید
+                      </h3>
+                      <p class="text-grey-darken-1 mb-0 mt-1">
+                        گزارش جدید برای مشتری {{ customer.customer.name || customer.customer.phone }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </v-card-item>
-              <v-divider/>
-              <v-card-item>
-                <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="customer"></actions_customer_report_create>
+              
+              <v-divider class="mx-4 mx-sm-6"></v-divider>
+              
+              <!-- Content Area -->
+              <v-card-item class="pa-4 pa-sm-6 pt-0">
+                <actions_customer_report_create 
+                  @Created="(item) => Create_Report(item)" 
+                  :customer="customer"
+                  :onCancel="() => add_report_dialog = false"
+                ></actions_customer_report_create>
               </v-card-item>
             </v-card>
           </v-dialog>
@@ -104,5 +135,10 @@ export default {
 </template>
 
 <style scoped>
-
+/* Ensure proper title styling */
+.v-dialog .v-card-item h3.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
+}
 </style>

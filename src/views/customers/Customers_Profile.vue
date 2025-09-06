@@ -131,7 +131,7 @@ export default {
                           :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
                           :fullscreen="$vuetify.display.smAndDown"
                           transition="dialog-bottom-transition"
-                          
+                          persistent
                       >
                         <v-card 
                           variant="flat" 
@@ -139,17 +139,36 @@ export default {
                           :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                           elevation="8"
                         >
-                          <!-- Header -->
+                          <!-- Enhanced Header -->
                           <v-card-item class="pa-4 pa-sm-6">
-                            <div></div>
+                            <div class="d-flex align-center justify-space-between">
+                    <div class="d-flex align-center">
+                      <v-icon
+                        icon="mdi-text-box-edit"
+                        color="teal-darken-2"
+                        size="28"
+                        class="me-3"
+                      ></v-icon>
+                      <div>
+                        <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                          ثبت گزارش جدید
+                        </h3>
+                        <p class="text-grey-darken-1 mb-0 mt-1">
+                          گزارش جدید برای مشتری {{ customer.name || customer.phone }}
+                        </p>
+                      </div>
+                    </div>
+                            </div>
                           </v-card-item>
+                          
+                          <v-divider class="mx-4 mx-sm-6"></v-divider>
                           
                           <!-- Content Area -->
                           <v-card-item class="pa-4 pa-sm-6 pt-0">
                             <actions_customer_project_report_create 
                               @Created="Create_Report" 
-                              @Cancel="report_dialog = false"
                               :customer="customer"
+                              :onCancel="() => report_dialog = false"
                             ></actions_customer_project_report_create>
                           </v-card-item>
                         </v-card>
@@ -162,6 +181,7 @@ export default {
                           :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
                           :fullscreen="$vuetify.display.smAndDown"
                           transition="dialog-bottom-transition"
+                          persistent
                       >
                         <v-card 
                           variant="flat" 
@@ -169,17 +189,36 @@ export default {
                           :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                           elevation="8"
                         >
-                          <!-- Header -->
+                          <!-- Enhanced Header -->
                           <v-card-item class="pa-4 pa-sm-6">
-                            <div></div>
+                            <div class="d-flex align-center justify-space-between">
+                              <div class="d-flex align-center">
+                                <v-icon 
+                                  icon="mdi-currency-usd" 
+                                  color="orange-darken-2" 
+                                  size="28"
+                                  class="me-3"
+                                ></v-icon>
+                                <div>
+                                  <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                                    ثبت فاکتور جدید
+                                  </h3>
+                                  <p class="text-grey-darken-1 mb-0 mt-1">
+                                    فاکتور جدید برای مشتری {{ customer.name || customer.phone }}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
                           </v-card-item>
+                          
+                          <v-divider class="mx-4 mx-sm-6"></v-divider>
                           
                           <!-- Content Area -->
                           <v-card-item class="pa-4 pa-sm-6 pt-0">
                             <actions_customer_project_invoice_create 
                               @Created="Create_Invoice" 
-                              @Cancel="invoice_dialog = false"
                               :customer="customer"
+                              :onCancel="() => invoice_dialog = false"
                             ></actions_customer_project_invoice_create>
                           </v-card-item>
                         </v-card>

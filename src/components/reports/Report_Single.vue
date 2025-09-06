@@ -12,7 +12,7 @@ export default {
     <v-card-item class="text-black pa-3">
       <div class="mb-4">
         <chips_user :user="report.user"></chips_user>
-        <chips_date class="float-left" :date="report.created_at" format="jYYYY/jM/jD - H:m:s"></chips_date>
+        <chips_date class="float-left" :date="report.created_at" format="jYYYY/jM/jD - H:m"></chips_date>
       </div>
       <p class="text-justify font-14">
         {{ report.report }}
