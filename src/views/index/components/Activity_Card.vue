@@ -309,7 +309,7 @@ export default {
                 density="compact"
               >
                 <template v-slot:prepend>
-                  <v-icon icon="mdi-pencil" size="16" color="error"></v-icon>
+                  <v-icon icon="mdi-delete" size="16" color="error"></v-icon>
                 </template>
                 <v-list-item-title class="text-right text-error">
                   حذف تسک
@@ -352,12 +352,12 @@ export default {
       </div>
     </v-card>
 
-    <!-- Mobile Actions Row (Inline under card) -->
+    <!-- Mobile Actions Row (Smooth slide animation) -->
     <div 
-      v-if="isSelected && isMobile" 
+      v-if="isMobile && isSelected" 
       class="mobile-actions-row"
     >
-      <div class="actions-container">
+      <div class="actions-container actions-visible">
         <!-- Complete Button -->
         <div class="action-section">
           <v-btn
@@ -365,7 +365,7 @@ export default {
             size="small"
             variant="elevated"
             class="action-btn-circle complete-btn"
-            @click="completeTaskMobile"
+            @click.stop="completeTaskMobile"
             :loading="completing"
             icon
           >
@@ -380,7 +380,7 @@ export default {
             size="small"
             variant="outlined"
             class="action-btn-circle edit-btn"
-            @click="editTaskMobile"
+            @click.stop="editTaskMobile"
             icon
           >
             <v-icon icon="mdi-pencil" size="18"></v-icon>
@@ -394,7 +394,7 @@ export default {
             size="small"
             variant="outlined"
             class="action-btn-circle delete-btn"
-            @click="deleteTaskMobile"
+            @click.stop="deleteTaskMobile"
             icon
           >
             <v-icon icon="mdi-delete" size="18"></v-icon>
@@ -459,6 +459,7 @@ export default {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -471,6 +472,26 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   margin-top: -1px;
   overflow: hidden;
+}
+
+/* Smooth slide animation for actions */
+.actions-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.actions-container.actions-visible {
+  max-height: 100px;
+  opacity: 1;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.1s;
+}
+
+/* Simple button styling */
+.action-btn {
+  transition: all 0.1s ease;
+  min-height: 36px;
 }
 
 .actions-container {

@@ -59,12 +59,8 @@ export default {
 
 <template>
   <div>
-    <div class="text-center">
-      <strong class="text-black-darken-1 font-15">لیست فعالیت ها</strong>
-    </div>
-    
     <!-- Today Section -->
-    <div class="mt-6">
+    <div>
       <div class="text-right mb-3">
         <h3 class="text-black-darken-1 font-14 font-weight-medium">امروز</h3>
       </div>

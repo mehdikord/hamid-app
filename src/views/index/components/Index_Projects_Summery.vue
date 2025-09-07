@@ -28,24 +28,17 @@ export default {
 
 <template>
   <div>
-    <div class="text-center">
-      <strong class="text-red-darken-1">خلاصه وضعیت و فعالیت ها</strong>
-    </div>
-    <div class="mt-4">
-      <v-select
-          variant="outlined"
-          rounded
-          label="انتخاب پروژه"
-          :items="projects"
-          v-model="selected_project"
-          item-title="name"
-          item-value="id"
-          color="deep-orange-darken-2"
-
-      >
-
-      </v-select>
-    </div>
+    <v-select
+        variant="outlined"
+        rounded
+        label="انتخاب پروژه"
+        :items="projects"
+        v-model="selected_project"
+        item-title="name"
+        item-value="id"
+        color="deep-orange-darken-2"
+    >
+    </v-select>
   </div>
 
 </template>

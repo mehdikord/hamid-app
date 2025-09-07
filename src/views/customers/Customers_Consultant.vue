@@ -66,6 +66,7 @@ export default {
       items_old:[],
       show_old:false,
       show_filter:false,
+      selected_card_id: null,
     }
   },
   watch: {
@@ -174,6 +175,31 @@ export default {
       this.query_params.search.phone = null;
       this.Get_Items();
     },
+    Clear_All_Filters(){
+      this.search_phone = null;
+      this.status_id = null;
+      this.level_id = null;
+      this.project_id = null;
+      this.query_params.search = {};
+      this.query_params_old.search = {};
+      this.Get_Items();
+      if (this.show_old){
+        this.Get_Items_Old();
+      }
+    },
+    Select_Card(card_id){
+      // If clicking the same card, deselect it
+      if (this.selected_card_id === card_id) {
+        this.selected_card_id = null;
+      } else {
+        // Immediately deselect any previously selected card
+        this.selected_card_id = null;
+        // Use a shorter timeout for faster response
+        setTimeout(() => {
+          this.selected_card_id = card_id;
+        }, 50);
+      }
+    },
     Show_Old(){
       this.show_old = !this.show_old;
       if (this.show_old){
@@ -197,17 +223,53 @@ export default {
 </script>
 
 <template>
-  <v-card flat border rounded>
-    <v-card-item>
-      <div>
-        <v-icon icon="mdi mdi-face-agent" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
-        <strong class="color-dark-text font-15">لیست شماره های در حال مشاوره</strong>
-      </div>
-      <div class="mt-4">
-        <strong v-if="this.$vuetify.display.mdAndUp" class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
-        <div v-if="!this.$vuetify.display.mdAndUp" class="text-center">
-          <v-btn class="mb-2" color="teal-darken-4" @click="show_filter = !show_filter" density="compact" variant="tonal" rounded>فیلتر و مرتب سازی</v-btn>
+  <!-- Enhanced Mobile-Friendly Header -->
+  <v-card flat border rounded class="mobile-header-card">
+    <v-card-item class="pa-4">
+      <!-- Header with Search -->
+      <div class="d-flex align-center justify-space-between mb-4">
+        <div class="d-flex align-center">
+          <v-icon icon="mdi-face-agent" size="28" color="deep-orange-darken-2" class="me-3"></v-icon>
+          <div>
+            <h2 class="text-h6 font-weight-bold mb-0">لیست شماره های در حال مشاوره</h2>
+            <p class="text-caption text-medium-emphasis mb-0">{{ pagination.total }} مشتری</p>
+          </div>
         </div>
+        
+        <!-- Mobile Filter Button -->
+        <v-btn
+          v-if="!this.$vuetify.display.mdAndUp"
+          @click="show_filter = !show_filter"
+          :color="show_filter ? 'primary' : 'grey-lighten-1'"
+          variant="flat"
+          size="small"
+          rounded
+          class="filter-toggle-btn"
+        >
+          <v-icon :icon="show_filter ? 'mdi-close' : 'mdi-filter'" size="18"></v-icon>
+        </v-btn>
+      </div>
+
+      <!-- Quick Search Bar (Mobile Only) -->
+      <v-text-field
+        v-if="!this.$vuetify.display.mdAndUp"
+        clearable
+        @click:clear="Clear_phone"
+        v-model="search_phone"
+        density="compact"
+        color="primary"
+        label="جستجو با شماره موبایل یا نام"
+        variant="outlined"
+        rounded
+        prepend-inner-icon="mdi-magnify"
+        class="search-field"
+        hint="حداقل ۴ کاراکتر وارد کنید"
+        persistent-hint
+      />
+
+      <!-- Desktop Filters -->
+      <div v-if="this.$vuetify.display.mdAndUp" class="mt-4">
+        <strong class="font-13 text-indigo">فیلتر و مرتب سازی : </strong>
         <div class="mt-4 hidden-xs">
           <v-row>
             <v-col lg="3" md="3" cols="12">
@@ -249,48 +311,74 @@ export default {
             </v-col>
           </v-row>
         </div>
-        <div v-show="show_filter" class="mt-4">
+      </div>
+
+      <!-- Mobile Filter Panel -->
+      <v-expand-transition>
+        <div v-show="show_filter && !this.$vuetify.display.mdAndUp" class="mobile-filter-panel">
+          <v-divider class="mb-4"></v-divider>
+          <div class="d-flex align-center justify-space-between mb-3">
+            <h3 class="text-subtitle-1 font-weight-bold mb-0">فیلترها</h3>
+            <v-btn
+              @click="Clear_All_Filters"
+              color="grey"
+              variant="text"
+              size="small"
+              class="text-caption"
+            >
+              پاک کردن همه
+            </v-btn>
+          </div>
+          
           <v-row>
-            <v-col cols="12" class="pb-0">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="compact" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
+            <v-col cols="12" class="pb-2">
+              <v-text-field
+                clearable
+                @click:clear="Clear_phone"
+                v-model="search_phone"
+                density="compact"
+                color="primary"
+                label="جستجو با شماره موبایل یا نام"
+                variant="outlined"
+                rounded
+                prepend-inner-icon="mdi-magnify"
+                hint="حداقل ۴ کاراکتر وارد کنید"
+                persistent-hint
+              />
             </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" class="py-2">
               <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="projects"
-                  v-model="project_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب پروژه"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
+                :items="projects"
+                v-model="project_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="primary"
+                label="پروژه"
+                variant="outlined"
+                density="compact"
+                clearable
+                @update:model-value="Do_Search"
+              />
             </v-col>
-            <v-col cols="12" class="py-0">
+            <v-col cols="12" class="pt-2">
               <v-select
-                  class="animate__animated animate__zoomIn"
-                  :items="statuses"
-                  v-model="status_id"
-                  item-title="name"
-                  item-value="id"
-                  rounded
-                  color="deep-orange-darken-2"
-                  label="انتخاب وضعیت مشتری"
-                  variant="outlined"
-                  density="compact"
-                  clearable
-                  @update:model-value="Do_Search"
-              >
-              </v-select>
+                :items="statuses"
+                v-model="status_id"
+                item-title="name"
+                item-value="id"
+                rounded
+                color="primary"
+                label="وضعیت مشتری"
+                variant="outlined"
+                density="compact"
+                clearable
+                @update:model-value="Do_Search"
+              />
             </v-col>
           </v-row>
         </div>
-      </div>
+      </v-expand-transition>
 
     </v-card-item>
   </v-card>
@@ -396,7 +484,12 @@ export default {
           </v-table>
           <div v-if="!this.$vuetify.display.mdAndUp" >
             <div v-for="item in items" class="animate__animated animate__fadeIn mb-6">
-              <consultant_item @Set_Report = "(item) => Create_Report(item)" :customer="item"></consultant_item>
+              <consultant_item 
+                @Set_Report = "(item) => Create_Report(item)" 
+                @select = "(card_id) => Select_Card(card_id)"
+                :customer="item"
+                :isSelected="selected_card_id === item.id"
+              ></consultant_item>
             </div>
           </div>
 
@@ -501,7 +594,12 @@ export default {
           </v-table>
           <div v-if="!this.$vuetify.display.mdAndUp" >
             <div v-for="item in items_old" class="animate__animated animate__fadeIn mb-6">
-              <consultant_item @Set_Report = "(item) => Create_Report(item)" :customer="item"></consultant_item>
+              <consultant_item 
+                @Set_Report = "(item) => Create_Report(item)" 
+                @select = "(card_id) => Select_Card(card_id)"
+                :customer="item"
+                :isSelected="selected_card_id === item.id"
+              ></consultant_item>
             </div>
           </div>
 
@@ -518,5 +616,77 @@ export default {
 </template>
 
 <style scoped>
+
+/* Enhanced Mobile Header Styles */
+.mobile-header-card {
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Font consistency */
+.mobile-header-card,
+.mobile-header-card *,
+.mobile-header-card h2,
+.mobile-header-card p,
+.mobile-header-card .v-btn,
+.mobile-header-card .v-text-field,
+.mobile-header-card .v-select {
+  font-family: inherit !important;
+}
+
+.filter-toggle-btn {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-toggle-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.search-field {
+  transition: all 0.3s ease !important;
+}
+
+.search-field:focus-within {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.15) !important;
+}
+
+.mobile-filter-panel {
+  background: transparent !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  margin-top: 8px !important;
+  border: 1px solid rgba(var(--v-theme-outline), 0.2) !important;
+}
+
+/* Mobile filter panel animations */
+.mobile-filter-panel .v-select {
+  transition: all 0.3s ease !important;
+}
+
+.mobile-filter-panel .v-select:focus-within {
+  transform: translateY(-1px) !important;
+}
+
+/* Active filter indicator */
+.filter-toggle-btn[color="primary"] {
+  box-shadow: 0 2px 8px rgba(var(--v-theme-primary), 0.3) !important;
+}
+
+/* Better spacing for mobile headers */
+@media (max-width: 600px) {
+  .mobile-header-card .v-card-item {
+    padding: 16px !important;
+  }
+  
+  .mobile-header-card h2 {
+    font-size: 1.1rem !important;
+    line-height: 1.3 !important;
+  }
+}
 
 </style>

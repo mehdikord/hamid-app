@@ -72,76 +72,128 @@ export default {
   <template v-else>
     <v-row class="mt-1">
       <v-col xs="12" md="4" lg="4" xl="3" sm="12" cols="12">
-        <v-card flat border rounded class="animate__animated animate__backInDown">
+        <v-card flat border rounded class="animate__animated animate__backInDown profile-card">
           <v-img
-              class="align-end text-white"
-              height="165"
+              class="profile-header-bg"
+              height="150"
               :src="profileBg"
               cover
           >
           </v-img>
-          <div class="px-3 pt-4 pb-6">
-            <v-row>
-              <v-col cols="3">
-                <v-avatar class="avatar-image" :image="Profile" size="80"></v-avatar>
-              </v-col>
-              <v-col cols="9">
-                <strong class="font-16">{{  customer.phone}}</strong>
-                <div class="mt-1">{{ customer.name ?? '---' }}</div>
-              </v-col>
-            </v-row>
-            <div>
-              <div>
-                <strong class="text-primary">اطلاعات حقیقی مشتری : </strong>
+          
+          <!-- Overlapping Avatar -->
+          <div class="avatar-container">
+            <v-avatar class="profile-avatar" :image="Profile" size="100"></v-avatar>
+          </div>
+          
+          <div class="profile-content">
+            <!-- Profile Header -->
+            <div class="profile-header">
+              <div class="profile-info">
+                <h2 class="profile-name">{{ customer.name ?? 'نام نامشخص' }}</h2>
+                <p class="profile-phone">{{ customer.phone }}</p>
+                <p class="profile-description" v-if="customer.description">{{ customer.description }}</p>
               </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-account" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">نام کامل : </span>
-                <strong class="font-weight-500">{{ customer.name ?? '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-instagram" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">اینستاگرام : </span>
-                <strong class="font-weight-500">{{ customer.instagram_id ?? '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-city" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">استان : </span>
-                <strong class="font-weight-500">{{ customer.province ? customer.province.name : '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-city" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">شهر : </span>
-                <strong class="font-weight-500">{{ customer.city ? customer.city.name : '---' }}</strong>
-              </div>
-              <div class="mt-6">
-                <v-icon icon="mdi-text" color="deep-orange-darken-2" class="font-27 me-2"/>
-                <span class="text-grey-darken-2">توضیحات : </span>
-                <p class="mt-2">{{ customer.description ?? '---' }}</p>
-              </div>
+            </div>
 
-              <div class="mt-7 text-center">
-                <v-btn prepend-icon="mdi-pen" @click="edit_dialog = true" variant="flat" color="blue-darken-3" rounded class="w-100 pb-8 pt-3" >ویرایش اطلاعات مشتری</v-btn>
-                <div class="mt-3">
-                  <v-row>
-                    <v-col class="px-2">
-                      <v-btn @click="report_dialog = true" prepend-icon="mdi-text-box-edit" rounded class="w-100 pb-8 pt-3" variant="flat" color="teal" >ثبت گزارش</v-btn>
-                      <v-dialog
-                          v-model="report_dialog"
-                          :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
-                          :fullscreen="$vuetify.display.smAndDown"
-                          transition="dialog-bottom-transition"
-                          persistent
-                      >
-                        <v-card 
-                          variant="flat" 
-                          rounded
-                          :class="$vuetify.display.smAndDown ? 'h-100' : ''"
-                          elevation="8"
-                        >
-                          <!-- Enhanced Header -->
-                          <v-card-item class="pa-4 pa-sm-6">
-                            <div class="d-flex align-center justify-space-between">
+            <!-- Customer Information Section -->
+            <div class="info-section">
+              <!-- <h3 class="section-title">اطلاعات حقیقی مشتری</h3> -->
+              
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-icon">
+                    <v-icon icon="mdi-account" color="primary"></v-icon>
+                  </div>
+                  <div class="info-content">
+                    <span class="info-label">نام کامل</span>
+                    <span class="info-value">{{ customer.name ?? '---' }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item" v-if="customer.instagram_id">
+                  <div class="info-icon">
+                    <v-icon icon="mdi-instagram" color="primary"></v-icon>
+                  </div>
+                  <div class="info-content">
+                    <span class="info-label">اینستاگرام</span>
+                    <span class="info-value">{{ customer.instagram_id }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item" v-if="customer.province">
+                  <div class="info-icon">
+                    <v-icon icon="mdi-map-marker" color="primary"></v-icon>
+                  </div>
+                  <div class="info-content">
+                    <span class="info-label">استان</span>
+                    <span class="info-value">{{ customer.province.name }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item" v-if="customer.city">
+                  <div class="info-icon">
+                    <v-icon icon="mdi-city" color="primary"></v-icon>
+                  </div>
+                  <div class="info-content">
+                    <span class="info-label">شهر</span>
+                    <span class="info-value">{{ customer.city.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <v-btn 
+                @click="edit_dialog = true" 
+                variant="flat" 
+                color="primary" 
+                class="action-btn primary-btn"
+                prepend-icon="mdi-pen"
+              >
+                ویرایش اطلاعات مشتری
+              </v-btn>
+              
+              <div class="secondary-buttons">
+                <v-btn 
+                  @click="report_dialog = true" 
+                  variant="flat" 
+                  color="teal" 
+                  class="action-btn secondary-btn"
+                  prepend-icon="mdi-text-box-edit"
+                >
+                  ثبت گزارش
+                </v-btn>
+                <v-btn 
+                  @click="invoice_dialog = true" 
+                  variant="flat" 
+                  color="orange" 
+                  class="action-btn secondary-btn"
+                  prepend-icon="mdi-currency-usd"
+                >
+                  ثبت فاکتور
+                </v-btn>
+              </div>
+            </div>
+
+            <!-- Report Dialog -->
+            <v-dialog
+                v-model="report_dialog"
+                :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                :fullscreen="$vuetify.display.smAndDown"
+                transition="dialog-bottom-transition"
+                persistent
+            >
+              <v-card 
+                variant="flat" 
+                rounded
+                :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                elevation="8"
+              >
+                <!-- Enhanced Header -->
+                <v-card-item class="pa-4 pa-sm-6">
+                  <div class="d-flex align-center justify-space-between">
                     <div class="d-flex align-center">
                       <v-icon
                         icon="mdi-text-box-edit"
@@ -158,79 +210,71 @@ export default {
                         </p>
                       </div>
                     </div>
-                            </div>
-                          </v-card-item>
-                          
-                          <v-divider class="mx-4 mx-sm-6"></v-divider>
-                          
-                          <!-- Content Area -->
-                          <v-card-item class="pa-4 pa-sm-6 pt-0">
-                            <actions_customer_project_report_create 
-                              @Created="Create_Report" 
-                              :customer="customer"
-                              :onCancel="() => report_dialog = false"
-                            ></actions_customer_project_report_create>
-                          </v-card-item>
-                        </v-card>
-                      </v-dialog>
-                    </v-col>
-                    <v-col class="px-2">
-                      <v-btn @click="invoice_dialog = true" prepend-icon="mdi-currency-usd" rounded class="w-100 pb-8 pt-3" variant="flat" color="orange-darken-4" >ثبت فاکتور</v-btn>
-                      <v-dialog
-                          v-model="invoice_dialog"
-                          :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
-                          :fullscreen="$vuetify.display.smAndDown"
-                          transition="dialog-bottom-transition"
-                          persistent
-                      >
-                        <v-card 
-                          variant="flat" 
-                          rounded
-                          :class="$vuetify.display.smAndDown ? 'h-100' : ''"
-                          elevation="8"
-                        >
-                          <!-- Enhanced Header -->
-                          <v-card-item class="pa-4 pa-sm-6">
-                            <div class="d-flex align-center justify-space-between">
-                              <div class="d-flex align-center">
-                                <v-icon 
-                                  icon="mdi-currency-usd" 
-                                  color="orange-darken-2" 
-                                  size="28"
-                                  class="me-3"
-                                ></v-icon>
-                                <div>
-                                  <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
-                                    ثبت فاکتور جدید
-                                  </h3>
-                                  <p class="text-grey-darken-1 mb-0 mt-1">
-                                    فاکتور جدید برای مشتری {{ customer.name || customer.phone }}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </v-card-item>
-                          
-                          <v-divider class="mx-4 mx-sm-6"></v-divider>
-                          
-                          <!-- Content Area -->
-                          <v-card-item class="pa-4 pa-sm-6 pt-0">
-                            <actions_customer_project_invoice_create 
-                              @Created="Create_Invoice" 
-                              :customer="customer"
-                              :onCancel="() => invoice_dialog = false"
-                            ></actions_customer_project_invoice_create>
-                          </v-card-item>
-                        </v-card>
-                      </v-dialog>
+                  </div>
+                </v-card-item>
+                
+                <v-divider class="mx-4 mx-sm-6"></v-divider>
+                
+                <!-- Content Area -->
+                <v-card-item class="pa-4 pa-sm-6 pt-0">
+                  <actions_customer_project_report_create 
+                    @Created="Create_Report" 
+                    :customer="customer"
+                    :onCancel="() => report_dialog = false"
+                  ></actions_customer_project_report_create>
+                </v-card-item>
+              </v-card>
+            </v-dialog>
 
-                    </v-col>
-
-                  </v-row>
-                </div>
-              </div>
-
-            </div>
+            <!-- Invoice Dialog -->
+            <v-dialog
+                v-model="invoice_dialog"
+                :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                :fullscreen="$vuetify.display.smAndDown"
+                transition="dialog-bottom-transition"
+                persistent
+            >
+              <v-card 
+                variant="flat" 
+                rounded
+                :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                elevation="8"
+              >
+                <!-- Enhanced Header -->
+                <v-card-item class="pa-4 pa-sm-6">
+                  <div class="d-flex align-center justify-space-between">
+                    <div class="d-flex align-center">
+                      <v-icon 
+                        icon="mdi-currency-usd" 
+                        color="orange-darken-2" 
+                        size="28"
+                        class="me-3"
+                      ></v-icon>
+                      <div>
+                        <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                          ثبت فاکتور جدید
+                        </h3>
+                        <p class="text-grey-darken-1 mb-0 mt-1">
+                          فاکتور جدید برای مشتری {{ customer.name || customer.phone }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </v-card-item>
+                
+                <v-divider class="mx-4 mx-sm-6"></v-divider>
+                
+                <!-- Content Area -->
+                <v-card-item class="pa-4 pa-sm-6 pt-0">
+                  <actions_customer_project_invoice_create 
+                    @Created="Create_Invoice" 
+                    :customer="customer"
+                    :onCancel="() => invoice_dialog = false"
+                  ></actions_customer_project_invoice_create>
+                </v-card-item>
+              </v-card>
+            </v-dialog>
+          </div>
             <v-dialog
                 v-model="edit_dialog"
                 :max-width="$vuetify.display.mdAndUp ? '1280' : '95'"
@@ -282,33 +326,62 @@ export default {
                 </v-card-item>
               </v-card>
             </v-dialog>
-          </div>
         </v-card>
       </v-col>
       <v-col xs="12" md="8" lg="8" xl="9" sm="12" cols="12">
 
-        <v-row>
+        <v-row class="navigation-buttons">
           <v-col class="animate__animated animate__flipInY" >
-            <v-card :to="{name : 'customers_profile',params:{id : customer.id}}" rounded color="indigo" variant="tonal">
-              <v-card-item class="pa-5">
-                <v-icon icon="mdi-view-dashboard" class="font-39"></v-icon>
-                <strong class="ms-2">خلاصه اطلاعات </strong>
+            <v-card 
+              :to="{name : 'customers_profile',params:{id : customer.id}}" 
+              rounded 
+              color="indigo" 
+              variant="tonal"
+              class="nav-card"
+            >
+              <v-card-item class="nav-card-content">
+                <div class="nav-card-icon">
+                  <v-icon icon="mdi-view-dashboard" size="24"></v-icon>
+                </div>
+                <div class="nav-card-text">
+                  <span class="nav-card-title">خلاصه اطلاعات</span>
+                </div>
               </v-card-item>
             </v-card>
           </v-col>
           <v-col class="animate__animated animate__flipInY" >
-            <v-card :to="{name:'customers_profile_reports',params:{id : customer.id}}" rounded color="teal" variant="tonal">
-              <v-card-item class="pa-5">
-                <v-icon icon="mdi-text-box-edit-outline" class="font-39"></v-icon>
-                <strong class="ms-2">لیست گزارشات </strong>
+            <v-card 
+              :to="{name:'customers_profile_reports',params:{id : customer.id}}" 
+              rounded 
+              color="teal" 
+              variant="tonal"
+              class="nav-card"
+            >
+              <v-card-item class="nav-card-content">
+                <div class="nav-card-icon">
+                  <v-icon icon="mdi-text-box-edit-outline" size="24"></v-icon>
+                </div>
+                <div class="nav-card-text">
+                  <span class="nav-card-title">لیست گزارشات</span>
+                </div>
               </v-card-item>
             </v-card>
           </v-col>
           <v-col class="animate__animated animate__flipInY" >
-            <v-card :to="{name:'customers_profile_invoices',params:{id : customer.id}}" rounded color="deep-orange-darken-2" variant="tonal">
-              <v-card-item class="pa-5">
-                <v-icon icon="mdi-currency-usd" class="font-39"></v-icon>
-                <strong class="ms-2">لیست فاکتور ها </strong>
+            <v-card 
+              :to="{name:'customers_profile_invoices',params:{id : customer.id}}" 
+              rounded 
+              color="deep-orange-darken-2" 
+              variant="tonal"
+              class="nav-card"
+            >
+              <v-card-item class="nav-card-content">
+                <div class="nav-card-icon">
+                  <v-icon icon="mdi-currency-usd" size="24"></v-icon>
+                </div>
+                <div class="nav-card-text">
+                  <span class="nav-card-title">لیست فاکتور ها</span>
+                </div>
               </v-card-item>
             </v-card>
           </v-col>
@@ -329,13 +402,239 @@ export default {
 </template>
 
 <style scoped>
-.avatar-image{
-  bottom : 50px!important;
+/* Profile Card Container */
+.profile-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Wave-like Background */
+.profile-header-bg {
+  position: relative;
+  border-bottom-left-radius: 50% 20%;
+  border-bottom-right-radius: 50% 20%;
+  overflow: hidden;
+}
+
+/* Alternative smooth wave using clip-path (uncomment to use) */
+/* .profile-header-bg {
+  position: relative;
+  height: 200px;
+  clip-path: ellipse(150% 100% at 50% 0%);
+} */
+
+/* Avatar Container */
+.avatar-container {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* Profile Avatar */
+.profile-avatar {
+  border: 4px solid white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Modern Profile Content Styles */
+.profile-content {
+  padding: 20px;
+  background: white;
+  margin-top: 15px; /* More space for overlapping avatar */
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-top: 20px; /* Add top padding for better spacing */
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-info {
+  flex: 1;
+  text-align: center;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.profile-phone {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.profile-description {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Information Section */
+.info-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e3f2fd;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  width: 40px;
+  height: 2px;
+  background: #2196f3;
+}
+
+/* Info Grid */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.info-item:hover {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+}
+
+.info-icon {
+  margin-left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #e3f2fd;
+  border-radius: 10px;
+}
+
+.info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.action-btn {
+  height: 48px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3) !important;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4) !important;
+}
+
+.secondary-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.secondary-btn {
+  background: linear-gradient(135deg, var(--v-theme-surface) 0%, #f5f5f5 100%) !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #1a1a1a !important;
+}
+
+.secondary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Teal button specific */
+.secondary-btn[color="teal"] {
+  background: linear-gradient(135deg, #009688 0%, #00796b 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.secondary-btn[color="teal"]:hover {
+  box-shadow: 0 6px 20px rgba(0, 150, 136, 0.3) !important;
+}
+
+/* Orange button specific */
+.secondary-btn[color="orange"] {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.secondary-btn[color="orange"]:hover {
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3) !important;
 }
 
 /* Enhanced Modal Styles for Mobile */
-
-/* Mobile-specific enhancements */
 @media (max-width: 960px) {
   .v-dialog .v-card {
     border-radius: 16px 16px 0 0 !important;
@@ -348,14 +647,91 @@ export default {
   .v-dialog .v-card-actions {
     padding: 16px !important;
   }
+  
+  .profile-card {
+    border: none !important;
+  }
+  
+  .profile-content {
+    padding: 12px;
+    margin-top: 30px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  
+  .avatar-container {
+    top: 80px;
+  }
+  
+  .profile-avatar {
+    width: 85px !important;
+    height: 85px !important;
+  }
+  
+  .profile-name {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  
+  .profile-phone {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  
+  .profile-description {
+    font-size: 12px;
+  }
+  
+  .info-section {
+    margin-bottom: 16px;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+  }
+  
+  .info-item {
+    padding: 10px;
+  }
+  
+  .info-icon {
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
+  }
+  
+  .info-label {
+    font-size: 11px;
+  }
+  
+  .info-value {
+    font-size: 14px;
+  }
+  
+  .action-btn {
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+  
+  .secondary-buttons {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 }
 
-/* Smooth transitions for mobile */
+/* Smooth transitions */
 .v-dialog .v-card {
   transition: all 0.3s ease-in-out;
 }
 
-/* Enhanced button hover effects */
 .v-btn.rounded-circle:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease-in-out;
@@ -372,6 +748,82 @@ export default {
   .v-dialog .v-card-item p {
     font-size: 0.875rem !important;
   }
+  
+  .profile-card {
+    border: none !important;
+  }
+  
+  .profile-content {
+    padding: 10px;
+    margin-top: 30px;
+  }
+  
+  .profile-header {
+    margin-bottom: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  
+  .avatar-container {
+    top: 80px;
+  }
+  
+  .profile-avatar {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  
+  .profile-name {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .profile-phone {
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  
+  .profile-description {
+    font-size: 11px;
+  }
+  
+  .info-section {
+    margin-bottom: 12px;
+  }
+  
+  .section-title {
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+  }
+  
+  .info-item {
+    padding: 8px;
+  }
+  
+  .info-icon {
+    width: 28px;
+    height: 28px;
+    margin-left: 10px;
+  }
+  
+  .info-label {
+    font-size: 10px;
+  }
+  
+  .info-value {
+    font-size: 13px;
+  }
+  
+  .action-btn {
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+  
+  .secondary-buttons {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
 }
 
 /* Ensure proper title styling */
@@ -379,5 +831,113 @@ export default {
   font-family: inherit !important;
   font-weight: 700 !important;
   color: rgb(var(--v-theme-primary-darken-2)) !important;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  margin-bottom: 24px;
+}
+
+.nav-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-card-content {
+  padding: 16px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 80px;
+  justify-content: center;
+}
+
+.nav-card-icon {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-card-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: inherit;
+}
+
+/* Mobile Responsive Navigation */
+@media (max-width: 960px) {
+  .nav-card-content {
+    padding: 12px !important;
+    min-height: 70px;
+  }
+  
+  .nav-card-icon {
+    margin-bottom: 6px;
+  }
+  
+  .nav-card-icon .v-icon {
+    font-size: 20px !important;
+  }
+  
+  .nav-card-title {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-card-content {
+    padding: 10px !important;
+    min-height: 60px;
+  }
+  
+  .nav-card-icon {
+    margin-bottom: 4px;
+  }
+  
+  .nav-card-icon .v-icon {
+    font-size: 18px !important;
+  }
+  
+  .nav-card-title {
+    font-size: 11px;
+    line-height: 1.1;
+  }
+}
+
+/* Animation for info items */
+.info-item {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.info-item:nth-child(1) { animation-delay: 0.1s; }
+.info-item:nth-child(2) { animation-delay: 0.2s; }
+.info-item:nth-child(3) { animation-delay: 0.3s; }
+.info-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

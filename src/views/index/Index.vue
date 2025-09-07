@@ -18,15 +18,47 @@ export default {
 </script>
 
 <template>
-  <links></links>
-  <div class="mt-8"></div>
-  <projects></projects>
-  <status-summary></status-summary>
-  <div class="mt-8"></div>
-  <activity-list></activity-list>
-  <div class="mt-8"></div>
+  <div class="index-container">
+    <links></links>
+    
+    <div class="section-spacing"></div>
+    <projects></projects>
+    
+    <div class="section-spacing"></div>
+    <status-summary></status-summary>
+    
+    <div class="section-spacing"></div>
+    <activity-list></activity-list>
+  </div>
 </template>
 
 <style scoped>
+.index-container {
+  padding: 0 16px;
+}
 
+.section-spacing {
+  height: 32px;
+}
+
+/* Mobile responsive spacing */
+@media (max-width: 960px) {
+  .index-container {
+    padding: 0 12px;
+  }
+  
+  .section-spacing {
+    height: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .index-container {
+    padding: 0 8px;
+  }
+  
+  .section-spacing {
+    height: 20px;
+  }
+}
 </style>

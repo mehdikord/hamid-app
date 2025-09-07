@@ -26,11 +26,12 @@ export default {
 
 <template>
   <div>
-    <div class="text-center">
-      <strong class="text-black-darken-1 font-15">تفکیک وضعیت شماره ها</strong>
+    <!-- Section Title -->
+    <div class="section-title-container">
+      <h2 class="section-title">تفکیک وضعیت شماره ها</h2>
     </div>
-    <div class="mt-4">
-      <v-row>
+    
+    <v-row>
         <!-- Card 1: In Consultation -->
         <v-col cols="6" sm="6" md="3">
           <v-card 
@@ -135,6 +136,62 @@ export default {
           </v-card>
         </v-col>
       </v-row>
-    </div>
   </div>
 </template>
+
+<style scoped>
+.section-title-container {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px 0;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1976d2;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1976d2, #42a5f5);
+  border-radius: 2px;
+}
+
+/* Mobile responsive */
+@media (max-width: 960px) {
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .section-title-container {
+    margin-bottom: 20px;
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-title {
+    font-size: 18px;
+  }
+  
+  .section-title-container {
+    margin-bottom: 16px;
+    padding: 10px 0;
+  }
+  
+  .section-title::after {
+    width: 40px;
+    height: 2px;
+  }
+}
+</style>
