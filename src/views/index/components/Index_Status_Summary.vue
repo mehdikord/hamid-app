@@ -35,7 +35,7 @@ export default {
         <!-- Card 1: In Consultation -->
         <v-col cols="6" sm="6" md="3">
           <v-card 
-            class="pa-4 h-100 d-flex flex-column justify-space-between"
+            class="pa-4 h-100 d-flex flex-column justify-space-between status-card"
             elevation="0"
             rounded="lg"
             border
@@ -61,7 +61,7 @@ export default {
         <!-- Card 2: Waiting for Deposit -->
         <v-col cols="6" sm="6" md="3">
           <v-card 
-            class="pa-4 h-100 d-flex flex-column justify-space-between"
+            class="pa-4 h-100 d-flex flex-column justify-space-between status-card"
             elevation="0"
             rounded="lg"
             border
@@ -87,7 +87,7 @@ export default {
         <!-- Card 3: Special Number -->
         <v-col cols="6" sm="6" md="3">
           <v-card 
-            class="pa-4 h-100 d-flex flex-column justify-space-between"
+            class="pa-4 h-100 d-flex flex-column justify-space-between status-card"
             elevation="0"
             rounded="lg"
             border
@@ -113,7 +113,7 @@ export default {
         <!-- Card 4: Unsuccessful -->
         <v-col cols="6" sm="6" md="3">
           <v-card 
-            class="pa-4 h-100 d-flex flex-column justify-space-between"
+            class="pa-4 h-100 d-flex flex-column justify-space-between status-card"
             elevation="0"
             rounded="lg"
             border
@@ -193,5 +193,10 @@ export default {
     width: 40px;
     height: 2px;
   }
+}
+
+/* Status cards border radius */
+.status-card {
+  border-radius: 12px !important;
 }
 </style>

@@ -77,7 +77,7 @@ export default {
 /* Dashboard Card */
 .dashboard-card {
   height: 120px;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;

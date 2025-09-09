@@ -58,8 +58,9 @@ export default {
 
 <template>
   <div>
-    <div class="mb-4 mt-2">
-      <strong class="font-15">لیست گزارشات ثبت شده برای مشتری</strong>
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-title">لیست گزارشات مشتری</h2>
     </div>
     <div>
       <template v-if="loading">
@@ -92,5 +93,52 @@ export default {
 </template>
 
 <style scoped>
+/* Section Header */
+.section-header {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e3f2fd;
+  position: relative;
+}
 
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  width: 60px;
+  height: 2px;
+  background: #009688; /* Teal color for reports */
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Mobile Responsive */
+@media (max-width: 960px) {
+  .section-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .section-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-header {
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+  }
+  
+  .section-title {
+    font-size: 16px;
+  }
+}
 </style>

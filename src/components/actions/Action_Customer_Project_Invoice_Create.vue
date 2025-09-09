@@ -104,7 +104,7 @@ export default {
 
     <div class="mb-3">
       <v-select
-          class="mt-3"
+          class="mt-3 custom-select"
           :items="projects"
           v-model="project_id"
           item-title="name"
@@ -113,7 +113,7 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب پروژه "
-          rounded
+          rounded="lg"
       >
 
       </v-select>
@@ -139,11 +139,11 @@ export default {
         برای ثبت فاکتور برای مشتری ، ابتدا باید مبلغ معامله مشتری را مشخص کنید و سپس فاکتور های مورد نظر را ثبت کنید
       </v-alert>
       <div class="mt-6">
-        <v-text-field v-model="target_price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="وارد کردن مبلغ معامله ( تومان )" placeholder="1,500,000" />
+        <v-text-field v-model="target_price" append-inner-icon="mdi-currency-usd" rounded="lg" variant="outlined" type="number" label="وارد کردن مبلغ معامله ( تومان )" placeholder="1,500,000" class="custom-input" />
       </div>
     </template>
     <div class="mb-3">
-      <v-text-field color="blue" :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="مبلغ واریزی ( تومان )" />
+      <v-text-field color="blue" :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded="lg" variant="outlined" type="number" label="مبلغ واریزی ( تومان )" class="custom-input" />
       <validation_errors :errors="Validation_Errors(errors,'price')"></validation_errors>
     </div>
     <div class="mb-3">
@@ -153,14 +153,15 @@ export default {
       label="توضیحات ( اختیاری )"
       v-model="description"
       color="blue"
-      rounded
+      rounded="lg"
       :error="Validation_Check(errors,'description')"
+      class="custom-textarea"
       >
       </v-textarea>
       <validation_errors :errors="Validation_Errors(errors,'description')"></validation_errors>
     </div>
     <div class="mb-3">
-      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded ></v-file-input>
+      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded="lg" class="custom-file-input" ></v-file-input>
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
@@ -188,7 +189,7 @@ export default {
             color="orange-darken-2" 
             prepend-icon="mdi-check" 
             variant="flat"  
-            rounded 
+            rounded="lg" 
             block
             size="large"
             @click="Create_Invoice"
@@ -205,7 +206,7 @@ export default {
             block
             size="large"
             prepend-icon="mdi-close"
-            rounded
+            rounded="lg"
             class="action-button"
           >
             انصراف
@@ -235,10 +236,35 @@ export default {
 }
 
 /* Enhanced input styling */
-.v-select,
-.v-textarea,
-.v-file-input,
-.v-text-field {
+.custom-select :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-select :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-input :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-input :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-textarea :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-textarea :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-file-input :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-file-input :deep(.v-field__outline) {
   border-radius: 12px !important;
 }
 
@@ -247,11 +273,11 @@ export default {
   border-radius: 12px !important;
 }
 
-.enhanced-date-picker .v-field {
+.enhanced-date-picker :deep(.v-field) {
   border-radius: 12px !important;
 }
 
-.enhanced-date-picker .v-field__outline {
+.enhanced-date-picker :deep(.v-field__outline) {
   border-radius: 12px !important;
 }
 

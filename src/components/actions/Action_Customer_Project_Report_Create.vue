@@ -113,7 +113,7 @@ export default {
 
     <div class="mb-3">
       <v-select
-          class="mt-3"
+          class="mt-3 custom-select"
           :items="projects"
           v-model="project_id"
           item-title="name"
@@ -122,7 +122,7 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب پروژه "
-          rounded
+          rounded="lg"
       >
 
       </v-select>
@@ -136,14 +136,15 @@ export default {
       v-model="report"
       color="blue"
       :error="Validation_Check(errors,'report')"
-      rounded
+      rounded="lg"
+      class="custom-textarea"
       >
       </v-textarea>
       <validation_errors :errors="Validation_Errors(errors,'report')"></validation_errors>
     </div>
     <div class="mb-3">
       <v-select
-          class="mt-3"
+          class="mt-3 custom-select"
           :items="levels"
           v-model="project_level_id"
           item-title="name"
@@ -152,14 +153,14 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب مرحله مذاکره"
-          rounded
+          rounded="lg"
       >
       </v-select>
     </div>
 
     <div class="mb-3">
       <v-select
-          class="mt-3"
+          class="mt-3 custom-select"
           :items="statuses"
           v-model="status_id"
           item-title="name"
@@ -168,13 +169,13 @@ export default {
           variant="outlined"
           density="comfortable"
           label="انتخاب وضعیت جدید"
-          rounded
+          rounded="lg"
       >
 
       </v-select>
     </div>
     <div class="mb-3">
-      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded></v-file-input>
+      <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded="lg" class="custom-file-input"></v-file-input>
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
@@ -202,7 +203,7 @@ export default {
             color="teal-darken-2" 
             prepend-icon="mdi-check" 
             variant="flat"  
-            rounded 
+            rounded="lg" 
             block
             size="large"
             @click="Create_Report"
@@ -219,7 +220,7 @@ export default {
             block
             size="large"
             prepend-icon="mdi-close"
-            rounded
+            rounded="lg"
             class="action-button"
           >
             انصراف
@@ -249,9 +250,27 @@ export default {
 }
 
 /* Enhanced input styling */
-.v-select,
-.v-textarea,
-.v-file-input {
+.custom-select :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-select :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-textarea :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-textarea :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-file-input :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-file-input :deep(.v-field__outline) {
   border-radius: 12px !important;
 }
 
@@ -260,11 +279,11 @@ export default {
   border-radius: 12px !important;
 }
 
-.enhanced-date-picker .v-field {
+.enhanced-date-picker :deep(.v-field) {
   border-radius: 12px !important;
 }
 
-.enhanced-date-picker .v-field__outline {
+.enhanced-date-picker :deep(.v-field__outline) {
   border-radius: 12px !important;
 }
 

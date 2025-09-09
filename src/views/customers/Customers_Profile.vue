@@ -27,6 +27,17 @@ export default {
       report_dialog:false,
       invoice_dialog:false,
       summery_key:0,
+      active_tab: 0,
+    }
+  },
+  computed: {
+    currentTab() {
+      const routeMap = {
+        'customers_profile': 0,
+        'customers_profile_reports': 1,
+        'customers_profile_invoices': 2
+      };
+      return routeMap[this.$route.name] || 0;
     }
   },
   methods:{
@@ -54,6 +65,18 @@ export default {
       this.summery_key ++;
       this.invoice_dialog=false;
       this.Notify_Success('فاکتور مورد نظر باموفقیت ثبت گردید')
+    },
+    switchTab(tabIndex) {
+      this.active_tab = tabIndex;
+      // Navigate to the appropriate route based on tab
+      const routes = [
+        { name: 'customers_profile', params: { id: this.customer.id } },
+        { name: 'customers_profile_reports', params: { id: this.customer.id } },
+        { name: 'customers_profile_invoices', params: { id: this.customer.id } }
+      ];
+      if (this.$route.name !== routes[tabIndex].name) {
+        this.$router.push(routes[tabIndex]);
+      }
     }
   }
 }
@@ -72,7 +95,7 @@ export default {
   <template v-else>
     <v-row class="mt-1">
       <v-col xs="12" md="4" lg="4" xl="3" sm="12" cols="12">
-        <v-card flat border rounded class="animate__animated animate__backInDown profile-card">
+        <v-card flat border class="animate__animated animate__backInDown profile-card ">
           <v-img
               class="profile-header-bg"
               height="150"
@@ -330,64 +353,56 @@ export default {
       </v-col>
       <v-col xs="12" md="8" lg="8" xl="9" sm="12" cols="12">
 
-        <v-row class="navigation-buttons">
-          <v-col class="animate__animated animate__flipInY" >
-            <v-card 
-              :to="{name : 'customers_profile',params:{id : customer.id}}" 
-              rounded 
-              color="indigo" 
-              variant="tonal"
-              class="nav-card"
+        <!-- Fabulous Tabs Navigation -->
+        <v-card flat class="fabulous-tabs-container">
+          <v-tabs
+            v-model="currentTab"
+            @update:model-value="switchTab"
+            color="primary"
+            align-tabs="center"
+            class="fabulous-tabs"
+            slider-color="transparent"
+            style="height: 80px !important;"
+          >
+            <v-tab 
+              value="0" 
+              class="fabulous-tab tab-summary"
+              :class="{ 'tab-active': currentTab === 0 }"
+              style="height: 80px !important; min-height: 80px !important; max-height: 80px !important;"
             >
-              <v-card-item class="nav-card-content">
-                <div class="nav-card-icon">
-                  <v-icon icon="mdi-view-dashboard" size="24"></v-icon>
-                </div>
-                <div class="nav-card-text">
-                  <span class="nav-card-title">خلاصه اطلاعات</span>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-          <v-col class="animate__animated animate__flipInY" >
-            <v-card 
-              :to="{name:'customers_profile_reports',params:{id : customer.id}}" 
-              rounded 
-              color="teal" 
-              variant="tonal"
-              class="nav-card"
+              <div class="tab-content" style="height: 80px !important;">
+                <v-icon icon="mdi-view-dashboard" class="tab-icon"></v-icon>
+                <span class="tab-text">خلاصه اطلاعات</span>
+              </div>
+            </v-tab>
+            
+            <v-tab 
+              value="1" 
+              class="fabulous-tab tab-reports"
+              :class="{ 'tab-active': currentTab === 1 }"
+              style="height: 80px !important; min-height: 80px !important; max-height: 80px !important;"
             >
-              <v-card-item class="nav-card-content">
-                <div class="nav-card-icon">
-                  <v-icon icon="mdi-text-box-edit-outline" size="24"></v-icon>
-                </div>
-                <div class="nav-card-text">
-                  <span class="nav-card-title">لیست گزارشات</span>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-          <v-col class="animate__animated animate__flipInY" >
-            <v-card 
-              :to="{name:'customers_profile_invoices',params:{id : customer.id}}" 
-              rounded 
-              color="deep-orange-darken-2" 
-              variant="tonal"
-              class="nav-card"
+              <div class="tab-content" style="height: 80px !important;">
+                <v-icon icon="mdi-text-box-edit-outline" class="tab-icon"></v-icon>
+                <span class="tab-text">لیست گزارشات</span>
+              </div>
+            </v-tab>
+            
+            <v-tab 
+              value="2" 
+              class="fabulous-tab tab-invoices"
+              :class="{ 'tab-active': currentTab === 2 }"
+              style="height: 80px !important; min-height: 80px !important; max-height: 80px !important;"
             >
-              <v-card-item class="nav-card-content">
-                <div class="nav-card-icon">
-                  <v-icon icon="mdi-currency-usd" size="24"></v-icon>
-                </div>
-                <div class="nav-card-text">
-                  <span class="nav-card-title">لیست فاکتور ها</span>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-        </v-row>
+              <div class="tab-content" style="height: 80px !important;">
+                <v-icon icon="mdi-currency-usd" class="tab-icon"></v-icon>
+                <span class="tab-text">لیست فاکتور ها</span>
+              </div>
+            </v-tab>
+          </v-tabs>
+        </v-card>
 
-        <v-card flat border class="mt-6" style="margin-bottom: 120px">
+        <v-card flat  class="mt-6" style="margin-bottom: 120px">
           <v-card-item>
             <profile_summery :key="summery_key" v-if="this.$route.name === 'customers_profile'" :customer="customer"></profile_summery>
             <profile_reports :key="summery_key" v-if="this.$route.name === 'customers_profile_reports'" :customer="customer"></profile_reports>
@@ -406,6 +421,7 @@ export default {
 .profile-card {
   position: relative;
   overflow: hidden;
+  border-radius: 14px;
 }
 
 /* Wave-like Background */
@@ -833,90 +849,184 @@ export default {
   color: rgb(var(--v-theme-primary-darken-2)) !important;
 }
 
-/* Navigation Buttons */
-.navigation-buttons {
+/* Clean Fabulous Tabs */
+.fabulous-tabs-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
+  overflow: visible;
 }
 
-.nav-card {
-  transition: all 0.2s ease;
-  cursor: pointer;
+.fabulous-tabs {
+  background: transparent;
 }
 
-.nav-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Override Vuetify defaults */
+.fabulous-tabs .v-tabs__slider {
+  display: none !important;
 }
 
-.nav-card-content {
-  padding: 16px !important;
+.fabulous-tabs .v-tabs__container .v-tab {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.fabulous-tabs .v-tabs__container .v-tab .v-tab__content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Force height on all Vuetify tab elements */
+.fabulous-tabs .v-tabs__container,
+.fabulous-tabs .v-tabs__wrapper,
+.fabulous-tabs .v-tabs__container .v-tab,
+.fabulous-tabs .v-tabs__container .v-tab .v-tab__content,
+.fabulous-tab,
+.fabulous-tab .v-tab__content {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+}
+
+.fabulous-tab {
+  margin: 0 4px !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+  color: #666 !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  flex: 1 !important;
+}
+
+.fabulous-tab:hover {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Summary tab (خلاصه اطلاعات) - Blue */
+.fabulous-tab.tab-summary.tab-active {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+  color: white !important;
+}
+
+/* Reports tab (لیست گزارشات) - Teal */
+.fabulous-tab.tab-reports.tab-active {
+  background: linear-gradient(135deg, #009688 0%, #00796b 100%) !important;
+  color: white !important;
+}
+
+/* Invoices tab (لیست فاکتور ها) - Orange */
+.fabulous-tab.tab-invoices.tab-active {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+  color: white !important;
+}
+
+.tab-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  min-height: 80px;
   justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  height: 100%;
+  border-radius: 12px;
 }
 
-.nav-card-icon {
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tab-icon {
+  font-size: 20px !important;
+  transition: all 0.3s ease !important;
 }
 
-.nav-card-text {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.fabulous-tab.tab-active .tab-icon {
+  color: white !important;
+  transform: scale(1.1) !important;
 }
 
-.nav-card-title {
-  font-size: 14px;
+.tab-text {
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.3;
-  color: inherit;
+  line-height: 1.2;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-/* Mobile Responsive Navigation */
+.fabulous-tab.tab-active .tab-text {
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+/* Mobile Responsive */
 @media (max-width: 960px) {
-  .nav-card-content {
-    padding: 12px !important;
-    min-height: 70px;
+  .fabulous-tabs-container {
+    padding: 8px;
   }
   
-  .nav-card-icon {
-    margin-bottom: 6px;
+  .fabulous-tabs .v-tabs__container {
+    height: 60px !important;
   }
   
-  .nav-card-icon .v-icon {
-    font-size: 20px !important;
+  .fabulous-tabs .v-tabs__container .v-tab {
+    height: 60px !important;
+    min-height: 60px !important;
+    max-height: 60px !important;
   }
   
-  .nav-card-title {
+  .fabulous-tab {
+    height: 60px !important;
+    min-height: 60px !important;
+    max-height: 60px !important;
+    margin: 0 2px !important;
+  }
+  
+  .tab-content {
+    padding: 8px 12px;
+    gap: 4px;
+  }
+  
+  .tab-icon {
+    font-size: 18px !important;
+  }
+  
+  .tab-text {
     font-size: 12px;
-    line-height: 1.2;
   }
 }
 
 @media (max-width: 600px) {
-  .nav-card-content {
-    padding: 10px !important;
-    min-height: 60px;
+  .fabulous-tabs-container {
+    padding: 6px;
   }
   
-  .nav-card-icon {
-    margin-bottom: 4px;
+  .fabulous-tabs .v-tabs__container {
+    height: 55px !important;
   }
   
-  .nav-card-icon .v-icon {
-    font-size: 18px !important;
+  .fabulous-tabs .v-tabs__container .v-tab {
+    height: 55px !important;
+    min-height: 55px !important;
+    max-height: 55px !important;
   }
   
-  .nav-card-title {
+  .fabulous-tab {
+    height: 55px !important;
+    min-height: 55px !important;
+    max-height: 55px !important;
+    margin: 0 1px !important;
+  }
+  
+  .tab-content {
+    padding: 6px 8px;
+    gap: 3px;
+  }
+  
+  .tab-icon {
+    font-size: 16px !important;
+  }
+  
+  .tab-text {
     font-size: 11px;
-    line-height: 1.1;
   }
 }
 

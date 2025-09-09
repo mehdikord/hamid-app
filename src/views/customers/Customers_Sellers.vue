@@ -200,7 +200,7 @@ export default {
           :color="show_filter ? 'primary' : 'grey-lighten-1'"
           variant="flat"
           size="small"
-          rounded
+          rounded="lg"
           class="filter-toggle-btn"
         >
           <v-icon :icon="show_filter ? 'mdi-close' : 'mdi-filter'" size="18"></v-icon>
@@ -217,9 +217,9 @@ export default {
         color="primary"
         label="جستجو با شماره موبایل یا نام"
         variant="outlined"
-        rounded
+        rounded="lg"
         prepend-inner-icon="mdi-magnify"
-        class="search-field"
+        class="search-field custom-input"
         hint="حداقل ۴ کاراکتر وارد کنید"
         persistent-hint
       />
@@ -230,16 +230,16 @@ export default {
         <div class="mt-4 hidden-xs">
           <v-row>
             <v-col lg="3" md="3" cols="12">
-              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded />
+              <v-text-field clearable @click:clear="Clear_phone" class="animate__animated animate__zoomIn custom-input" hint="حداقل ۴ کاراکتر وارد کنید " v-model="search_phone" density="comfortable" color="blue" label="جستجو با شماره موبایل یا نام" variant="outlined" rounded="lg" />
             </v-col>
             <v-col lg="3" md="3" cols="12">
               <v-select
-                  class="animate__animated animate__zoomIn"
+                  class="animate__animated animate__zoomIn custom-select"
                   :items="projects"
                   v-model="project_id"
                   item-title="name"
                   item-value="id"
-                  rounded
+                  rounded="lg"
                   color="deep-orange-darken-2"
                   label="انتخاب پروژه"
                   variant="outlined"
@@ -251,12 +251,12 @@ export default {
             </v-col>
             <v-col lg="3" md="3" cols="12">
               <v-select
-                  class="animate__animated animate__zoomIn"
+                  class="animate__animated animate__zoomIn custom-select"
                   :items="statuses"
                   v-model="status_id"
                   item-title="name"
                   item-value="id"
-                  rounded
+                  rounded="lg"
                   color="deep-orange-darken-2"
                   label="انتخاب وضعیت مشتری"
                   variant="outlined"
@@ -294,12 +294,13 @@ export default {
                 v-model="project_id"
                 item-title="name"
                 item-value="id"
-                rounded
+                rounded="lg"
                 color="primary"
                 label="پروژه"
                 variant="outlined"
                 density="compact"
                 clearable
+                class="custom-select"
                 @update:model-value="Do_Search"
               />
             </v-col>
@@ -309,12 +310,13 @@ export default {
                 v-model="level_id"
                 item-title="name"
                 item-value="id"
-                rounded
+                rounded="lg"
                 color="primary"
                 label="مرحله"
                 variant="outlined"
                 density="compact"
                 clearable
+                class="custom-select"
                 @update:model-value="Do_Search"
               />
             </v-col>
@@ -324,12 +326,13 @@ export default {
                 v-model="status_id"
                 item-title="name"
                 item-value="id"
-                rounded
+                rounded="lg"
                 color="primary"
                 label="وضعیت مشتری"
                 variant="outlined"
                 density="compact"
                 clearable
+                class="custom-select"
                 @update:model-value="Do_Search"
               />
             </v-col>
@@ -340,7 +343,7 @@ export default {
   </v-card>
 
   <v-card flat  rounded class="mt-4">
-    <v-card-item>
+    <v-card-item :class="{'pa-0' : !this.$vuetify.display.mdAndUp}">
       <template v-if="items_loading">
         <v-row  class="mt-2">
           <v-col v-for="i in 6" xl="4" lg="6" md="6" sm="12" cols="12">
@@ -412,7 +415,7 @@ export default {
                 >
                   <v-card 
                     variant="flat" 
-                    rounded
+                    rounded="lg"
                     :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                     elevation="8"
                   >
@@ -461,7 +464,7 @@ export default {
                 >
                   <v-card 
                     variant="flat" 
-                    rounded
+                    rounded="lg"
                     :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                     elevation="8"
                   >
@@ -534,6 +537,7 @@ export default {
 .mobile-header-card {
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 12px !important;
 }
 
 /* Font consistency */
@@ -640,6 +644,23 @@ export default {
 
 .mobile-filter-panel .v-select:focus-within {
   transform: translateY(-1px) !important;
+}
+
+/* Custom input and select styling */
+.custom-input :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-input :deep(.v-field__outline) {
+  border-radius: 12px !important;
+}
+
+.custom-select :deep(.v-field) {
+  border-radius: 12px !important;
+}
+
+.custom-select :deep(.v-field__outline) {
+  border-radius: 12px !important;
 }
 
 /* Active filter indicator */

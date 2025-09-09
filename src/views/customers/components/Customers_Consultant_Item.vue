@@ -167,7 +167,7 @@ export default {
                 prepend-icon="mdi-account"
                 class="action-btn w-100"
                 size="small"
-                rounded
+                rounded="lg"
               >
                 پروفایل
               </v-btn>
@@ -180,7 +180,7 @@ export default {
                 prepend-icon="mdi-text-box-edit"
                 class="action-btn w-100"
                 size="small"
-                rounded
+                rounded="lg"
               >
                 گزارش
               </v-btn>
@@ -197,7 +197,7 @@ export default {
           >
             <v-card 
               variant="flat" 
-              rounded
+              rounded="lg"
               :class="$vuetify.display.smAndDown ? 'h-100' : ''"
               elevation="8"
             >
@@ -246,6 +246,7 @@ export default {
   transition: all 0.15s ease;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 12px !important;
 }
 
 .customer-card:hover {

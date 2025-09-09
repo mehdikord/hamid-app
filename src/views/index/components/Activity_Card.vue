@@ -410,6 +410,7 @@ export default {
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  border-radius: 12px !important;
 }
 
 .activity-card:hover {
@@ -421,6 +422,7 @@ export default {
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  border-radius: 12px !important;
 }
 
 .activity-card-mobile:hover {

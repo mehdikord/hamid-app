@@ -47,18 +47,18 @@ export default defineConfig(({ command, mode }) => {
                 runtimeCaching: [
                     {
                         urlPattern: ({ url }) => url.pathname === '/',
-                        handler: 'NetworkFirst',
+                        handler: 'StaleWhileRevalidate',
                         options: {
                             cacheName: 'html-cache',
                             expiration: {
                                 maxEntries: 10,
-                                maxAgeSeconds: 24 * 60 * 60 // 1 روز
+                                maxAgeSeconds: 2 * 60 * 60 // 2 hours instead of 24 hours
                             }
                         }
                     },
                     {
                         urlPattern: ({request}) => request.destination === 'document',
-                        handler: 'NetworkFirst',
+                        handler: 'StaleWhileRevalidate',
                     },
                     {
                         urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
@@ -67,12 +67,29 @@ export default defineConfig(({ command, mode }) => {
                             cacheName: 'images-cache',
                             expiration: {
                                 maxEntries: 100,
-                                maxAgeSeconds: 30 * 24 * 60 * 60,
+                                maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days instead of 30 days
+                            },
+                        },
+                    },
+                    {
+                        urlPattern: /\.(?:js|css)$/,
+                        handler: 'StaleWhileRevalidate',
+                        options: {
+                            cacheName: 'static-resources',
+                            expiration: {
+                                maxEntries: 50,
+                                maxAgeSeconds: 24 * 60 * 60, // 1 day for JS/CSS
                             },
                         },
                     }
                 ],
-                cacheId: 'pergola-cache-v1.2',
+                // Dynamic cache ID that changes with each build
+                cacheId: `leadana-cache-v${Date.now()}`,
+                // Automatically skip waiting and activate new service worker
+                skipWaiting: true,
+                clientsClaim: true,
+                // Clean up old caches automatically
+                cleanupOutdatedCaches: true,
             },
             includeAssets: [
                 'favicon.ico',
@@ -80,7 +97,7 @@ export default defineConfig(({ command, mode }) => {
                 'webfonts/**/*.woff2'
             ],
             devOptions: {
-                enabled: true,
+                enabled: false, // Disable in development to avoid conflicts
                 type: 'module',
                 navigateFallback: 'index.html'
             }
