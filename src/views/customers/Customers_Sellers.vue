@@ -359,8 +359,7 @@ export default {
           <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
-              <th>تاریخ ثبت</th>
-              <th>تاریخ تخصیص</th>
+              <th class="text-center">تاریخ ها</th>
               <th>
                 مشتری
               </th>
@@ -374,18 +373,19 @@ export default {
             <tbody>
             <tr v-for="item in items" class="animate__animated animate__fadeIn" >
               <td>
-                <chips_date :date="item.created_at"></chips_date>
-              </td>
-              <td>
-                <chips_date :date="item.start_at"></chips_date>
+                <div class="date-stack">
+                  <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
+                  <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
+                </div>
               </td>
               <td class="pa-2">
                 <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
-                  <v-icon icon="mdi-account font-29" color="deep-orange-darken-3"></v-icon>
-                  <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
-                  <template v-if=" item.customer.name">
-                    <span class="ms-2 text-grey-darken-4 font-14">( {{item.customer.name}} )</span>
-                  </template>
+                  <div class="d-flex flex-column">
+                    <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
+                    <template v-if=" item.customer.name">
+                      <span class="text-grey-darken-4 font-12 mt-1">{{item.customer.name}}</span>
+                    </template>
+                  </div>
                 </router-link>
               </td>
               <td class="pa-2">
@@ -404,8 +404,16 @@ export default {
                 </template>
               </td>
               <td class="pa-2 text-center" style="min-width: 120px;">
-                <div class="d-flex align-center justify-center gap-2">
-                  <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش" size="small"></v-btn>
+                <div class="operations-container">
+                  <div class="operation-group">
+                    <v-btn 
+                      @click="add_report_dialog[item.id] = true" 
+                      class="compact-operation-btn report-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <span class="operation-label">گزارش</span>
+                    </v-btn>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
                     :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
@@ -453,7 +461,15 @@ export default {
                     </v-card-item>
                   </v-card>
                 </v-dialog>
-                  <v-btn @click="add_invoice_dialog[item.id] = true" density="comfortable" color="blue-darken-2" variant="flat" icon="mdi-currency-usd" title="ثبت فاکتور" size="small"></v-btn>
+                    <v-btn 
+                      @click="add_invoice_dialog[item.id] = true" 
+                      class="compact-operation-btn invoice-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <span class="operation-label">فاکتور</span>
+                    </v-btn>
+                  </div>
                 </div>
                 <v-dialog
                     v-model="add_invoice_dialog[item.id]"
@@ -667,5 +683,136 @@ export default {
 .filter-toggle-btn[color="primary"] {
   box-shadow: 0 2px 8px rgba(var(--v-theme-primary), 0.3) !important;
 }
+
+/* Compact Operations Column - Minimalist Design */
+.operations-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px;
+}
+
+.operation-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.compact-operation-btn {
+  position: relative !important;
+  min-width: auto !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.compact-operation-btn .operation-label {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  opacity: 0.8 !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Report Action Styling */
+.report-action {
+  color: #059669 !important;
+}
+
+.report-action:hover {
+  background: rgba(5, 150, 105, 0.08) !important;
+  border-color: rgba(5, 150, 105, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15) !important;
+}
+
+.report-action:hover .operation-label {
+  opacity: 1 !important;
+  color: #047857 !important;
+}
+
+/* Invoice Action Styling */
+.invoice-action {
+  color: #2563eb !important;
+}
+
+.invoice-action:hover {
+  background: rgba(37, 99, 235, 0.08) !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+}
+
+.invoice-action:hover .operation-label {
+  opacity: 1 !important;
+  color: #1d4ed8 !important;
+}
+
+/* Row Hover Effects */
+.v-table tbody tr:hover .operation-group {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.v-table tbody tr:hover .compact-operation-btn {
+  opacity: 1 !important;
+}
+
+/* Active State */
+.compact-operation-btn:active {
+  transform: translateY(0) scale(0.98) !important;
+  transition: all 0.1s ease !important;
+}
+
+/* Enhanced Table Styling */
+.v-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  vertical-align: middle !important;
+}
+
+.v-table tbody tr {
+  transition: all 0.2s ease !important;
+}
+
+.v-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.015) !important;
+}
+
+/* Date Stack Styling - Direct stacking without container */
+.date-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.date-stack :deep(.v-chip) {
+  border-radius: 0 !important;
+}
+
+.date-stack :deep(.v-chip:first-child) {
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.date-stack :deep(.v-chip:last-child) {
+  border-radius: 0 0 12px 12px !important;
+}
+
 
 </style>

@@ -29,6 +29,13 @@ export default {
       this.show_buttons = !this.show_buttons;
       // Emit selection event to parent
       this.$emit('select', this.customer.id);
+    },
+    makeCall() {
+      // Open phone dialer with customer's phone number
+      const phoneNumber = this.customer.customer.phone;
+      if (phoneNumber) {
+        window.open(`tel:${phoneNumber}`, '_self');
+      }
     }
   },
   watch: {
@@ -159,7 +166,7 @@ export default {
       <div class="actions-container" :class="{ 'actions-visible': isSelected }">
         <v-card-actions class="pa-4 pt-0">
           <v-row no-gutters class="w-100">
-            <v-col cols="6" class="px-1">
+            <v-col cols="4" class="px-1">
               <v-btn
                 :to="{name:'customers_profile',params:{id:customer.customer.id}}"
                 color="primary"
@@ -172,10 +179,10 @@ export default {
                 پروفایل
               </v-btn>
             </v-col>
-            <v-col cols="6" class="px-1">
+            <v-col cols="4" class="px-1">
               <v-btn
                 @click.stop="openReportDialog"
-                color="success"
+                color="purple"
                 variant="flat"
                 prepend-icon="mdi-text-box-edit"
                 class="action-btn w-100"
@@ -183,6 +190,19 @@ export default {
                 rounded="lg"
               >
                 گزارش
+              </v-btn>
+            </v-col>
+            <v-col cols="4" class="px-1">
+              <v-btn
+                @click.stop="makeCall"
+                color="success"
+                variant="flat"
+                prepend-icon="mdi-phone"
+                class="action-btn w-100"
+                size="small"
+                rounded="lg"
+              >
+                تماس
               </v-btn>
             </v-col>
           </v-row>
@@ -271,7 +291,7 @@ export default {
 }
 
 .actions-container.actions-visible {
-  max-height: 100px;
+  max-height: 120px;
   opacity: 1;
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease 0.1s;
 }
@@ -357,4 +377,5 @@ export default {
 .customer-card .router-link:hover p {
   color: rgb(var(--v-theme-primary)) !important;
 }
+
 </style>

@@ -412,7 +412,7 @@ export default {
           <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
-              <th>تاریخ ها</th>
+              <th class="text-center">تاریخ ها</th>
               <th>ورود و تگها</th>
               <th>
                 مشتری
@@ -425,12 +425,10 @@ export default {
             </thead>
             <tbody>
             <tr v-for="item in items" class="animate__animated animate__fadeIn" >
-              <td>
-                <div class="mt-3">
-                <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
-                </div>
-                <div class="mt-2 mb-3">
-                    <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
+              <td class="pa-2">
+                <div class="date-stack">
+                  <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
+                  <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
                 </div>
               </td>
               <td>
@@ -438,11 +436,12 @@ export default {
               </td>
               <td class="pa-2">
                 <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
-                  <v-icon icon="mdi-account font-29" color="deep-orange-darken-3"></v-icon>
-                  <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
-                  <template v-if=" item.customer.name">
-                    <span class="ms-2 text-grey-darken-4 font-14">( {{item.customer.name}} )</span>
-                  </template>
+                  <div class="d-flex flex-column">
+                    <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
+                    <template v-if=" item.customer.name">
+                      <span class="text-grey-darken-4 font-12 mt-1">{{item.customer.name}}</span>
+                    </template>
+                  </div>
                 </router-link>
               </td>
               <td class="pa-2">
@@ -457,8 +456,19 @@ export default {
                   {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
                 </template>
               </td>
-              <td class="pa-2 text-center">
-                <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
+              <td class="pa-2 text-center" style="min-width: 120px;">
+                <div class="operations-container">
+                  <div class="operation-group">
+                    <v-btn 
+                      @click="add_report_dialog[item.id] = true" 
+                      class="compact-operation-btn report-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <span class="operation-label">گزارش</span>
+                    </v-btn>
+                  </div>
+                </div>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
                     :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
@@ -472,7 +482,32 @@ export default {
                     :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                     elevation="8"
                   >
+                    <!-- Enhanced Header -->
                     <v-card-item class="pa-4 pa-sm-6">
+                      <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center">
+                          <v-icon
+                            icon="mdi-text-box-edit"
+                            color="teal-darken-2"
+                            size="28"
+                            class="me-3"
+                          ></v-icon>
+                          <div>
+                            <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                              ثبت گزارش جدید
+                            </h3>
+                            <p class="text-grey-darken-1 mb-0 mt-1">
+                              گزارش جدید برای مشتری {{ item.customer.name || item.customer.phone }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </v-card-item>
+                    
+                    <v-divider class="mx-4 mx-sm-6"></v-divider>
+                    
+                    <!-- Content Area -->
+                    <v-card-item class="pa-4 pa-sm-6 pt-0">
                       <actions_customer_report_create 
                         @Created="(item) => Create_Report(item)" 
                         :customer="item"
@@ -548,11 +583,12 @@ export default {
               </td>
               <td class="pa-2">
                 <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
-                  <v-icon icon="mdi-account font-29" color="deep-orange-darken-3"></v-icon>
-                  <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
-                  <template v-if=" item.customer.name">
-                    <span class="ms-2 text-grey-darken-4 font-14">( {{item.customer.name}} )</span>
-                  </template>
+                  <div class="d-flex flex-column">
+                    <strong class="font-14 text-black">{{ item.customer.phone}}</strong>
+                    <template v-if=" item.customer.name">
+                      <span class="text-grey-darken-4 font-12 mt-1">{{item.customer.name}}</span>
+                    </template>
+                  </div>
                 </router-link>
               </td>
               <td class="pa-2">
@@ -567,8 +603,19 @@ export default {
                   {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
                 </template>
               </td>
-              <td class="pa-2 text-center">
-                <v-btn @click="add_report_dialog[item.id] = true" color="teal" density="comfortable" variant="flat" icon="mdi-text-box-edit" title="ثبت گزارش"></v-btn>
+              <td class="pa-2 text-center" style="min-width: 120px;">
+                <div class="operations-container">
+                  <div class="operation-group">
+                    <v-btn 
+                      @click="add_report_dialog[item.id] = true" 
+                      class="compact-operation-btn report-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <span class="operation-label">گزارش</span>
+                    </v-btn>
+                  </div>
+                </div>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
                     :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
@@ -582,7 +629,32 @@ export default {
                     :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                     elevation="8"
                   >
+                    <!-- Enhanced Header -->
                     <v-card-item class="pa-4 pa-sm-6">
+                      <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center">
+                          <v-icon
+                            icon="mdi-text-box-edit"
+                            color="teal-darken-2"
+                            size="28"
+                            class="me-3"
+                          ></v-icon>
+                          <div>
+                            <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                              ثبت گزارش جدید
+                            </h3>
+                            <p class="text-grey-darken-1 mb-0 mt-1">
+                              گزارش جدید برای مشتری {{ item.customer.name || item.customer.phone }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </v-card-item>
+                    
+                    <v-divider class="mx-4 mx-sm-6"></v-divider>
+                    
+                    <!-- Content Area -->
+                    <v-card-item class="pa-4 pa-sm-6 pt-0">
                       <actions_customer_report_create 
                         @Created="(item) => Create_Report(item)" 
                         :customer="item"
@@ -702,8 +774,117 @@ export default {
   border-radius: 12px !important;
 }
 
+/* Date Stack Styling - Direct stacking without container */
+.date-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.date-stack :deep(.v-chip) {
+  border-radius: 0 !important;
+}
+
+.date-stack :deep(.v-chip:first-child) {
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.date-stack :deep(.v-chip:last-child) {
+  border-radius: 0 0 12px 12px !important;
+}
+
+/* Compact Operations Column - Minimalist Design */
+.operations-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px;
+}
+
+.operation-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.compact-operation-btn {
+  position: relative !important;
+  min-width: auto !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.compact-operation-btn .operation-label {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  opacity: 0.8 !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Report Action Styling */
+.report-action {
+  color: #059669 !important;
+}
+
+.report-action:hover {
+  background: rgba(5, 150, 105, 0.08) !important;
+  border-color: rgba(5, 150, 105, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15) !important;
+}
+
+.report-action:hover .operation-label {
+  opacity: 1 !important;
+  color: #047857 !important;
+}
+
+/* Row Hover Effects */
+.v-table tbody tr:hover .operation-group {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.v-table tbody tr:hover .compact-operation-btn {
+  opacity: 1 !important;
+}
+
+/* Active State */
+.compact-operation-btn:active {
+  transform: translateY(0) scale(0.98) !important;
+  transition: all 0.1s ease !important;
+}
+
 /* Better spacing for mobile headers */
 @media (max-width: 600px) {
+  .v-dialog .v-card-item h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+    font-family: inherit !important;
+  }
+  
+  .v-dialog .v-card-item p {
+    font-size: 0.875rem !important;
+  }
+  
   .mobile-header-card .v-card-item {
     padding: 16px !important;
   }
@@ -712,6 +893,15 @@ export default {
     font-size: 1.1rem !important;
     line-height: 1.3 !important;
   }
+}
+
+/* Ensure proper title styling */
+.v-dialog .v-card-item h3.text-h5 {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: rgb(var(--v-theme-primary-darken-2)) !important;
+  font-size: 1.5rem !important;
+  line-height: 1.2 !important;
 }
 
 </style>
