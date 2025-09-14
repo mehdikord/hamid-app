@@ -36,16 +36,37 @@ export default {
     }
   },
   methods:{
-    Create_Invoice(){
+    async Create_Invoice(){
       this.loading=true;
+      
+      // If no target price exists, set it first
       if (this.user_project && !this.user_project.target_price){
         if (!this.target_price){
+          this.loading=false;
           return this.Notify_Error('مبلغ معامله را وارد کنید !');
         }
-        Stores_Customer().Invoices_Target_Price({customer_id : this.user_project.project_customer_id,price:this.target_price}).then((res)=>{
-        }).catch((error)=>{
+        try {
+          await Stores_Customer().Invoices_Target_Price({customer_id : this.user_project.project_customer_id,price:this.target_price});
+          // After successful target price setting, proceed with invoice creation
+          this.Create_Invoice_After_Target();
+        } catch (error) {
+          this.loading=false;
           return this.Notify_Error('خطا در ثبت مبلغ معامله !');
-        })
+        }
+      } else {
+        // If target price already exists, proceed directly with invoice creation
+        this.Create_Invoice_After_Target();
+      }
+    },
+    
+    Create_Invoice_After_Target(){
+      // Validate that deposit amount doesn't exceed remaining contract amount
+      if (this.user_project && this.user_project.target_price) {
+        const remainingAmount = this.user_project.target_price - this.user_project.sum_invoices;
+        if (this.price > remainingAmount) {
+          this.loading=false;
+          return this.Notify_Error(`مبلغ واریزی نمی‌تواند بیشتر از مبلغ باقیمانده (${this.$filters.number_format(remainingAmount)} تومان) باشد!`);
+        }
       }
       let params = {
         customer_id : this.customer.id,
@@ -58,6 +79,10 @@ export default {
       Stores_Customer().Projects_Invoices_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
+        // Close modal after successful creation
+        if (this.onCancel) {
+          this.onCancel();
+        }
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors=error.response.data;
@@ -71,7 +96,6 @@ export default {
         }
         this.loading=false;
       })
-
     },
     Get_Project(){
       Stores_Customer().Projects_Index({id : this.customer.id}).then(res => {
@@ -143,7 +167,17 @@ export default {
       </div>
     </template>
     <div class="mb-3">
-      <v-text-field color="blue" :error="Validation_Check(errors,'price')" v-model="price" append-inner-icon="mdi-currency-usd" rounded="lg" variant="outlined" type="number" label="مبلغ واریزی ( تومان )" class="custom-input" />
+      <v-text-field 
+        color="blue" 
+        :error="Validation_Check(errors,'price')" 
+        v-model="price" 
+        append-inner-icon="mdi-currency-usd" 
+        rounded="lg" 
+        variant="outlined" 
+        type="number" 
+        :label="user_project && user_project.target_price ? `مبلغ واریزی ( حداکثر ${this.$filters.number_format(user_project.target_price - user_project.sum_invoices)} تومان )` : 'مبلغ واریزی ( تومان )'" 
+        class="custom-input" 
+      />
       <validation_errors :errors="Validation_Errors(errors,'price')"></validation_errors>
     </div>
     <div class="mb-3">

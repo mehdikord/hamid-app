@@ -45,6 +45,13 @@ export default {
   methods:{
     Create_Report(){
       this.loading=true;
+      
+      // Validate required fields
+      if (!this.report || this.report.trim() === ''){
+        this.loading=false;
+        return this.Notify_Error('متن گزارش را وارد کنید')
+      }
+      
       let params = {
         customer_id : this.customer.project_customer_id,
         date : this.date,
@@ -56,6 +63,10 @@ export default {
       Stores_Customer().Reports_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
+        // Close modal after successful creation
+        if (this.onCancel) {
+          this.onCancel();
+        }
       }).catch(error => {
         if (error.response.status === 422) {
 

@@ -4,7 +4,8 @@ const Profile_Routes = [
     {
         path : "/profile",
         name : 'profile',
-        component : Profile
+        component : Profile,
+        meta: { title: 'پروفایل' }
     }
 ];
 

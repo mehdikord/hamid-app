@@ -4,7 +4,8 @@ const Auth_Routes = [
     {
         path : "/auth",
         name : 'auth',
-        component : Auth
+        component : Auth,
+        meta: { title: 'ورود به سیستم' }
     }
 ];
 

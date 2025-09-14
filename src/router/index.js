@@ -30,4 +30,11 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+router.afterEach((to, from) => {
+    // Update document title based on route meta
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    }
+});
 export default router

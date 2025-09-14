@@ -21,11 +21,11 @@ export default {
   methods: {
     Create_Report(item) {
       this.$emit('Set_Report', item)
-      this.add_report_dialog = false;
+      // Modal closing is now handled by the action component
     },
     Create_Invoice(item) {
       this.$emit('Set_Invoice', item)
-      this.add_invoice_dialog = false;
+      // Modal closing is now handled by the action component
     },
     openReportDialog() {
       this.add_report_dialog = true;

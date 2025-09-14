@@ -54,20 +54,34 @@ export default {
 
     Create_Report(){
       this.loading=true;
+      
+      // Validate required fields
       if (!this.project_id){
+        this.loading=false;
         return this.Notify_Error('پروژه مورد نظر را انتخاب کنید')
       }
+      
+      if (!this.report || this.report.trim() === ''){
+        this.loading=false;
+        return this.Notify_Error('متن گزارش را وارد کنید')
+      }
+      
       let params = {
         customer_id : this.customer.id,
         project_id : this.project_id,
         date : this.date,
         status_id : this.status_id,
+        project_level_id : this.project_level_id,
         report : this.report,
         file : this.file,
       }
       Stores_Customer().Projects_Reports_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
+        // Close modal after successful creation
+        if (this.onCancel) {
+          this.onCancel();
+        }
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors=error.response.data;

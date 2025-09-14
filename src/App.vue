@@ -56,9 +56,25 @@ import { Stores_Auth } from "@/stores/auth/auth.js";
 import Template_Menu from "@/components/template/Template_Menu.vue";
 import Template_Bottom_Navigation from "@/components/template/Template_Bottom_Navigation.vue";
 import InstallPrompt from "@/InstallPrompt.vue";
+import { useTitle } from '@/composables/useTitle.js';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default {
   name: "App",
+  setup() {
+    const route = useRoute();
+    const { updateTitleFromRoute } = useTitle();
+    
+    // Watch for route changes
+    watch(route, () => {
+      updateTitleFromRoute();
+    }, { immediate: true });
+    
+    return {
+      // Return any setup data if needed
+    };
+  },
   data() {
     return {
       user_check: Stores_Auth().AuthGetCheckAuth,

@@ -7,17 +7,20 @@ const Customers_Routes = [
     {
         path : "/customers",
         name : 'customers',
-        component : Customers
+        component : Customers,
+        meta: { title: 'مشتریان' }
     },
     {
         path : "/customers/consultant",
         name : 'customers_consultant',
-        component : Customers_Consultant
+        component : Customers_Consultant,
+        meta: { title: 'لیست شماره های در حال مشاوره' }
     },
     {
         path : "/customers/seller",
         name : 'customers_seller',
-        component : Customers_Sellers
+        component : Customers_Sellers,
+        meta: { title: 'لیست شماره های در حال فروش' }
     },
 
 
@@ -26,17 +29,20 @@ const Customers_Routes = [
     {
         path : "/customers/profile/:id",
         name : 'customers_profile',
-        component : Customers_Profile
+        component : Customers_Profile,
+        meta: { title: 'پروفایل مشتری', dynamicTitle: true }
     },
     {
         path : "/customers/profile/:id/reports",
         name : 'customers_profile_reports',
-        component : Customers_Profile
+        component : Customers_Profile,
+        meta: { title: 'گزارشات مشتری', dynamicTitle: true }
     },
     {
         path : "/customers/profile/:id/invoices",
         name : 'customers_profile_invoices',
-        component : Customers_Profile
+        component : Customers_Profile,
+        meta: { title: 'فاکتورهای مشتری', dynamicTitle: true }
     }
 ];
 

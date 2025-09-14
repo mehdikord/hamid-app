@@ -4,7 +4,8 @@ const Reports_Routes = [
     {
         path : "/reports",
         name : 'reports',
-        component : Reports
+        component : Reports,
+        meta: { title: 'گزارشات' }
     }
 ];
 

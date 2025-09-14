@@ -5,6 +5,7 @@ import Profile from '@/assets/images/icons/customer.svg'
 import Customer_Profile_Summery from "@/views/customers/components/Customer_Profile_Summery.vue";
 import Customer_Profile_Reports from "@/views/customers/components/Customer_Profile_Reports.vue";
 import Customer_Profile_Invoices from "@/views/customers/components/Customer_Profile_Invoices.vue";
+import { useTitle } from '@/composables/useTitle.js';
 
 export default {
   name: "Customers_Profile",
@@ -12,6 +13,12 @@ export default {
     'profile_summery' : Customer_Profile_Summery,
     'profile_reports' : Customer_Profile_Reports,
     'profile_invoices' : Customer_Profile_Invoices,
+  },
+  setup() {
+    const { updateCustomerTitle } = useTitle();
+    return {
+      updateCustomerTitle
+    };
   },
   mounted() {
     this.Get_Customer();
@@ -45,6 +52,8 @@ export default {
       Stores_Customer().Show({id : this.$route.params.id}).then(res=>{
         this.customer = res.data.result;
         this.loading = false;
+        // Update title with customer information
+        this.updateCustomerTitle(this.customer);
       }).catch(error=>{
         this.Notify_Error_Server();
 
@@ -53,6 +62,8 @@ export default {
     Update_Customer(item){
       this.customer = item;
       this.edit_dialog = false;
+      // Update title with updated customer information
+      this.updateCustomerTitle(this.customer);
       this.Notify_Success('اطلاعات مشتری با موفقیت ویراش گردید')
     },
     Create_Report(){

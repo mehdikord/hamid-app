@@ -13,6 +13,7 @@ export default {
                 iconColor : color,
                 background : background,
                 timerProgressBar: true,
+                zIndex: 99999,
                 didOpen: (toast) => {
                     toast.onmouseenter = this.$swal.stopTimer;
                     toast.onmouseleave = this.$swal.resumeTimer;

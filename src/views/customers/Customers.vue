@@ -119,7 +119,7 @@ export default {
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
             customer.last_report = item;
-            this.add_report_dialog[customer.id] = false;
+            // Modal closing is now handled by the action component
           }
           return customer;
         })
@@ -131,8 +131,7 @@ export default {
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
             customer.invoices_count+=1;
-            this.add_invoice_dialog[customer.id] = false;
-
+            // Modal closing is now handled by the action component
           }
           return customer;
         })
@@ -320,7 +319,7 @@ export default {
                       </v-card-item>
                       <v-divider/>
                       <v-card-item>
-                        <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item"></actions_customer_report_create>
+                        <actions_customer_report_create @Created="(item) => Create_Report(item)" :customer="item" :onCancel="() => add_report_dialog[item.id] = false"></actions_customer_report_create>
                       </v-card-item>
                     </v-card>
                   </v-dialog>
@@ -341,7 +340,7 @@ export default {
                       </v-card-item>
                       <v-divider/>
                       <v-card-item>
-                        <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item"></actions_customer_invoice_create>
+                        <actions_customer_invoice_create @Created="(item) => Create_Invoice(item)" :customer="item" :onCancel="() => add_invoice_dialog[item.id] = false"></actions_customer_invoice_create>
 
 
                       </v-card-item>

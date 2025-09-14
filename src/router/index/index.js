@@ -4,7 +4,8 @@ const Index_Routes = [
     {
         path : "/",
         name : 'index',
-        component : Index
+        component : Index,
+        meta: { title: 'داشبورد' }
     }
 ];
 

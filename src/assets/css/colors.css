@@ -57,3 +57,8 @@
 .border-grey-medium {
     border-color: rgba(0, 0, 0, 0.12) !important;
 }
+
+/* SweetAlert2 Z-Index Fix */
+.swal2-container {
+    z-index: 99999 !important;
+}
