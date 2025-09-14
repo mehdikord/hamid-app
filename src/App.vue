@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-locale-provider rtl>
-      <v-app-bar v-if="user_check && !isMobile" elevation="0" class="bg-grey-darken-4" app>
-        <!-- Only show menu toggle on desktop -->
+      <!-- Top black bar commented out for new hover-based navigation -->
+      <!-- <v-app-bar v-if="user_check && !isMobile" elevation="0" class="bg-grey-darken-4" app>
         <v-app-bar-nav-icon 
           v-if="!isMobile"
           variant="text" 
@@ -17,7 +17,7 @@
           <v-btn icon="mdi-filter" variant="text"></v-btn>
         </template>
         <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
-      </v-app-bar>
+      </v-app-bar> -->
 
       <v-navigation-drawer
           v-if="user_check && !isMobile"
@@ -26,7 +26,9 @@
           app
           permanent
           @click="rail = false"
-
+          @mouseenter="onDrawerHover"
+          @mouseleave="onDrawerLeave"
+          class="hover-navigation-drawer"
       >
         <v-list nav>
           <template_menu :user="user"></template_menu>
@@ -80,7 +82,6 @@ export default {
       user_check: Stores_Auth().AuthGetCheckAuth,
       user: Stores_Auth().AuthGetUser,
       rail: true,
-      mini:true,
     };
   },
   computed: {
@@ -89,14 +90,14 @@ export default {
     }
   },
   methods : {
-    toggleMenu() {
-      if (this.isMobile) {
-        this.mini = !this.mini;
-      } else {
-        this.rail = !this.rail
-      }
+    onDrawerHover() {
+      // Open the drawer when hovering over it
+      this.rail = false;
+    },
+    onDrawerLeave() {
+      // Close the drawer when mouse leaves
+      this.rail = true;
     }
-
   },
   components: {
     'template_menu': Template_Menu,
@@ -109,5 +110,13 @@ export default {
 <style scoped>
 .mobile-main {
   padding-bottom: 70px; /* Account for bottom navigation height */
+}
+
+.hover-navigation-drawer {
+  transition: all 0.3s ease-in-out;
+}
+
+.hover-navigation-drawer:hover {
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
 }
 </style>

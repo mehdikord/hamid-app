@@ -82,7 +82,8 @@ export default {
     </template>
   </v-list-item>
   <v-spacer class="mt-2 mb-2" />
-  <v-list-item
+  <!--  فاکتور ها و شماره های ثبت شده برای مشتریان -->
+  <!-- <v-list-item
       active-color="deep-orange-darken-2"
 
   >
@@ -109,8 +110,8 @@ export default {
         <span class="font-14">فاکتور ها </span>
       </div>
     </template>
-  </v-list-item>
-  <v-spacer class="mt-2 mb-2" />
+  </v-list-item> -->
+  <!-- <v-spacer class="mt-2 mb-2" />
   <v-list-item
       active-color="deep-orange-darken-2"
   >
@@ -123,7 +124,7 @@ export default {
         <span class="font-14">شماره ها </span>
       </div>
     </template>
-  </v-list-item>
+  </v-list-item> -->
   <v-spacer class="mt-2 mb-2" />
   <v-list-item
       :to="{name : 'profile'}"
