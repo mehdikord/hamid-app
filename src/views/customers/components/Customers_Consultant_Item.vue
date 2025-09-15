@@ -36,6 +36,17 @@ export default {
       if (phoneNumber) {
         window.open(`tel:${phoneNumber}`, '_self');
       }
+    },
+    openWhatsApp() {
+      // Open WhatsApp with customer's phone number and سلام message
+      const phoneNumber = this.customer.customer.phone;
+      if (phoneNumber) {
+        const cleanPhone = phoneNumber.replace(/\D/g, '');
+        const whatsappPhone = cleanPhone.startsWith('98') ? cleanPhone : `98${cleanPhone}`;
+        const message = encodeURIComponent('سلام');
+        const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
+      }
     }
   },
   watch: {
@@ -166,43 +177,52 @@ export default {
       <div class="actions-container" :class="{ 'actions-visible': isSelected }">
         <v-card-actions class="pa-4 pt-0">
           <v-row no-gutters class="w-100">
-            <v-col cols="4" class="px-1">
+            <v-col cols="3" class="px-1">
               <v-btn
                 :to="{name:'customers_profile',params:{id:customer.customer.id}}"
                 color="primary"
                 variant="outlined"
-                prepend-icon="mdi-account"
                 class="action-btn w-100"
                 size="small"
                 rounded="lg"
               >
-                پروفایل
+                <v-icon icon="mdi-account" size="18"></v-icon>
               </v-btn>
             </v-col>
-            <v-col cols="4" class="px-1">
+            <v-col cols="3" class="px-1">
               <v-btn
                 @click.stop="openReportDialog"
                 color="purple"
                 variant="flat"
-                prepend-icon="mdi-text-box-edit"
                 class="action-btn w-100"
                 size="small"
                 rounded="lg"
               >
-                گزارش
+                <v-icon icon="mdi-text-box-edit" size="18"></v-icon>
               </v-btn>
             </v-col>
-            <v-col cols="4" class="px-1">
+            <v-col cols="3" class="px-1">
               <v-btn
                 @click.stop="makeCall"
-                color="success"
+                color="teal"
                 variant="flat"
-                prepend-icon="mdi-phone"
                 class="action-btn w-100"
                 size="small"
                 rounded="lg"
               >
-                تماس
+                <v-icon icon="mdi-phone" size="18"></v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="3" class="px-1">
+              <v-btn
+                @click.stop="openWhatsApp"
+                color="green"
+                variant="flat"
+                class="action-btn w-100"
+                size="small"
+                rounded="lg"
+              >
+                <v-icon icon="mdi-whatsapp" size="18"></v-icon>
               </v-btn>
             </v-col>
           </v-row>

@@ -174,6 +174,14 @@ export default {
       }
       this.Notify_Success('فاکتور با موفقیت ثبت گردید');
     },
+    openWhatsApp(phoneNumber) {
+      // Remove any non-digit characters and ensure it starts with country code
+      const cleanPhone = phoneNumber.replace(/\D/g, '');
+      const whatsappPhone = cleanPhone.startsWith('98') ? cleanPhone : `98${cleanPhone}`;
+      const message = encodeURIComponent('سلام');
+      const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${message}`;
+      window.open(whatsappUrl, '_blank');
+    },
 
   }
 }
@@ -469,6 +477,14 @@ export default {
                     >
                       <span class="operation-label">فاکتور</span>
                     </v-btn>
+                    <v-btn 
+                      @click="openWhatsApp(item.customer.phone)" 
+                      class="compact-operation-btn whatsapp-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <v-icon icon="mdi-whatsapp" size="14"></v-icon>
+                    </v-btn>
                   </div>
                 </div>
                 <v-dialog
@@ -758,6 +774,22 @@ export default {
 .invoice-action:hover .operation-label {
   opacity: 1 !important;
   color: #1d4ed8 !important;
+}
+
+/* WhatsApp Action Styling */
+.whatsapp-action {
+  color: #25d366 !important;
+}
+
+.whatsapp-action:hover {
+  background: rgba(37, 211, 102, 0.08) !important;
+  border-color: rgba(37, 211, 102, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.15) !important;
+}
+
+.whatsapp-action:hover .v-icon {
+  color: #128c7e !important;
 }
 
 /* Row Hover Effects */
