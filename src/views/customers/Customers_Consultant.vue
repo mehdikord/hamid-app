@@ -20,7 +20,7 @@ export default {
   data(){
     return {
       items_loading:true,
-      items_loading_old:true,
+      // items_loading_old:true,
       add_report_dialog:[],
       query_params:{
         sort_by : 'id',
@@ -29,13 +29,13 @@ export default {
         page : 1,
         search :{}
       },
-      query_params_old:{
-        sort_by : 'id',
-        sort_type : 'desc',
-        per_page : 15,
-        page : 1,
-        search :{}
-      },
+      // query_params_old:{
+      //   sort_by : 'id',
+      //   sort_type : 'desc',
+      //   per_page : 15,
+      //   page : 1,
+      //   search :{}
+      // },
       pagination: {
         current: 1,
         total: 0,
@@ -45,15 +45,15 @@ export default {
         to: 1,
         links:[]
       },
-      pagination_old: {
-        current: 1,
-        total: 0,
-        per_page: 15,
-        last_page: 1,
-        from: 1,
-        to: 1,
-        links:[]
-      },
+      // pagination_old: {
+      //   current: 1,
+      //   total: 0,
+      //   per_page: 15,
+      //   last_page: 1,
+      //   from: 1,
+      //   to: 1,
+      //   links:[]
+      // },
 
       status_id:null,
       level_id:null,
@@ -63,10 +63,40 @@ export default {
       projects:[],
       project_id:null,
       items:[],
-      items_old:[],
-      show_old:false,
+      // items_old:[],
+      // show_old:false,
       show_filter:false,
       selected_card_id: null,
+    }
+  },
+  computed: {
+    // Sort items to move successful/unsuccessful statuses to the end
+    sortedItems() {
+      if (!this.items || this.items.length === 0) return [];
+      
+      // Define status names that indicate final states (successful/unsuccessful)
+      const finalStatusNames = [
+        'موفق', 'ناموفق', 'تکمیل شده', 'انجام شده', 'پایان یافته',
+        'موفقیت', 'شکست', 'تمام شده', 'خاتمه یافته', 'نهایی',
+        'successful', 'unsuccessful', 'completed', 'finished', 'done',
+        'success', 'failed', 'final', 'closed', 'ended'
+      ];
+      
+      return [...this.items].sort((a, b) => {
+        const aStatusName = a.status?.name?.toLowerCase() || '';
+        const bStatusName = b.status?.name?.toLowerCase() || '';
+        
+        const aIsFinal = finalStatusNames.some(status => aStatusName.includes(status.toLowerCase()));
+        const bIsFinal = finalStatusNames.some(status => bStatusName.includes(status.toLowerCase()));
+        
+        // If both are final or both are not final, maintain original order
+        if (aIsFinal === bIsFinal) {
+          return 0;
+        }
+        
+        // Move final statuses to the end
+        return aIsFinal ? 1 : -1;
+      });
     }
   },
   watch: {
@@ -124,24 +154,24 @@ export default {
         this.items_loading=false;
       })
     },
-    Get_Items_Old(){
-      this.items_loading_old=true;
-      Stores_Customer().Index_Consultant_Old(this.query_params_old).then(res => {
-        this.items_old = res.data.result.data
-        if (res.data.result){
-          this.pagination_old.current = res.data.result.current_page;
-          this.pagination_old.per_page = res.data.result.per_page;
-          this.pagination_old.from = res.data.result.from;
-          this.pagination_old.to = res.data.result.to;
-          this.pagination_old.total = res.data.result.total;
-          this.pagination_old.last_page = res.data.result.last_page;
-          this.pagination_old.links = res.data.result.links;
-        }
-        this.items_loading_old=false;
-      }).catch((error) => {
-        this.items_loading_old=false;
-      })
-    },
+    // Get_Items_Old(){
+    //   this.items_loading_old=true;
+    //   Stores_Customer().Index_Consultant_Old(this.query_params_old).then(res => {
+    //     this.items_old = res.data.result.data
+    //     if (res.data.result){
+    //       this.pagination_old.current = res.data.result.current_page;
+    //       this.pagination_old.per_page = res.data.result.per_page;
+    //       this.pagination_old.from = res.data.result.from;
+    //       this.pagination_old.to = res.data.result.to;
+    //       this.pagination_old.total = res.data.result.total;
+    //       this.pagination_old.last_page = res.data.result.last_page;
+    //       this.pagination_old.links = res.data.result.links;
+    //     }
+    //     this.items_loading_old=false;
+    //   }).catch((error) => {
+    //     this.items_loading_old=false;
+    //   })
+    // },
     Change_Per_Page(page){
       this.query_params.per_page = page;
       this.query_params.page = 1;
@@ -151,24 +181,24 @@ export default {
       this.query_params.page = page;
       this.Get_Items();
     },
-    Change_Per_Page_Old(page){
-      this.query_params_old.per_page = page;
-      this.query_params_old.page = 1;
-      this.Get_Items_Old();
-    },
-    Change_Page_Old(page){
-      this.query_params_old.page = page;
-      this.Get_Items_Old();
-    },
+    // Change_Per_Page_Old(page){
+    //   this.query_params_old.per_page = page;
+    //   this.query_params_old.page = 1;
+    //   this.Get_Items_Old();
+    // },
+    // Change_Page_Old(page){
+    //   this.query_params_old.page = page;
+    //   this.Get_Items_Old();
+    // },
     Do_Search(){
       this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
-      this.query_params_old.search.status_id = this.status_id;
-      this.query_params_old.search.project_id = this.project_id;
+      // this.query_params_old.search.status_id = this.status_id;
+      // this.query_params_old.search.project_id = this.project_id;
       this.Get_Items();
-      if (this.show_old){
-        this.Get_Items_Old();
-      }
+      // if (this.show_old){
+      //   this.Get_Items_Old();
+      // }
     },
     Clear_phone(){
       this.search_phone = null;
@@ -181,11 +211,11 @@ export default {
       this.level_id = null;
       this.project_id = null;
       this.query_params.search = {};
-      this.query_params_old.search = {};
+      // this.query_params_old.search = {};
       this.Get_Items();
-      if (this.show_old){
-        this.Get_Items_Old();
-      }
+      // if (this.show_old){
+      //   this.Get_Items_Old();
+      // }
     },
     Select_Card(card_id){
       // If clicking the same card, deselect it
@@ -200,12 +230,12 @@ export default {
         }, 50);
       }
     },
-    Show_Old(){
-      this.show_old = !this.show_old;
-      if (this.show_old){
-        this.Get_Items_Old();
-      }
-    },
+    // Show_Old(){
+    //   this.show_old = !this.show_old;
+    //   if (this.show_old){
+    //     this.Get_Items_Old();
+    //   }
+    // },
     Create_Report(item){
       if (item.project_customer_id){
         this.items = this.items.map(customer => {
@@ -432,7 +462,7 @@ export default {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in items" class="animate__animated animate__fadeIn" >
+            <tr v-for="item in sortedItems" class="animate__animated animate__fadeIn" >
               <td class="pa-2">
                 <div class="date-stack">
                   <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
@@ -537,7 +567,7 @@ export default {
             </tbody>
           </v-table>
           <div v-if="!this.$vuetify.display.mdAndUp" >
-            <div v-for="item in items" class="animate__animated animate__fadeIn mb-6">
+            <div v-for="item in sortedItems" class="animate__animated animate__fadeIn mb-6">
               <consultant_item 
                 @Set_Report = "(item) => Create_Report(item)" 
                 @select = "(card_id) => Select_Card(card_id)"
@@ -554,7 +584,7 @@ export default {
         </div>
       </div>
     </v-card-item>
-    <v-divider class="mb-6"/>
+    <!-- <v-divider class="mb-6"/>
     <v-alert @click="Show_Old" color="blue-grey-lighten-4" class="custom-alert cursor-pointer">
       <div class="text-center">
         <span class="font-14 font-weight-500">مشاهده شماره های مشاوره شده پیشین</span>
@@ -653,7 +683,6 @@ export default {
                     :class="$vuetify.display.smAndDown ? 'h-100' : ''"
                     elevation="8"
                   >
-                    <!-- Enhanced Header -->
                     <v-card-item class="pa-4 pa-sm-6">
                       <div class="d-flex align-center justify-space-between">
                         <div class="d-flex align-center">
@@ -677,7 +706,6 @@ export default {
                     
                     <v-divider class="mx-4 mx-sm-6"></v-divider>
                     
-                    <!-- Content Area -->
                     <v-card-item class="pa-4 pa-sm-6 pt-0">
                       <actions_customer_report_create 
                         @Created="(item) => Create_Report(item)" 
@@ -708,7 +736,7 @@ export default {
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </v-card>
 
 
