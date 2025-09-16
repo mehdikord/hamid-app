@@ -184,68 +184,58 @@ export default {
       <!-- Compact Actions -->
       <div class="actions-container" :class="{ 'actions-visible': isSelected }">
         <v-card-actions class="pa-4 pt-0">
-          <v-row no-gutters class="w-100">
-            <v-col cols="2" class="px-1">
-              <v-btn
-                :to="{name:'customers_profile',params:{id:customer.customer.id}}"
-                color="primary"
-                variant="outlined"
-                class="action-btn w-100"
-                size="small"
-                rounded="lg"
-              >
-                <v-icon icon="mdi-account" size="18"></v-icon>
-              </v-btn>
-            </v-col>
-            <v-col cols="2" class="px-1">
-              <v-btn
-                @click.stop="openReportDialog"
-                color="purple"
-                variant="flat"
-                class="action-btn w-100"
-                size="small"
-                rounded="lg"
-              >
-                <v-icon icon="mdi-text-box-edit" size="18"></v-icon>
-              </v-btn>
-            </v-col>
-            <v-col cols="2" class="px-1">
-              <v-btn
-                @click.stop="openInvoiceDialog"
-                color="info"
-                variant="flat"
-                class="action-btn w-100"
-                size="small"
-                rounded="lg"
-              >
-                <v-icon icon="mdi-currency-usd" size="18"></v-icon>
-              </v-btn>
-            </v-col>
-            <v-col cols="3" class="px-1">
-              <v-btn
-                @click.stop="makeCall"
-                color="teal"
-                variant="flat"
-                class="action-btn w-100"
-                size="small"
-                rounded="lg"
-              >
-                <v-icon icon="mdi-phone" size="18"></v-icon>
-              </v-btn>
-            </v-col>
-            <v-col cols="3" class="px-1">
-              <v-btn
-                @click.stop="openWhatsApp"
-                color="green"
-                variant="flat"
-                class="action-btn w-100"
-                size="small"
-                rounded="lg"
-              >
-                <v-icon icon="mdi-whatsapp" size="18"></v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
+          <div class="equal-buttons-container">
+            <v-btn
+              :to="{name:'customers_profile',params:{id:customer.customer.id}}"
+              color="primary"
+              variant="outlined"
+              class="action-btn equal-btn"
+              size="small"
+              rounded="lg"
+            >
+              <v-icon icon="mdi-account" size="18"></v-icon>
+            </v-btn>
+            <v-btn
+              @click.stop="openReportDialog"
+              color="purple"
+              variant="flat"
+              class="action-btn equal-btn"
+              size="small"
+              rounded="lg"
+            >
+              <v-icon icon="mdi-text-box-edit" size="18"></v-icon>
+            </v-btn>
+            <v-btn
+              @click.stop="openInvoiceDialog"
+              color="info"
+              variant="flat"
+              class="action-btn equal-btn"
+              size="small"
+              rounded="lg"
+            >
+              <v-icon icon="mdi-currency-usd" size="18"></v-icon>
+            </v-btn>
+            <v-btn
+              @click.stop="makeCall"
+              color="teal"
+              variant="flat"
+              class="action-btn equal-btn"
+              size="small"
+              rounded="lg"
+            >
+              <v-icon icon="mdi-phone" size="18"></v-icon>
+            </v-btn>
+            <v-btn
+              @click.stop="openWhatsApp"
+              color="green"
+              variant="flat"
+              class="action-btn equal-btn"
+              size="small"
+              rounded="lg"
+            >
+              <v-icon icon="mdi-whatsapp" size="18"></v-icon>
+            </v-btn>
+          </div>
         </v-card-actions>
       </div>
           <v-dialog
@@ -442,6 +432,18 @@ export default {
 /* Compact Action Buttons */
 .action-btn {
   min-height: 36px !important;
+}
+
+/* Equal width buttons container */
+.equal-buttons-container {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.equal-btn {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Reduce space between icon and text for invoice button */
