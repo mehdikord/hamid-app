@@ -61,10 +61,7 @@ export default {
         return this.Notify_Error('پروژه مورد نظر را انتخاب کنید')
       }
       
-      if (!this.report || this.report.trim() === ''){
-        this.loading=false;
-        return this.Notify_Error('متن گزارش را وارد کنید')
-      }
+      // Report text validation removed - now optional
       
       let params = {
         customer_id : this.customer.id,

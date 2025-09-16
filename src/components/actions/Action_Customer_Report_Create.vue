@@ -46,11 +46,7 @@ export default {
     Create_Report(){
       this.loading=true;
       
-      // Validate required fields
-      if (!this.report || this.report.trim() === ''){
-        this.loading=false;
-        return this.Notify_Error('متن گزارش را وارد کنید')
-      }
+      // Report text validation removed - now optional
       
       let params = {
         customer_id : this.customer.project_customer_id,
