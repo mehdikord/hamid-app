@@ -214,10 +214,9 @@ export default {
             <!-- Report Dialog -->
             <v-dialog
                 v-model="report_dialog"
-                :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                 :fullscreen="$vuetify.display.smAndDown"
                 transition="dialog-bottom-transition"
-                persistent
             >
               <v-card 
                 variant="flat" 
@@ -263,10 +262,9 @@ export default {
             <!-- Invoice Dialog -->
             <v-dialog
                 v-model="invoice_dialog"
-                :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                 :fullscreen="$vuetify.display.smAndDown"
                 transition="dialog-bottom-transition"
-                persistent
             >
               <v-card 
                 variant="flat" 

@@ -309,7 +309,7 @@ export default {
 
                   <v-dialog
                       v-model="add_report_dialog[item.id]"
-                      max-width="960"
+                      max-width="600"
                       transition="dialog-top-transition"
                   >
                     <v-card variant="flat" rounded>
@@ -329,7 +329,7 @@ export default {
 
                   <v-dialog
                       v-model="add_invoice_dialog[item.id]"
-                      max-width="960"
+                      max-width="600"
                       transition="dialog-top-transition"
 
                   >

@@ -174,6 +174,14 @@ export default {
       }
       this.Notify_Success('فاکتور با موفقیت ثبت گردید');
     },
+    Change_Status(item) {
+      this.items = this.items.map(get_items => {
+        if (get_items.project_customer_id === item.project_customer_id) {
+          return item;
+        }
+        return get_items;
+      })
+    },
     openWhatsApp(phoneNumber) {
       // Remove any non-digit characters and ensure it starts with country code
       const cleanPhone = phoneNumber.replace(/\D/g, '');
@@ -397,10 +405,13 @@ export default {
                 </router-link>
               </td>
               <td class="pa-2">
-                <chips_customer_level :customer="item"></chips_customer_level>
+                <actions_customer_status :customer="item" @Changed="(item) => Change_Status(item)" :show_level="true"></actions_customer_status>
+
+                <!-- <chips_customer_level :customer="item"></chips_customer_level> -->
               </td>
-              <td class="pa-2">
-                <chips_customer_status :customer="item"></chips_customer_status>
+              <td class="pa-2"> 
+                <actions_customer_status :customer="item" @Changed="(item) => Change_Status(item)"></actions_customer_status>
+                <!-- <chips_customer_status :customer="item"></chips_customer_status> -->
               </td>
               <td class="pa-2">
                 <strong class="text-indigo-darken-1">{{ item.project.name }}</strong>
@@ -424,10 +435,9 @@ export default {
                     </v-btn>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                     :fullscreen="$vuetify.display.smAndDown"
                     transition="dialog-bottom-transition"
-                    persistent
                 >
                   <v-card 
                     variant="flat" 
@@ -489,10 +499,9 @@ export default {
                 </div>
                 <v-dialog
                     v-model="add_invoice_dialog[item.id]"
-                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                     :fullscreen="$vuetify.display.smAndDown"
                     transition="dialog-bottom-transition"
-                    persistent
                 >
                   <v-card 
                     variant="flat" 
@@ -544,6 +553,7 @@ export default {
               <seller_item 
                 @Set_Report = "(get_item) => Create_Report(get_item)" 
                 @Set_Invoice = "(get_item) => Create_Invoice(get_item)"
+                @change_status = "(get_item) => Change_Status(get_item)"
                 @select = "(card_id) => Select_Card(card_id)"
                 :customer="item"
                 :isSelected="selected_card_id === item.id"

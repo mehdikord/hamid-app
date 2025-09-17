@@ -4,11 +4,13 @@ import {Stores_Customer} from "@/stores/customers/customers.js";
 
 import {Stores_Projects} from "@/stores/projects/projects.js";
 import Customers_Consultant_Item from "@/views/customers/components/Customers_Consultant_Item.vue";
+import Actions_Customer_Status from "@/components/actions/Actions_Customer_Status.vue";
 
 export default {
   name: "Customers",
   components:{
-    'consultant_item' : Customers_Consultant_Item
+    'consultant_item' : Customers_Consultant_Item,
+    'actions_customer_status' : Actions_Customer_Status
   },
   mounted() {
     this.Get_Statuses();
@@ -255,6 +257,14 @@ export default {
       const message = encodeURIComponent('سلام');
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
+    },
+    Change_Status(item) {
+      this.items = this.items.map(get_items => {
+        if (get_items.project_customer_id === item.project_customer_id) {
+          return item;
+        }
+        return get_items;
+      })
     }
   }
 }
@@ -455,6 +465,7 @@ export default {
               <th>
                 مشتری
               </th>
+              <th>مرحله</th>
               <th>وضعیت</th>
               <th>پروژه</th>
               <th>آخرین گزارش</th>
@@ -483,7 +494,10 @@ export default {
                 </router-link>
               </td>
               <td class="pa-2">
-                <chips_customer_status :customer="item"></chips_customer_status>
+                <actions_customer_status :customer="item" @changed="(item) => Change_Status(item)" :show_level="true"></actions_customer_status>
+              </td>
+              <td class="pa-2">
+                <actions_customer_status :customer="item" @changed="(item) => Change_Status(item)"></actions_customer_status>
               </td>
               <td class="pa-2">
                 <strong class="text-indigo-darken-1">{{ item.project.name }}</strong>
@@ -517,10 +531,9 @@ export default {
                 </div>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                     :fullscreen="$vuetify.display.smAndDown"
                     transition="dialog-bottom-transition"
-                    persistent
                 >
                   <v-card 
                     variant="flat" 
@@ -570,6 +583,7 @@ export default {
             <div v-for="item in sortedItems" class="animate__animated animate__fadeIn mb-6">
               <consultant_item 
                 @Set_Report = "(item) => Create_Report(item)" 
+                @change_status = "(item) => Change_Status(item)"
                 @select = "(card_id) => Select_Card(card_id)"
                 :customer="item"
                 :isSelected="selected_card_id === item.id"
@@ -616,6 +630,7 @@ export default {
               <th>
                 مشتری
               </th>
+              <th>مرحله</th>
               <th>وضعیت</th>
               <th>پروژه</th>
               <th>آخرین گزارش</th>
@@ -638,7 +653,10 @@ export default {
                 </router-link>
               </td>
               <td class="pa-2">
-                <chips_customer_status :customer="item"></chips_customer_status>
+                <actions_customer_status :customer="item" @changed="(item) => Change_Status(item)" :show_level="true"></actions_customer_status>
+              </td>
+              <td class="pa-2">
+                <actions_customer_status :customer="item" @changed="(item) => Change_Status(item)"></actions_customer_status>
               </td>
               <td class="pa-2">
                 <strong class="text-indigo-darken-1">{{ item.project.name }}</strong>
@@ -672,10 +690,9 @@ export default {
                 </div>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
-                    :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+                    :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
                     :fullscreen="$vuetify.display.smAndDown"
                     transition="dialog-bottom-transition"
-                    persistent
                 >
                   <v-card 
                     variant="flat" 
@@ -723,6 +740,7 @@ export default {
             <div v-for="item in items_old" class="animate__animated animate__fadeIn mb-6">
               <consultant_item 
                 @Set_Report = "(item) => Create_Report(item)" 
+                @change_status = "(item) => Change_Status(item)"
                 @select = "(card_id) => Select_Card(card_id)"
                 :customer="item"
                 :isSelected="selected_card_id === item.id"

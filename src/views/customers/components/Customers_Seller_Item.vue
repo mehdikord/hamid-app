@@ -1,6 +1,12 @@
 <script>
+import Actions_Customer_Status from "@/components/actions/Actions_Customer_Status.vue";
+
 export default {
   name: "Customers_Seller_Item",
+  emits: ['Set_Report', 'Set_Invoice', 'change_status', 'select'],
+  components: {
+    Actions_Customer_Status
+  },
   props: {
     customer: {
       type: Object,
@@ -26,6 +32,9 @@ export default {
     Create_Invoice(item) {
       this.$emit('Set_Invoice', item)
       // Modal closing is now handled by the action component
+    },
+    Change_Status(item) {
+      this.$emit('change_status', item);
     },
     openReportDialog() {
       this.add_report_dialog = true;
@@ -104,14 +113,11 @@ export default {
               </router-link>
             </div>
           </div>
-          <v-chip 
-            v-if="customer.level" 
-            :color="customer.level.color" 
-            size="small"
-            variant="flat"
-          >
-            {{ customer.level.name }}
-          </v-chip>
+          <actions_customer_status 
+            :customer="customer" 
+            @changed="(item) => Change_Status(item)" 
+            :show_level="true"
+          ></actions_customer_status>
         </div>
       </v-card-item>
 
@@ -136,16 +142,10 @@ export default {
             </template>
             <v-list-item-title class="text-body-2">
               <span class="text-medium-emphasis">وضعیت:</span>
-              <v-chip 
-                v-if="customer.status"
-                :color="customer.status.color" 
-                size="x-small"
-                variant="flat"
-                class="ms-1"
-              >
-                {{ customer.status.name }}
-              </v-chip>
-              <span v-else class="text-error ms-1">بدون وضعیت</span>
+              <actions_customer_status 
+                :customer="customer" 
+                @changed="(item) => Change_Status(item)"
+              ></actions_customer_status>
             </v-list-item-title>
           </v-list-item>
 
@@ -240,10 +240,9 @@ export default {
       </div>
           <v-dialog
               v-model="add_report_dialog"
-              :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+              :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
               :fullscreen="$vuetify.display.smAndDown"
               transition="dialog-bottom-transition"
-              persistent
           >
             <v-card 
               variant="flat" 
@@ -287,10 +286,9 @@ export default {
           </v-dialog>
           <v-dialog
               v-model="add_invoice_dialog"
-              :max-width="$vuetify.display.mdAndUp ? '960' : '95'"
+              :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
               :fullscreen="$vuetify.display.smAndDown"
               transition="dialog-bottom-transition"
-              persistent
           >
             <v-card 
               variant="flat" 
