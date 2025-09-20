@@ -24,6 +24,8 @@ export default {
       loading:false,
       price:null,
       target_price:null,
+      formatted_price:'',
+      formatted_target_price:'',
       date:null,
       description:null,
       file:null,
@@ -32,6 +34,37 @@ export default {
     }
   },
   methods:{
+    // Format number with commas every 3 digits
+    formatNumber(value) {
+      if (!value) return '';
+      // Remove all non-numeric characters
+      const numericValue = value.toString().replace(/[^\d]/g, '');
+      // Add commas every 3 digits
+      return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    
+    // Parse formatted number back to numeric value
+    parseNumber(formattedValue) {
+      if (!formattedValue) return null;
+      // Remove commas and convert to number
+      const numericValue = formattedValue.toString().replace(/,/g, '');
+      return numericValue ? parseInt(numericValue) : null;
+    },
+    
+    // Handle price input formatting
+    onPriceInput(event) {
+      const formatted = this.formatNumber(event.target.value);
+      this.formatted_price = formatted;
+      this.price = this.parseNumber(formatted);
+    },
+    
+    // Handle target price input formatting
+    onTargetPriceInput(event) {
+      const formatted = this.formatNumber(event.target.value);
+      this.formatted_target_price = formatted;
+      this.target_price = this.parseNumber(formatted);
+    },
+    
     async Create_Invoice(){
       this.loading=true;
       
@@ -121,18 +154,28 @@ export default {
         برای ثبت فاکتور برای مشتری ، ابتدا باید مبلغ معامله مشتری را مشخص کنید و سپس فاکتور های مورد نظر را ثبت کنید
       </v-alert>
       <div class="mt-6">
-        <v-text-field v-model="target_price" append-inner-icon="mdi-currency-usd" rounded variant="outlined" type="number" label="وارد کردن مبلغ معامله ( تومان )" placeholder="1,500,000" />
+        <v-text-field 
+          v-model="formatted_target_price" 
+          @input="onTargetPriceInput"
+          append-inner-icon="mdi-currency-usd" 
+          rounded 
+          variant="outlined" 
+          type="text" 
+          label="وارد کردن مبلغ معامله ( تومان )" 
+          placeholder="1,500,000" 
+        />
       </div>
     </template>
     <div class="mb-3">
       <v-text-field 
         color="blue" 
         :error="Validation_Check(errors,'price')" 
-        v-model="price" 
+        v-model="formatted_price" 
+        @input="onPriceInput"
         append-inner-icon="mdi-currency-usd" 
         rounded 
         variant="outlined" 
-        type="number" 
+        type="text" 
         :label="customer.target_price ? `مبلغ واریزی ( حداکثر ${this.$filters.number_format(customer.target_price - customer.sum_invoices)} تومان )` : 'مبلغ واریزی ( تومان )'" 
       />
       <validation_errors :errors="Validation_Errors(errors,'price')"></validation_errors>
@@ -156,7 +199,8 @@ export default {
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
-      <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" />
+      <!-- <date-picker v-model="date" /> -->
+      <!-- <date-picker  :error="Validation_Check(errors,'file')" compact-time auto-submit color="#5c6bc0"  type="datetime" label="انتخاب تاریخ و زمان" v-model="date" format="YYYY-MM-DD HH:mm" display-format="jYYYY-jMM-jDD HH:mm" /> -->
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
 

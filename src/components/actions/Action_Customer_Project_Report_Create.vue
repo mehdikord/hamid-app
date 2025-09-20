@@ -38,6 +38,12 @@ export default {
 
     }
   },
+  computed: {
+    formattedDate() {
+      if (!this.date) return '';
+      return moment(this.date).format('jYYYY-jMM-jDD HH:mm');
+    }
+  },
   methods:{
 
     Get_Project(){
@@ -190,25 +196,38 @@ export default {
       <validation_errors :errors="Validation_Errors(errors,'file')"></validation_errors>
     </div>
     <div class="mb-3">
+      <!-- Custom HTML input styled like Vuetify -->
+      <div class="custom-date-input-wrapper" :class="{ error: Validation_Check(errors,'date') }">
+        <input
+          type="text"
+          class="custom-date-input"
+          :value="formattedDate"
+          placeholder="انتخاب تاریخ و زمان"
+          readonly
+        />
+        <label class="custom-date-label">انتخاب تاریخ و زمان</label>
+        <i class="mdi mdi-calendar custom-date-icon"></i>
+      </div>
+      
+      <!-- Date picker component -->
       <date-picker  
         :error="Validation_Check(errors,'date')" 
         compact-time 
         auto-submit 
         color="#5c6bc0"  
         type="datetime" 
-        label="انتخاب تاریخ و زمان" 
         v-model="date" 
         format="YYYY-MM-DD HH:mm" 
         display-format="jYYYY-jMM-jDD HH:mm"
-        class="enhanced-date-picker"
+        custom-input=".custom-date-input"
       />
       <validation_errors :errors="Validation_Errors(errors,'date')"></validation_errors>
     </div>
 
     <!-- Footer Actions with Both Buttons -->
     <div class="mt-8 mb-4">
-      <v-row no-gutters class="button-row">
-        <v-col cols="12" md="6" class="pr-md-2 mb-3 mb-md-0">
+      <v-row class="button-row" :gutter="16">
+        <v-col cols="12" md="6" class="mb-3 mb-md-0">
           <v-btn 
             :loading="loading" 
             color="teal-darken-2" 
@@ -223,7 +242,7 @@ export default {
             ثبت گزارش
           </v-btn>
         </v-col>
-        <v-col cols="12" md="6" class="pl-md-2">
+        <v-col cols="12" md="6">
           <v-btn
             @click="onCancel && onCancel()"
             variant="outlined"
@@ -285,25 +304,105 @@ export default {
   border-radius: 12px !important;
 }
 
-/* Enhanced date picker styling */
-.enhanced-date-picker {
-  border-radius: 12px !important;
+/* Custom date input styling to match Vuetify */
+.custom-date-input-wrapper {
+  position: relative;
+  margin-bottom: 8px;
 }
 
-.enhanced-date-picker :deep(.v-field) {
-  border-radius: 12px !important;
+.custom-date-input {
+  width: 100%;
+  height: 56px;
+  padding: 16px 48px 16px 12px;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.enhanced-date-picker :deep(.v-field__outline) {
-  border-radius: 12px !important;
+.custom-date-input:focus {
+  outline: none;
+  border-color: rgb(var(--v-theme-primary));
+  border-width: 2px;
+}
+
+.custom-date-input:hover {
+  border-color: rgba(var(--v-theme-on-surface), 0.6);
+}
+
+.custom-date-label {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  font-size: 12px;
+  color: rgb(var(--v-theme-primary));
+  background-color: rgb(var(--v-theme-surface));
+  padding: 0 4px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.custom-date-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-size: 20px;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.custom-date-input-wrapper:hover .custom-date-icon {
+  opacity: 1;
+  color: rgb(var(--v-theme-error));
+}
+
+.custom-date-input:focus + .custom-date-label + .custom-date-icon {
+  opacity: 1;
+  color: rgb(var(--v-theme-error));
+}
+
+/* Error state styling */
+.custom-date-input-wrapper.error .custom-date-input {
+  border-color: rgb(var(--v-theme-error));
+}
+
+.custom-date-input-wrapper.error .custom-date-label {
+  color: rgb(var(--v-theme-error));
 }
 
 /* Button spacing and mobile optimization */
+.button-row {
+  margin: 0 !important;
+}
 
 .action-button {
   min-height: 48px !important;
   font-weight: 600 !important;
   letter-spacing: 0.5px !important;
+}
+
+/* Desktop button layout */
+@media (min-width: 960px) {
+  .button-row .v-col {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  .button-row .v-col:first-child {
+    padding-left: 0 !important;
+  }
+  
+  .button-row .v-col:last-child {
+    padding-right: 0 !important;
+  }
 }
 
 /* Mobile-specific spacing */

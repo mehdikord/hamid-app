@@ -220,8 +220,8 @@ name: "Actions_Customer_Status",
         </v-card-item>
         <!-- Footer Actions with Both Buttons -->
         <div class="pa-4 pa-sm-6 pt-0">
-          <v-row no-gutters class="button-row">
-            <v-col cols="12" md="6" class="pr-md-2 mb-3 mb-md-0">
+          <v-row class="button-row" :gutter="16">
+            <v-col cols="12" md="6" class="mb-3 mb-md-0">
               <v-btn 
                 :loading="change_loading" 
                 color="success" 
@@ -236,7 +236,7 @@ name: "Actions_Customer_Status",
                 تغییر وضعیت و ثبت اطلاعات
               </v-btn>
             </v-col>
-            <v-col cols="12" md="6" class="pl-md-2">
+            <v-col cols="12" md="6">
               <v-btn
                 @click="change_dialog=false"
                 variant="outlined"
@@ -332,10 +332,30 @@ name: "Actions_Customer_Status",
 }
 
 /* Button spacing and mobile optimization */
+.button-row {
+  margin: 0 !important;
+}
+
 .action-button {
   min-height: 48px !important;
   font-weight: 600 !important;
   letter-spacing: 0.5px !important;
+}
+
+/* Desktop button layout */
+@media (min-width: 960px) {
+  .button-row .v-col {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  .button-row .v-col:first-child {
+    padding-left: 0 !important;
+  }
+  
+  .button-row .v-col:last-child {
+    padding-right: 0 !important;
+  }
 }
 
 /* Mobile-specific spacing */
