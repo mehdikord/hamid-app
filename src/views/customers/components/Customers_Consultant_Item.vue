@@ -132,8 +132,8 @@ export default {
             <template v-slot:prepend>
               <v-icon icon="mdi-flag-outline" size="16" color="medium-emphasis"></v-icon>
             </template>
-            <v-list-item-title class="text-body-2">
-              <span class="text-medium-emphasis">وضعیت:</span>
+            <v-list-item-title class="text-body-2 d-flex align-center">
+              <span class="text-medium-emphasis me-2">وضعیت:</span>
               <actions_customer_status 
                 :customer="customer" 
                 @changed="(item) => Change_Status(item)"
@@ -395,6 +395,21 @@ export default {
 
 .customer-card .router-link:hover p {
   color: rgb(var(--v-theme-primary)) !important;
+}
+
+/* Status badge alignment fix for mobile */
+.customer-card .v-list-item-title.d-flex {
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.customer-card .v-list-item-title .v-btn {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  font-size: 11px !important;
+  padding: 0 8px !important;
 }
 
 </style>
