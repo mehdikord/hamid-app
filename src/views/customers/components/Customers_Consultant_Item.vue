@@ -154,6 +154,44 @@ export default {
             </v-list-item-title>
           </v-list-item>
 
+          <!-- Import Method and Tags Combined -->
+          <v-list-item v-if="(customer.import_method && customer.import_method.name) || (customer.tags && customer.tags.length > 0)" class="px-3 py-1">
+            <template v-slot:prepend>
+              <v-icon icon="mdi-import" size="16" color="medium-emphasis"></v-icon>
+            </template>
+            <v-list-item-title class="text-body-2 d-flex align-center flex-wrap gap-3">
+              <!-- Import Method -->
+              <div v-if="customer.import_method && customer.import_method.name" class="d-flex align-center">
+                <span class="text-medium-emphasis me-2">ورودی:</span>
+                <v-chip 
+                  color="blue" 
+                  variant="tonal" 
+                  size="x-small"
+                  class="font-weight-medium"
+                >
+                  {{ customer.import_method.name }}
+                </v-chip>
+              </div>
+              
+              <!-- Tags -->
+              <div v-if="customer.tags && customer.tags.length > 0" class="d-flex align-center">
+                <span class="text-medium-emphasis me-2">تگها:</span>
+                <div class="d-flex flex-wrap gap-1">
+                  <v-chip 
+                    v-for="tag in customer.tags" 
+                    :key="tag.name"
+                    color="green" 
+                    variant="tonal" 
+                    size="x-small"
+                    class="font-weight-medium"
+                  >
+                    {{ tag.name }}
+                  </v-chip>
+                </div>
+              </div>
+            </v-list-item-title>
+          </v-list-item>
+
           <!-- Last Report -->
           <v-list-item v-if="customer.last_report" class="px-3 py-1">
             <template v-slot:prepend>
@@ -410,6 +448,45 @@ export default {
   min-height: 24px !important;
   font-size: 11px !important;
   padding: 0 8px !important;
+}
+
+/* Combined import method and tags styling */
+.customer-card .v-list-item-title .gap-3 {
+  gap: 12px !important;
+}
+
+.customer-card .v-list-item-title .gap-1 {
+  gap: 4px !important;
+}
+
+/* Ensure tags stay inline with label */
+.customer-card .v-list-item-title .d-flex.align-center {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.customer-card .v-list-item-title .d-flex.gap-1 {
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+/* Mobile responsive adjustments for combined fields */
+@media (max-width: 600px) {
+  .customer-card .v-list-item-title .gap-3 {
+    gap: 8px !important;
+  }
+  
+  .customer-card .v-list-item-title .d-flex.flex-wrap {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+  
+  /* On very small screens, allow tags to wrap but keep label inline */
+  .customer-card .v-list-item-title .d-flex.align-center {
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
 }
 
 </style>

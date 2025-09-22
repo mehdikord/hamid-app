@@ -376,6 +376,8 @@ export default {
             <thead>
             <tr class="bg-grey-darken-3">
               <th class="text-center">تاریخ ها</th>
+              <th>ورودی</th>
+              <th>تگها</th>
               <th>
                 مشتری
               </th>
@@ -393,6 +395,33 @@ export default {
                   <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
                   <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
                 </div>
+              </td>
+              <td class="pa-2">
+                <v-chip 
+                  v-if="item.import_method && item.import_method.name" 
+                  color="blue" 
+                  variant="tonal" 
+                  size="x-small"
+                  class="font-weight-medium"
+                >
+                  {{ item.import_method.name }}
+                </v-chip>
+                <span v-else class="text-grey">-</span>
+              </td>
+              <td class="pa-2">
+                <div v-if="item.tags && item.tags.length > 0" class="d-flex flex-wrap gap-1">
+                  <v-chip 
+                    v-for="tag in item.tags" 
+                    :key="tag.name"
+                    color="green" 
+                    variant="tonal" 
+                    size="x-small"
+                    class="font-weight-medium"
+                  >
+                    {{ tag.name }}
+                  </v-chip>
+                </div>
+                <span v-else class="text-grey">-</span>
               </td>
               <td class="pa-2">
                 <router-link :to="{name:'customers_profile',params:{id:item.customer.id}}">
@@ -414,7 +443,7 @@ export default {
                 <!-- <chips_customer_status :customer="item"></chips_customer_status> -->
               </td>
               <td class="pa-2">
-                <strong class="text-indigo-darken-1">{{ item.project.name }}</strong>
+                <strong class="text-indigo-darken-1 font-12">{{ item.project.name }}</strong>
               </td>
               <td class="pa-2">
                 <template v-if="item.last_report">

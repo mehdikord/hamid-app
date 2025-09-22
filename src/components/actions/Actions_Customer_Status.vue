@@ -99,13 +99,13 @@ name: "Actions_Customer_Status",
 
   <template v-if="customer">
     <template v-if="show_level">
-      <v-btn v-if="!customer.level" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-13 mt-2" rounded>بدون مرحله</v-btn>
-      <v-btn v-else @click="Open_Dialog" variant="flat" color="orange-darken-1" size="small" class="font-13 mt-2" rounded>{{ customer.level.name }}</v-btn>
+      <v-btn v-if="!customer.level" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-11" rounded>بدون مرحله</v-btn>
+      <v-btn v-else @click="Open_Dialog" variant="flat" color="orange-darken-1" size="small" class="font-11" rounded>{{ customer.level.name }}</v-btn>
 
     </template>
     <template v-else>
-      <v-btn v-if="!customer.status" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-13" rounded>بدون وضعیت</v-btn>
-    <v-btn v-else @click="Open_Dialog" variant="flat" :style="{'backgroundColor' : customer.status.color,'color' : 'white' }" size="small" class="font-13" rounded>{{ customer.status.name }}</v-btn>
+    <v-btn v-if="!customer.status" @click="Open_Dialog" variant="flat" color="grey-darken-3" size="small" class="font-11" rounded>بدون وضعیت</v-btn>
+    <v-btn v-else @click="Open_Dialog" variant="flat" :style="{'backgroundColor' : customer.status.color,'color' : 'white' }" size="small" class="font-11" rounded>{{ customer.status.name }}</v-btn>
 
     </template>
 
