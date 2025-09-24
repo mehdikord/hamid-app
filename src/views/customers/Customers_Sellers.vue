@@ -286,7 +286,7 @@ export default {
                   item-value="id"
                   rounded="lg"
                   color="deep-orange-darken-2"
-                  label="انتخاب سطح مشتری"
+                  label="انتخاب مرحله مشتری"
                   variant="outlined"
                   density="comfortable"
                   clearable
