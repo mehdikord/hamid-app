@@ -164,7 +164,6 @@ export default {
 
 <template>
   <div class="mt-0">
-
     <div class="mb-3">
       <v-select
           class="mt-3 custom-select"

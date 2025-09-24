@@ -116,7 +116,7 @@ export default {
     <div class="mt-3" @keyup.enter="Edit_Customer">
       <v-row>
         <v-col md="4" cols="12" class="pb-0">
-          <v-text-field :error="Validation_Check(errors,'name')" v-model="item.name" append-inner-icon="mdi-account" rounded variant="outlined" type="text" label="نام کامل" />
+          <v-text-field :error="Validation_Check(errors,'name')" v-model="item.name" append-inner-icon="mdi-account text-primary" rounded variant="outlined" type="text" label="نام کامل" />
           <validation_errors :errors="Validation_Errors(errors,'name')"></validation_errors>
         </v-col>
         <v-col md="4" cols="12" class="pb-0">
@@ -125,11 +125,10 @@ export default {
           v-if="provinces.length"
                   :items="provinces"
                   v-model="item.province_id"
-                
                   item-title="name"
                   item-value="id"
                   rounded
-                  append-inner-icon="mdi-city"
+                  append-inner-icon="mdi-city text-primary"
                   label="انتخاب استان"
                   variant= "outlined"
                 @update:model-value="Get_Cities"
@@ -144,7 +143,7 @@ export default {
               item-title="name"
               item-value="id"
               rounded
-              append-inner-icon="mdi-city"
+              append-inner-icon="mdi-city text-primary"
               label="انتخاب شهر"
               variant= "outlined"
               no-data-text="لطفا استان را انتخاب کنید"
@@ -155,23 +154,27 @@ export default {
 
 
         <v-col md="4" cols="12" class="pb-0">
-          <v-text-field :error="Validation_Check(errors,'instagram_id')" v-model="item.instagram_id" append-inner-icon="mdi-instagram" rounded variant="outlined" type="text" label="اینستاگرام" />
+          <v-text-field :error="Validation_Check(errors,'instagram_id')" v-model="item.instagram_id" append-inner-icon="mdi-instagram text-primary" rounded variant="outlined" type="text" label="اینستاگرام" />
           <validation_errors :errors="Validation_Errors(errors,'instagram_id')"></validation_errors>
         </v-col>
+        <v-col md="4" cols="12" class="pb-0">
+          <v-text-field :error="Validation_Check(errors,'telegram_id')" v-model="item.telegram_id" append-inner-icon="mdi-send text-primary" rounded variant="outlined" type="text" label="تلگرام" />
+          <validation_errors :errors="Validation_Errors(errors,'telegram_id')"></validation_errors>
+        </v-col>
         <v-col md="4" cols="12">
-          <v-text-field :error="Validation_Check(errors,'email')" v-model="item.email" append-inner-icon="mdi-email" rounded variant="outlined" type="email" label="ایمیل" />
+          <v-text-field :error="Validation_Check(errors,'email')" v-model="item.email" append-inner-icon="mdi-email text-primary" rounded variant="outlined" type="email" label="ایمیل" />
           <validation_errors :errors="Validation_Errors(errors,'email')"></validation_errors>
         </v-col>
         <v-col md="4" cols="12">
-          <v-text-field :error="Validation_Check(errors,'national_code')" v-model="item.national_code" append-inner-icon="mdi-card-account-details" rounded variant="outlined" type="number" label="کد ملی" />
+          <v-text-field :error="Validation_Check(errors,'national_code')" v-model="item.national_code" append-inner-icon="mdi-card-account-details text-primary" rounded variant="outlined" type="number" label="کد ملی" />
           <validation_errors :errors="Validation_Errors(errors,'national_code')"></validation_errors>
         </v-col>
         <v-col md="4" cols="12">
-          <v-text-field :error="Validation_Check(errors,'tel')" v-model="item.tel" append-inner-icon="mdi-phone" rounded variant="outlined" type="number" label="تلفن ثابت" />
+          <v-text-field :error="Validation_Check(errors,'tel')" v-model="item.tel" append-inner-icon="mdi-phone text-primary" rounded variant="outlined" type="number" label="تلفن ثابت" />
           <validation_errors :errors="Validation_Errors(errors,'tel')"></validation_errors>
         </v-col>
         <v-col md="4" cols="12">
-          <v-text-field :error="Validation_Check(errors,'postal_code')" v-model="item.postal_code" append-inner-icon="mdi-mailbox" rounded variant="outlined" type="number" label="کد پستی" />
+          <v-text-field :error="Validation_Check(errors,'postal_code')" v-model="item.postal_code" append-inner-icon="mdi-mailbox text-primary" rounded variant="outlined" type="number" label="کد پستی" />
           <validation_errors :errors="Validation_Errors(errors,'postal_code')"></validation_errors>
         </v-col>
 
