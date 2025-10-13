@@ -192,6 +192,7 @@ export const Stores_Customer = defineStore('customers',{
                 let data = new FormData();
                 if(params.report){data.append('report',params.report);}
                 if(params.status_id){data.append('status_id',params.status_id);}
+                if(params.project_level_id){data.append('project_level_id',params.project_level_id);}
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
                 this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/reports',data,{

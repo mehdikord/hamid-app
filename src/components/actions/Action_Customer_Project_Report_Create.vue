@@ -20,6 +20,7 @@ export default {
     this.date = now.format("YYYY-MM-DD HH:mm");
     this.Get_Project();
     this.Get_Statuses();
+    
 
   },
   data(){
@@ -42,6 +43,13 @@ export default {
     formattedDate() {
       if (!this.date) return '';
       return moment(this.date).format('jYYYY-jMM-jDD HH:mm');
+    }
+  },
+  watch: {
+    project_id(newVal) {
+      if (newVal) {
+        this.Get_Levels();
+      }
     }
   },
   methods:{
@@ -78,6 +86,13 @@ export default {
         report : this.report,
         file : this.file,
       }
+      
+      // Remove null/undefined values to avoid sending them
+      Object.keys(params).forEach(key => {
+        if (params[key] === null || params[key] === undefined) {
+          delete params[key];
+        }
+      });
       Stores_Customer().Projects_Reports_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
@@ -106,19 +121,26 @@ export default {
     },
 
     Get_Levels(){
+      if (!this.project_id) {
+        return;
+      }
+      
       let params = {
         id : this.customer.id,
         project_id: this.project_id
       }
+      
       Stores_Customer().Projects_Levels(params).then(res =>{
         if (res.data.result){
           this.levels = res.data.result;
+        } else {
+          this.levels = [];
         }
       }).catch(error =>{
+        this.levels = [];
         return this.Notify_Error('خطا در دریافت مراحل')
-
       })
-    },
+    }
 
   }
 
@@ -173,6 +195,9 @@ export default {
           rounded="lg"
       >
       </v-select>
+      <div v-if="levels.length === 0" class="text-caption text-grey">
+        ابتدا پروژه را انتخاب کنید
+      </div>
     </div>
 
     <div class="mb-3">
