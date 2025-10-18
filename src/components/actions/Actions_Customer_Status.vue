@@ -39,7 +39,7 @@ name: "Actions_Customer_Status",
     },
     Get_Statuses(){
       this.statuses_loading = true;
-      Stores_Statuses().All().then(res =>{
+      Stores_Statuses().All({project_id:this.customer.project.id}).then(res =>{
         this.statuses_loading = false;
         if(res.data.result.length){
           this.statuses = res.data.result;
@@ -51,10 +51,9 @@ name: "Actions_Customer_Status",
     Get_Levels(){
       this.levels_loading = true;
       let params = {
-        id : this.customer.customer.id,
-        project_id: this.customer.project.id,
+        project_id: this.customer.project.id
       }
-      Stores_Customer().Projects_Levels(params).then(res =>{
+      Stores_Customer().Levels_All(params).then(res =>{
         this.levels_loading = false;
         if (res.data.result.length){
           this.levels = res.data.result;
@@ -188,6 +187,7 @@ name: "Actions_Customer_Status",
             <div v-if="statuses_loading" class="mt-3">
               <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
             </div>
+            
             <v-select
                 v-else
                 class="mt-3 custom-select"

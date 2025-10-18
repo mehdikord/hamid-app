@@ -237,7 +237,7 @@ export const Stores_Customer = defineStore('customers',{
 
         Projects_Levels(params){
             return new Promise((resolve, reject) => {
-                this.$axios.get('users/customers/'+params.id+'/projects/levels/'+params.project_id).then(response =>{
+                this.$axios.get('users/projects/'+params.project_id+'/levels').then(response =>{
                     return resolve(response);
                 }).catch(error =>{
                     return reject(error);
@@ -245,9 +245,9 @@ export const Stores_Customer = defineStore('customers',{
             })
         },
 
-        Levels_All(){
+        Levels_All(params){
             return new Promise((resolve, reject) => {
-                this.$axios.get('users/customers/levels').then(response =>{
+                this.$axios.get('users/projects/'+params.project_id+'/levels').then(response =>{
                     return resolve(response);
                 }).catch(error =>{
                     return reject(error);

@@ -85,10 +85,15 @@ export default {
 
     },
     Get_Statuses(){
-      Stores_Statuses().All().then(res =>{
+      if (!this.customer.project || !this.customer.project.id) {
+        console.error('Project ID not available for statuses request');
+        return;
+      }
+      
+      Stores_Statuses().All({"project_id": this.customer.project.id}).then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
-
+        console.error('Error fetching statuses:', error);
       })
     },
     Get_Levels(){
