@@ -13,11 +13,10 @@ export default {
     'actions_customer_status' : Actions_Customer_Status
   },
   mounted() {
-    this.Get_Statuses();
-    this.Get_Levels();
+    // this.Get_Statuses();
+    // this.Get_Levels();
     this.Get_Projects();
-    this.Get_Items();
-
+    // Don't call Get_Items() here - it will be called after projects are loaded
   },
   data(){
     return {
@@ -118,15 +117,15 @@ export default {
     }
   },
   methods:{
-    Get_Statuses(){
-      Stores_Statuses().All().then(res =>{
+    Get_Statuses(project){
+      Stores_Statuses().All({"project_id":project}).then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
 
       })
     },
-    Get_Levels(){
-      Stores_Customer().Levels_All().then(res =>{
+    Get_Levels(project){
+      Stores_Customer().Levels_All({"project_id":project}).then(res =>{
         this.levels = res.data.result;
       }).catch(error =>{
       })
@@ -134,6 +133,14 @@ export default {
     Get_Projects(){
       Stores_Projects().All().then(res =>{
         this.projects = res.data.result;
+        if(this.projects.length){
+          this.project_id = this.projects[0].id
+        }
+        this.Get_Statuses(this.project_id);
+        this.Get_Levels(this.project_id);
+        // Set initial search params and fetch items
+        this.query_params.search.project_id = this.project_id;
+        this.Get_Items();
       }).catch(error =>{
       })
     },
@@ -150,7 +157,6 @@ export default {
           this.pagination.last_page = res.data.result.last_page;
           this.pagination.links = res.data.result.links;
         }
-        console.log(this.items)
         this.items_loading=false;
       }).catch((error) => {
         this.items_loading=false;
@@ -193,6 +199,8 @@ export default {
     //   this.Get_Items_Old();
     // },
     Do_Search(){
+      this.Get_Statuses(this.project_id);
+      this.Get_Levels(this.project_id);
       this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
       // this.query_params_old.search.status_id = this.status_id;
@@ -211,8 +219,13 @@ export default {
       this.search_phone = null;
       this.status_id = null;
       this.level_id = null;
-      this.project_id = null;
+      // Don't clear project_id - keep the selected project
+      // this.project_id = null;
       this.query_params.search = {};
+      // Set the project_id back in search params
+      if (this.project_id) {
+        this.query_params.search.project_id = this.project_id;
+      }
       // this.query_params_old.search = {};
       this.Get_Items();
       // if (this.show_old){

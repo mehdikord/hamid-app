@@ -12,11 +12,8 @@ export default {
     'seller_item' : Customers_Seller_Item,
   },
   mounted() {
-    this.Get_Statuses();
-    this.Get_Levels();
     this.Get_Projects();
-    this.Get_Items();
-
+    // Get_Statuses, Get_Levels, and Get_Items will be called after projects are loaded
   },
   data(){
     return {
@@ -69,15 +66,15 @@ export default {
     }
   },
   methods:{
-    Get_Statuses(){
-      Stores_Statuses().All().then(res =>{
+    Get_Statuses(project){
+      Stores_Statuses().All({"project_id":project}).then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
 
       })
     },
-    Get_Levels(){
-      Stores_Customer().Levels_All().then(res =>{
+    Get_Levels(project){
+      Stores_Customer().Levels_All({"project_id":project}).then(res =>{
         this.levels = res.data.result;
       }).catch(error =>{
       })
@@ -85,6 +82,14 @@ export default {
     Get_Projects(){
       Stores_Projects().All().then(res =>{
         this.projects = res.data.result;
+        if(this.projects.length){
+          this.project_id = this.projects[0].id
+        }
+        this.Get_Statuses(this.project_id);
+        this.Get_Levels(this.project_id);
+        // Set initial search params and fetch items
+        this.query_params.search.project_id = this.project_id;
+        this.Get_Items();
       }).catch(error =>{
       })
     },
@@ -116,11 +121,12 @@ export default {
       this.Get_Items();
     },
     Do_Search(){
+      this.Get_Statuses(this.project_id);
+      this.Get_Levels(this.project_id);
       this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
       this.query_params.search.level_id = this.level_id;
       this.Get_Items();
-
     },
     Clear_phone(){
       this.search_phone = null;
@@ -131,8 +137,13 @@ export default {
       this.search_phone = null;
       this.status_id = null;
       this.level_id = null;
-      this.project_id = null;
+      // Don't clear project_id - keep the selected project
+      // this.project_id = null;
       this.query_params.search = {};
+      // Set the project_id back in search params
+      if (this.project_id) {
+        this.query_params.search.project_id = this.project_id;
+      }
       this.Get_Items();
     },
     Select_Card(card_id){
@@ -305,6 +316,22 @@ export default {
           
           <v-row>
             <v-col cols="12" class="pb-2">
+              <v-text-field
+                clearable
+                @click:clear="Clear_phone"
+                v-model="search_phone"
+                density="compact"
+                color="primary"
+                label="جستجو با شماره موبایل یا نام"
+                variant="outlined"
+                rounded="lg"
+                prepend-inner-icon="mdi-magnify"
+                class="custom-input"
+                hint="حداقل ۴ کاراکتر وارد کنید"
+                persistent-hint
+              />
+            </v-col>
+            <v-col cols="12" class="py-2">
               <v-select
                 :items="projects"
                 v-model="project_id"

@@ -10,11 +10,8 @@ export default {
     'customer_price_target' : Customer_Price_Target
   },
   mounted() {
-    this.Get_Statuses();
-    this.Get_Levels();
     this.Get_Projects();
-    this.Get_Items();
-
+    // Get_Statuses, Get_Levels, and Get_Items will be called after projects are loaded
   },
   data(){
     return {
@@ -67,22 +64,30 @@ export default {
     }
   },
   methods:{
-    Get_Statuses(){
-      Stores_Statuses().All().then(res =>{
+    Get_Statuses(project){
+      Stores_Statuses().All({"project_id":project}).then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
 
       })
     },
-    Get_Levels(){
-      Stores_Customer().Levels_All().then(res =>{
+    Get_Levels(project){
+      Stores_Customer().Levels_All({"project_id":project}).then(res =>{
         this.levels = res.data.result;
       }).catch(error =>{
       })
     },
     Get_Projects(){
       Stores_Projects().All().then(res =>{
-        this.levels = res.data.result;
+        this.projects = res.data.result;
+        if(this.projects.length){
+          this.project_id = this.projects[0].id
+        }
+        this.Get_Statuses(this.project_id);
+        this.Get_Levels(this.project_id);
+        // Set initial search params and fetch items
+        this.query_params.search.project_id = this.project_id;
+        this.Get_Items();
       }).catch(error =>{
       })
     },

@@ -19,9 +19,7 @@ export default {
     const now = moment();
     this.date = now.format("YYYY-MM-DD HH:mm");
     this.Get_Project();
-    this.Get_Statuses();
-    
-
+    // Get_Statuses will be called after project_id is set in Get_Project()
   },
   data(){
     return {
@@ -59,11 +57,10 @@ export default {
         this.projects = res.data.result;
         if (this.projects){
           this.project_id = this.projects[0].id;
+          this.Get_Statuses(); // Call Get_Statuses after project_id is set
           this.Get_Levels();
-
         }
       })
-
     },
 
     Create_Report(){
@@ -113,10 +110,15 @@ export default {
     },
 
     Get_Statuses(){
-      Stores_Statuses().All().then(res =>{
+      if (!this.project_id) {
+        console.error('Project ID not available for statuses request');
+        return;
+      }
+      
+      Stores_Statuses().All({"project_id": this.project_id}).then(res =>{
         this.statuses = res.data.result;
       }).catch(error =>{
-
+        console.error('Error fetching statuses:', error);
       })
     },
 
@@ -202,6 +204,7 @@ export default {
 
     <div class="mb-3">
       <v-select
+
           class="mt-3 custom-select"
           :items="statuses"
           v-model="status_id"
