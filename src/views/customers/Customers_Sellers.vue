@@ -49,6 +49,18 @@ export default {
 
     }
   },
+  computed: {
+    // Add "بدون مرحله" option to levels
+    levelsWithNoOption() {
+      const noLevelOption = { id: 'no', name: 'بدون مرحله' };
+      return [noLevelOption, ...this.levels];
+    },
+    // Add "بدون وضعیت" option to statuses
+    statusesWithNoOption() {
+      const noStatusOption = { id: 'no', name: 'بدون وضعیت' };
+      return [noStatusOption, ...this.statuses];
+    }
+  },
   watch: {
     search_phone(newValue, oldValue) {
 
@@ -300,7 +312,24 @@ export default {
             <v-col lg="3" md="3" cols="12">
               <v-select
                   class="animate__animated animate__zoomIn custom-select"
-                  :items="statuses"
+                  :items="levelsWithNoOption"
+                  v-model="level_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded="lg"
+                  color="deep-orange-darken-2"
+                  label="انتخاب مرحله مشتری"
+                  variant="outlined"
+                  density="comfortable"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+            <v-col lg="3" md="3" cols="12">
+              <v-select
+                  class="animate__animated animate__zoomIn custom-select"
+                  :items="statusesWithNoOption"
                   v-model="status_id"
                   item-title="name"
                   item-value="id"
@@ -370,7 +399,7 @@ export default {
             </v-col>
             <v-col cols="12" class="py-2">
               <v-select
-                :items="levels"
+                :items="levelsWithNoOption"
                 v-model="level_id"
                 item-title="name"
                 item-value="id"
@@ -386,7 +415,7 @@ export default {
             </v-col>
             <v-col cols="12" class="pt-2">
               <v-select
-                :items="statuses"
+                :items="statusesWithNoOption"
                 v-model="status_id"
                 item-title="name"
                 item-value="id"

@@ -155,6 +155,16 @@ export default {
                   </div>
                 </div>
 
+                <div class="info-item" v-if="customer.telegram_id">
+                  <div class="info-icon">
+                    <v-icon icon="mdi-send" color="primary"></v-icon>
+                  </div>
+                  <div class="info-content">
+                    <span class="info-label">تلگرام</span>
+                    <span class="info-value">{{ customer.telegram_id }}</span>
+                  </div>
+                </div>
+
                 <div class="info-item" v-if="customer.province">
                   <div class="info-icon">
                     <v-icon icon="mdi-map-marker" color="primary"></v-icon>

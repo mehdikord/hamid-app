@@ -98,6 +98,16 @@ export default {
         // Move final statuses to the end
         return aIsFinal ? 1 : -1;
       });
+    },
+    // Add "بدون مرحله" option to levels
+    levelsWithNoOption() {
+      const noLevelOption = { id: 'no', name: 'بدون مرحله' };
+      return [noLevelOption, ...this.levels];
+    },
+    // Add "بدون وضعیت" option to statuses
+    statusesWithNoOption() {
+      const noStatusOption = { id: 'no', name: 'بدون وضعیت' };
+      return [noStatusOption, ...this.statuses];
     }
   },
   watch: {
@@ -205,8 +215,10 @@ export default {
       this.Get_Levels(this.project_id);
       this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
+      this.query_params.search.level_id = this.level_id;
       // this.query_params_old.search.status_id = this.status_id;
       // this.query_params_old.search.project_id = this.project_id;
+      // this.query_params_old.search.level_id = this.level_id;
       this.Get_Items();
       // if (this.show_old){
       //   this.Get_Items_Old();
@@ -361,7 +373,24 @@ export default {
             <v-col lg="3" md="3" cols="12">
               <v-select
                   class="animate__animated animate__zoomIn custom-select"
-                  :items="statuses"
+                  :items="levelsWithNoOption"
+                  v-model="level_id"
+                  item-title="name"
+                  item-value="id"
+                  rounded="lg"
+                  color="deep-orange-darken-2"
+                  label="انتخاب مرحله مشتری"
+                  variant="outlined"
+                  density="comfortable"
+                  clearable
+                  @update:model-value="Do_Search"
+              >
+              </v-select>
+            </v-col>
+            <v-col lg="3" md="3" cols="12">
+              <v-select
+                  class="animate__animated animate__zoomIn custom-select"
+                  :items="statusesWithNoOption"
                   v-model="status_id"
                   item-title="name"
                   item-value="id"
@@ -429,9 +458,25 @@ export default {
                 @update:model-value="Do_Search"
               />
             </v-col>
+            <v-col cols="12" class="py-2">
+              <v-select
+                :items="levelsWithNoOption"
+                v-model="level_id"
+                item-title="name"
+                item-value="id"
+                rounded="lg"
+                color="primary"
+                label="مرحله مشتری"
+                variant="outlined"
+                density="compact"
+                clearable
+                class="custom-select"
+                @update:model-value="Do_Search"
+              />
+            </v-col>
             <v-col cols="12" class="pt-2">
               <v-select
-                :items="statuses"
+                :items="statusesWithNoOption"
                 v-model="status_id"
                 item-title="name"
                 item-value="id"
