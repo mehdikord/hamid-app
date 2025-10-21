@@ -83,7 +83,9 @@ export default {
       Stores_Projects().All().then(res =>{
         this.projects = res.data.result;
         if(this.projects.length){
-          this.project_id = this.projects[0].id
+          // Sort projects by updated_at in descending order and select the most recent one
+          const sortedProjects = this.projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+          this.project_id = sortedProjects[0].id
         }
         this.Get_Statuses(this.project_id);
         this.Get_Levels(this.project_id);
@@ -164,13 +166,32 @@ export default {
         this.items = this.items.map(customer => {
           if (customer.project_customer_id === item.project_customer_id){
             // Update only the necessary fields instead of replacing the entire object
-            customer.last_report = item.last_report || customer.last_report;
+            // Handle various response shapes to ensure report text shows up
+            if (item.last_report) {
+              customer.last_report = item.last_report;
+            } else if (item.report) {
+              customer.last_report = {
+                report: item.report,
+                created_at: item.created_at || item.date || new Date().toISOString()
+              };
+            } else if (item.data && item.data.report) {
+              customer.last_report = {
+                report: item.data.report,
+                created_at: item.data.created_at || item.data.date || new Date().toISOString()
+              };
+            } else {
+              customer.last_report = customer.last_report;
+            }
             customer.reports_count = (customer.reports_count || 0) + 1;
           }
           return customer;
         })
       }
       this.Notify_Success('گزارش با موفقیت ثبت گردید');
+      // Ensure the list reflects the latest data (e.g., last_report) without manual refresh
+      // Preserve current filters/pagination already stored in query_params
+      this.items_loading = true;
+      this.Get_Items();
     },
     Create_Invoice(item){
       if (item.project_customer_id){
@@ -475,7 +496,7 @@ export default {
               <td class="pa-2">
                 <template v-if="item.last_report">
                   <chips_date :date="item.last_report.created_at"></chips_date> :
-                  {{ this.Helper_Text_Shorter(item.last_report.report,15) }}
+                  {{ this.Helper_Text_Shorter((item.last_report.report || item.last_report.description || item.last_report.text || item.last_report.content || item.last_report.body || ''),15) }}
                 </template>
               </td>
               <td class="pa-2 text-center" style="min-width: 120px;">

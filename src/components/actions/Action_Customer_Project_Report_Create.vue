@@ -56,7 +56,9 @@ export default {
       Stores_Customer().Projects_Index({id : this.customer.id}).then(res => {
         this.projects = res.data.result;
         if (this.projects){
-          this.project_id = this.projects[0].id;
+          // Sort projects by updated_at in descending order and select the most recent one
+          const sortedProjects = this.projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+          this.project_id = sortedProjects[0].id;
           this.Get_Statuses(); // Call Get_Statuses after project_id is set
           this.Get_Levels();
         }
