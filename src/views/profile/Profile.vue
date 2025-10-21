@@ -2,6 +2,7 @@
 import profileBg from '@/assets/images/backgrounds/profile-bg.jpg';
 import Profile from '@/assets/images/icons/profile.svg';
 import {Stores_Profile} from "@/stores/profile/profile.js";
+import {Stores_Auth} from "@/stores/auth/auth.js";
 
 export default {
   name: "Profile",
@@ -24,6 +25,9 @@ export default {
      }).catch(error => {
        this.Notify_Error_Server('خطا در دریافت اطلاعات');
      });
+   },
+   Logout(){
+     Stores_Auth().AuthLogout();
    }
 
   }
@@ -60,6 +64,7 @@ export default {
                 icon="mdi-logout"
                 size="small"
                 class="action-btn"
+                @click="Logout"
               ></v-btn>
               <v-btn 
                 variant="text" 

@@ -31,10 +31,33 @@ export const Stores_Auth = defineStore('auth',{
                 this.user = JSON.parse(localStorage.getItem('crm_users_user'));
             }
         },
-        AuthLogout(){
+        async AuthLogout(){
+            // Clear localStorage
             localStorage.removeItem('crm_users_token');
             localStorage.removeItem('crm_users_user');
-            window.location.reload();
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            // Clear all service worker caches
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+            }
+            
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                await Promise.all(registrations.map(reg => reg.unregister()));
+            }
+            
+            // Reset store state
+            this.user = null;
+            this.token = null;
+            
+            // Redirect and reload
+            window.location.href = '/auth';
         }
     },
 
