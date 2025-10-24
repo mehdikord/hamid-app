@@ -83,6 +83,8 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.project_level_id){data.append('project_level_id',params.project_level_id);}
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
+                if(params.messages){data.append('messages',JSON.stringify(params.messages));}
+                
                 this.$axios.post('users/customers/'+params.customer_id+'/reports',data,{
                     headers: {'Content-Type': 'multipart/form-data'}
                 }).then(response =>{
@@ -195,6 +197,8 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.project_level_id){data.append('project_level_id',params.project_level_id);}
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
+                if(params.messages){data.append('messages',JSON.stringify(params.messages));}
+                
                 this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/reports',data,{
                     headers: {'Content-Type': 'multipart/form-data'}
                 }).then(response =>{

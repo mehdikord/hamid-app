@@ -38,8 +38,10 @@ export default {
       status_id:null,
       statuses : [],
       levels : [],
-      errors:[]
-
+      errors:[],
+      selected_messages: {},
+      available_messages: [],
+      messageValidationErrors: {}
     }
   },
   computed: {
@@ -48,9 +50,32 @@ export default {
       return moment(this.date).format('jYYYY-jMM-jDD HH:mm');
     }
   },
+  watch: {
+    status_id(newVal) {
+      this.updateAvailableMessages();
+    }
+  },
   methods:{
     Create_Report(){
       this.loading=true;
+      
+      // Validate required message fields
+      this.messageValidationErrors = {};
+      let hasValidationErrors = false;
+      
+      if (this.available_messages.length > 0) {
+        this.available_messages.forEach(message => {
+          if (!this.selected_messages[message.id]) {
+            this.messageValidationErrors[message.id] = true;
+            hasValidationErrors = true;
+          }
+        });
+      }
+      
+      if (hasValidationErrors) {
+        this.loading = false;
+        return this.Notify_Error('لطفاً تمام فیلدهای الزامی را تکمیل کنید');
+      }
       
       // Report text validation removed - now optional
       
@@ -61,7 +86,9 @@ export default {
         project_level_id : this.project_level_id,
         report : this.report,
         file : this.file,
+        messages : this.selected_messages,
       }
+      
       Stores_Customer().Reports_Store(params).then(res=>{
         this.loading=false;
         this.$emit('Created',res.data.result);
@@ -103,13 +130,40 @@ export default {
       }
       Stores_Customer().Projects_Levels(params).then(res =>{
         if (res.data.result){
-          this.levels = res.data.result;
+          // Sort levels by priority (ascending order - lower priority number first)
+          this.levels = res.data.result.sort((a, b) => (a.priority || 0) - (b.priority || 0));
         }
       }).catch(error =>{
         return this.Notify_Error('خطا در دریافت مراحل')
 
       })
     },
+
+    updateAvailableMessages() {
+      this.available_messages = [];
+      this.selected_messages = {};
+      
+      if (!this.status_id || !this.statuses.length) {
+        return;
+      }
+      
+      const selectedStatus = this.statuses.find(status => status.id === this.status_id);
+      if (selectedStatus && selectedStatus.messages && selectedStatus.messages.length > 0) {
+        this.available_messages = selectedStatus.messages;
+      }
+    },
+
+    onMessageOptionChange(messageId, optionId) {
+      if (optionId) {
+        this.selected_messages[messageId] = optionId;
+        // Clear validation error when user selects an option
+        if (this.messageValidationErrors[messageId]) {
+          delete this.messageValidationErrors[messageId];
+        }
+      } else {
+        delete this.selected_messages[messageId];
+      }
+    }
 
   }
 
@@ -163,6 +217,30 @@ export default {
       >
 
       </v-select>
+    </div>
+
+    <!-- Failure Reasons Section -->
+    <div v-if="available_messages.length > 0" class="mb-3">
+      <div class="text-error mb-4">موارد زیر را تکمیل کنید</div>
+      <div v-for="message in available_messages" :key="message.id" class="mb-3">
+        <v-select
+          :items="message.options"
+          :item-title="'option'"
+          :item-value="'id'"
+          v-model="selected_messages[message.id]"
+          @update:model-value="onMessageOptionChange(message.id, $event)"
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          :label="`انتخاب ${message.name}`"
+          rounded="lg"
+          class="custom-select"
+          clearable
+          :error="messageValidationErrors[message.id]"
+          :error-messages="messageValidationErrors[message.id] ? ['این فیلد الزامی است'] : []"
+        >
+        </v-select>
+      </div>
     </div>
     <div class="mb-3">
       <v-file-input v-model="file" hint="فایل های مجاز : تصویر - ویدئو - متن - صوت" color="blue" clearable label="انتخاب فایل" variant="outlined" density="comfortable" rounded="lg" class="custom-file-input"></v-file-input>

@@ -29,7 +29,15 @@ name: "Actions_Customer_Status",
       levels : [],
       statuses_loading: false,
       levels_loading: false,
+      selected_messages: {},
+      available_messages: [],
+      messageValidationErrors: {}
   }
+  },
+  watch: {
+    status_id(newVal) {
+      this.updateAvailableMessages();
+    }
   },
   methods:{
     Open_Dialog(){
@@ -56,7 +64,8 @@ name: "Actions_Customer_Status",
       Stores_Customer().Levels_All(params).then(res =>{
         this.levels_loading = false;
         if (res.data.result.length){
-          this.levels = res.data.result;
+          // Sort levels by priority (ascending order - lower priority number first)
+          this.levels = res.data.result.sort((a, b) => (a.priority || 0) - (b.priority || 0));
         }
       }).catch(error =>{
         this.levels_loading = false;
@@ -68,18 +77,43 @@ name: "Actions_Customer_Status",
         return this.Notify_Error('وضعیت مورد نظر را انتخاب کنید')
 
       }
+      
+      // Validate required message fields
+      this.messageValidationErrors = {};
+      let hasValidationErrors = false;
+      
+      if (this.available_messages.length > 0) {
+        this.available_messages.forEach(message => {
+          if (!this.selected_messages[message.id]) {
+            this.messageValidationErrors[message.id] = true;
+            hasValidationErrors = true;
+          }
+        });
+      }
+      
+      if (hasValidationErrors) {
+        return this.Notify_Error('لطفاً تمام فیلدهای الزامی را تکمیل کنید');
+      }
+      
       this.change_loading = true;
       let params = {
         customer_id : this.customer.project_customer_id,
         status_id : this.status_id,
         project_level_id : this.project_level_id,
         description : this.description,
+        messages : this.selected_messages,
       }
+      
+      // Debug: Log the final params to see what's being sent
+      console.log('Sending params:', params);
+      console.log('Selected messages:', this.selected_messages);
       Stores_Customer().Statuses_Store(params).then(res =>{
         this.change_loading = false;
         this.change_dialog = false;
         this.status_id=null;
-        this.description=null
+        this.description=null;
+        this.selected_messages = {};
+        this.available_messages = [];
         this.Notify_Success('وضعیت مشتری باموفقیت تغییر کرد')
         this.$emit('changed',res.data.result);
       }).catch(error =>{
@@ -88,6 +122,32 @@ name: "Actions_Customer_Status",
       })
 
 
+    },
+
+    updateAvailableMessages() {
+      this.available_messages = [];
+      this.selected_messages = {};
+      
+      if (!this.status_id || !this.statuses.length) {
+        return;
+      }
+      
+      const selectedStatus = this.statuses.find(status => status.id === this.status_id);
+      if (selectedStatus && selectedStatus.messages && selectedStatus.messages.length > 0) {
+        this.available_messages = selectedStatus.messages;
+      }
+    },
+
+    onMessageOptionChange(messageId, optionId) {
+      if (optionId) {
+        this.selected_messages[messageId] = optionId;
+        // Clear validation error when user selects an option
+        if (this.messageValidationErrors[messageId]) {
+          delete this.messageValidationErrors[messageId];
+        }
+      } else {
+        delete this.selected_messages[messageId];
+      }
     }
 
   }
@@ -202,6 +262,30 @@ name: "Actions_Customer_Status",
             >
 
             </v-select>
+          </div>
+
+          <!-- Failure Reasons Section -->
+          <div v-if="available_messages.length > 0">
+            <div class="text-error mb-4">موارد زیر را تکمیل کنید</div>
+            <div v-for="message in available_messages" :key="message.id" class="mb-3">
+              <v-select
+                :items="message.options"
+                :item-title="'option'"
+                :item-value="'id'"
+                v-model="selected_messages[message.id]"
+                @update:model-value="onMessageOptionChange(message.id, $event)"
+                color="blue"
+                variant="outlined"
+                density="comfortable"
+                :label="`انتخاب ${message.name}`"
+                rounded="lg"
+                class="custom-select"
+                clearable
+                :error="messageValidationErrors[message.id]"
+                :error-messages="messageValidationErrors[message.id] ? ['این فیلد الزامی است'] : []"
+              >
+              </v-select>
+            </div>
           </div>
           <div>
             <label>توضیحات (اختیاری)</label>

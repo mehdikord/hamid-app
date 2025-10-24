@@ -73,7 +73,8 @@ export default {
     },
     Get_Levels(project){
       Stores_Customer().Levels_All({"project_id":project}).then(res =>{
-        this.levels = res.data.result;
+        // Sort levels by priority (ascending order - lower priority number first)
+        this.levels = res.data.result.sort((a, b) => (a.priority || 0) - (b.priority || 0));
       }).catch(error =>{
       })
     },

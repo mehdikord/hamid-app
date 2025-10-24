@@ -112,18 +112,20 @@ export default {
   },
   watch: {
     search_phone(newValue, oldValue) {
-
-      newValue.replace(/\s/g, '');
-      if (newValue.length >= 4) {
+      // Remove spaces from the input
+      const cleanValue = newValue ? newValue.replace(/\s/g, '') : '';
+      
+      if (cleanValue.length >= 4) {
         this.items_loading = true;
         setTimeout(() => {
-          this.query_params.search.phone = newValue;
+          this.query_params.search.phone = cleanValue;
           this.Get_Items();
-        },500);
-      }else {
-
+        }, 500);
+      } else if (cleanValue.length === 0 && oldValue && oldValue.length > 0) {
+        // Reset search when field becomes empty (user deleted all characters)
+        this.query_params.search.phone = null;
+        this.Get_Items();
       }
-
     }
   },
   methods:{
@@ -136,7 +138,8 @@ export default {
     },
     Get_Levels(project){
       Stores_Customer().Levels_All({"project_id":project}).then(res =>{
-        this.levels = res.data.result;
+        // Sort levels by priority (ascending order - lower priority number first)
+        this.levels = res.data.result.sort((a, b) => (a.priority || 0) - (b.priority || 0));
       }).catch(error =>{
       })
     },
