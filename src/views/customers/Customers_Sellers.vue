@@ -39,6 +39,7 @@ export default {
       status_id:null,
       level_id:null,
       search_phone:null,
+      dateRange:null,
       statuses : [],
       levels : [],
       projects:[],
@@ -59,6 +60,13 @@ export default {
     statusesWithNoOption() {
       const noStatusOption = { id: 'no', name: 'بدون وضعیت' };
       return [noStatusOption, ...this.statuses];
+    },
+    // Format date range for display
+    formattedDateRange() {
+      if (!this.dateRange || !Array.isArray(this.dateRange) || this.dateRange.length !== 2) return '';
+      const [start, end] = this.dateRange;
+      if (!start || !end) return '';
+      return `${moment(start).format('jYYYY-jMM-jDD HH:mm')} - ${moment(end).format('jYYYY-jMM-jDD HH:mm')}`;
     }
   },
   watch: {
@@ -143,6 +151,14 @@ export default {
       this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
       this.query_params.search.level_id = this.level_id;
+      // Set date range parameters
+      if (this.dateRange && Array.isArray(this.dateRange) && this.dateRange.length === 2) {
+        this.query_params.search.from_date = this.dateRange[0];
+        this.query_params.search.to_date = this.dateRange[1];
+      } else {
+        this.query_params.search.from_date = null;
+        this.query_params.search.to_date = null;
+      }
       this.Get_Items();
     },
     Clear_phone(){
@@ -154,6 +170,7 @@ export default {
       this.search_phone = null;
       this.status_id = null;
       this.level_id = null;
+      this.dateRange = null;
       // Don't clear project_id - keep the selected project
       // this.project_id = null;
       this.query_params.search = {};
@@ -162,6 +179,9 @@ export default {
         this.query_params.search.project_id = this.project_id;
       }
       this.Get_Items();
+    },
+    onDateRangeChange() {
+      this.Do_Search();
     },
     Select_Card(card_id){
       // If clicking the same card, deselect it
@@ -347,6 +367,35 @@ export default {
               </v-select>
             </v-col>
           </v-row>
+          <!-- Date Range Filter Row -->
+          <v-row class="mt-2">
+            <v-col lg="6" md="6" cols="12">
+              <!-- Date Range Picker -->
+              <div class="custom-date-input-wrapper">
+                <input
+                  type="text"
+                  class="custom-date-input"
+                  :value="formattedDateRange"
+                  placeholder="انتخاب بازه زمانی"
+                  readonly
+                />
+                <label class="custom-date-label">بازه زمانی</label>
+                <i class="mdi mdi-calendar-range custom-date-icon"></i>
+              </div>
+              <date-picker  
+                range
+                compact-time 
+                auto-submit 
+                color="#5c6bc0"  
+                type="datetime" 
+                v-model="dateRange" 
+                format="YYYY-MM-DD HH:mm" 
+                display-format="jYYYY-jMM-jDD HH:mm"
+                custom-input=".custom-date-input"
+                @change="onDateRangeChange"
+              />
+            </v-col>
+          </v-row>
         </div>
       </div>
 
@@ -432,6 +481,33 @@ export default {
                 @update:model-value="Do_Search"
               />
             </v-col>
+            <!-- Date Range Filter for Mobile -->
+            <v-col cols="12" class="py-2">
+              <!-- Date Range Picker -->
+              <div class="custom-date-input-wrapper">
+                <input
+                  type="text"
+                  class="custom-date-input"
+                  :value="formattedDateRange"
+                  placeholder="انتخاب بازه زمانی"
+                  readonly
+                />
+                <label class="custom-date-label">بازه زمانی</label>
+                <i class="mdi mdi-calendar-range custom-date-icon"></i>
+              </div>
+              <date-picker  
+                range
+                compact-time 
+                auto-submit 
+                color="#5c6bc0"  
+                type="datetime" 
+                v-model="dateRange" 
+                format="YYYY-MM-DD HH:mm" 
+                display-format="jYYYY-jMM-jDD HH:mm"
+                custom-input=".custom-date-input"
+                @change="onDateRangeChange"
+              />
+            </v-col>
           </v-row>
         </div>
       </v-expand-transition>
@@ -452,7 +528,7 @@ export default {
           <no_items text="هیچ شماره ( مشتری ) یافت نشد !"></no_items>
         </div>
         <div v-else>
-          <v-table v-if="this.$vuetify.display.mdAndUp" class="table-responsive" hover style="border-radius: 7px">
+          <v-table v-if="this.$vuetify.display.mdAndUp" class="custom-table-responsive" hover style="border-radius: 7px">
             <thead>
             <tr class="bg-grey-darken-3">
               <th class="text-center">تاریخ ها</th>
@@ -470,9 +546,8 @@ export default {
             </thead>
             <tbody>
             <tr v-for="item in items" class="animate__animated animate__fadeIn" >
-              <td>
+              <td class="pa-2">
                 <div class="date-stack">
-                  <chips_date color="indigo-darken-1" :date="item.created_at"></chips_date>
                   <chips_date color="teal-darken-1" :date="item.start_at"></chips_date>
                 </div>
               </td>
@@ -786,6 +861,196 @@ export default {
   color: rgb(var(--v-theme-primary-darken-2)) !important;
   font-size: 1.5rem !important;
   line-height: 1.2 !important;
+}
+
+/* Date Picker Modal Z-Index Fix */
+.v-dialog {
+  z-index: 9999 !important;
+}
+
+.v-dialog .v-overlay__content {
+  z-index: 10000 !important;
+}
+
+/* Date Picker Specific Fix */
+.v-dialog .v-card {
+  z-index: 10001 !important;
+  position: relative !important;
+}
+
+/* Table Z-Index Fix - Higher than normal content but lower than modals */
+.custom-table-responsive {
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* Keep old class for backward compatibility */
+.table-responsive {
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+.v-table {
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+.v-table tbody tr {
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* Fix table cell positioning */
+.v-table td {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Fix table header positioning */
+.v-table th {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Ensure Date Picker Components Are Above Table */
+.v-date-picker {
+  z-index: 10002 !important;
+  position: relative !important;
+}
+
+.v-date-picker__container {
+  z-index: 10002 !important;
+  position: relative !important;
+}
+
+/* Vue3 Persian DateTime Picker Z-Index Fix */
+.persian-datetime-picker {
+  z-index: 10018 !important;
+}
+
+.persian-datetime-picker .v-overlay {
+  z-index: 10018 !important;
+}
+
+.persian-datetime-picker .v-overlay__content {
+  z-index: 10019 !important;
+}
+
+.persian-datetime-picker .v-card {
+  z-index: 10020 !important;
+}
+
+/* Vue3 Persian DateTime Picker Modal Overlay */
+.persian-datetime-picker-modal {
+  z-index: 10021 !important;
+}
+
+.persian-datetime-picker-modal .v-overlay {
+  z-index: 10021 !important;
+}
+
+.persian-datetime-picker-modal .v-overlay__content {
+  z-index: 10022 !important;
+}
+
+.persian-datetime-picker-modal .v-card {
+  z-index: 10023 !important;
+}
+
+/* Generic date picker modal fixes */
+[class*="date-picker"] {
+  z-index: 10024 !important;
+}
+
+[class*="date-picker"] .v-overlay {
+  z-index: 10024 !important;
+}
+
+[class*="date-picker"] .v-overlay__content {
+  z-index: 10025 !important;
+}
+
+[class*="date-picker"] .v-card {
+  z-index: 10026 !important;
+}
+
+/* Vue3 Persian DateTime Picker specific classes */
+.vue3-persian-datetime-picker {
+  z-index: 10027 !important;
+}
+
+.vue3-persian-datetime-picker .v-overlay {
+  z-index: 10027 !important;
+}
+
+.vue3-persian-datetime-picker .v-overlay__content {
+  z-index: 10028 !important;
+}
+
+.vue3-persian-datetime-picker .v-card {
+  z-index: 10029 !important;
+}
+
+/* Ensure all date picker modals are above everything else */
+.v-dialog[class*="date"],
+.v-dialog[class*="picker"],
+.v-dialog[class*="persian"] {
+  z-index: 10030 !important;
+}
+
+.v-dialog[class*="date"] .v-overlay__content,
+.v-dialog[class*="picker"] .v-overlay__content,
+.v-dialog[class*="persian"] .v-overlay__content {
+  z-index: 10031 !important;
+}
+
+.v-dialog[class*="date"] .v-card,
+.v-dialog[class*="picker"] .v-card,
+.v-dialog[class*="persian"] .v-card {
+  z-index: 10032 !important;
+}
+
+/* Custom Date Input Styling */
+.custom-date-input-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.custom-date-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-date-input:focus {
+  outline: none;
+  border-color: #5c6bc0;
+  box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.2);
+}
+
+.custom-date-label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background: white;
+  padding: 0 4px;
+  font-size: 12px;
+  color: #5c6bc0;
+  font-weight: 500;
+}
+
+.custom-date-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #5c6bc0;
+  pointer-events: none;
 }
 
 /* Mobile filter panel animations */

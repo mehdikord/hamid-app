@@ -62,3 +62,210 @@
 .swal2-container {
     z-index: 99999 !important;
 }
+
+/* Date Picker Modal Z-Index Fix */
+.v-dialog {
+    z-index: 9999 !important;
+}
+
+.v-dialog .v-overlay__content {
+    z-index: 10000 !important;
+}
+
+/* Date Picker Specific Fix */
+.v-dialog .v-card {
+    z-index: 10001 !important;
+    position: relative !important;
+}
+
+/* Table Z-Index Fix - Higher than normal content but lower than modals */
+.custom-table-responsive {
+    z-index: 10 !important;
+    position: relative !important;
+}
+
+/* Keep old class for backward compatibility */
+.table-responsive {
+    z-index: 10 !important;
+    position: relative !important;
+}
+
+.v-table {
+    z-index: 10 !important;
+    position: relative !important;
+}
+
+.v-table tbody tr {
+    z-index: 10 !important;
+    position: relative !important;
+}
+
+/* Fix table cell positioning */
+.v-table td {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Fix table header positioning */
+.v-table th {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Ensure Date Picker Components Are Above Table */
+.v-date-picker {
+    z-index: 10002 !important;
+    position: relative !important;
+}
+
+.v-date-picker__container {
+    z-index: 10002 !important;
+    position: relative !important;
+}
+
+/* Vue3 Persian DateTime Picker Z-Index Fix */
+.persian-datetime-picker {
+    z-index: 10003 !important;
+}
+
+.persian-datetime-picker .v-overlay {
+    z-index: 10003 !important;
+}
+
+.persian-datetime-picker .v-overlay__content {
+    z-index: 10004 !important;
+}
+
+.persian-datetime-picker .v-card {
+    z-index: 10005 !important;
+}
+
+/* Vue3 Persian DateTime Picker Modal Overlay */
+.persian-datetime-picker-modal {
+    z-index: 10006 !important;
+}
+
+.persian-datetime-picker-modal .v-overlay {
+    z-index: 10006 !important;
+}
+
+.persian-datetime-picker-modal .v-overlay__content {
+    z-index: 10007 !important;
+}
+
+.persian-datetime-picker-modal .v-card {
+    z-index: 10008 !important;
+}
+
+/* Generic date picker modal fixes */
+[class*="date-picker"] {
+    z-index: 10009 !important;
+}
+
+[class*="date-picker"] .v-overlay {
+    z-index: 10009 !important;
+}
+
+[class*="date-picker"] .v-overlay__content {
+    z-index: 10010 !important;
+}
+
+[class*="date-picker"] .v-card {
+    z-index: 10011 !important;
+}
+
+/* Vue3 Persian DateTime Picker specific classes */
+.vue3-persian-datetime-picker {
+    z-index: 10012 !important;
+}
+
+.vue3-persian-datetime-picker .v-overlay {
+    z-index: 10012 !important;
+}
+
+.vue3-persian-datetime-picker .v-overlay__content {
+    z-index: 10013 !important;
+}
+
+.vue3-persian-datetime-picker .v-card {
+    z-index: 10014 !important;
+}
+
+/* Ensure all date picker modals are above everything else */
+.v-dialog[class*="date"],
+.v-dialog[class*="picker"],
+.v-dialog[class*="persian"] {
+    z-index: 10015 !important;
+}
+
+.v-dialog[class*="date"] .v-overlay__content,
+.v-dialog[class*="picker"] .v-overlay__content,
+.v-dialog[class*="persian"] .v-overlay__content {
+    z-index: 10016 !important;
+}
+
+.v-dialog[class*="date"] .v-card,
+.v-dialog[class*="picker"] .v-card,
+.v-dialog[class*="persian"] .v-card {
+    z-index: 10017 !important;
+}
+
+/* Additional comprehensive date picker fixes */
+.v-menu__content,
+.v-menu__content .v-overlay__content,
+.v-menu__content .v-card {
+    z-index: 10018 !important;
+}
+
+/* Target any modal or overlay that might contain date picker */
+.v-overlay[class*="date"],
+.v-overlay[class*="picker"],
+.v-overlay[class*="persian"],
+.v-overlay[class*="datetime"] {
+    z-index: 10019 !important;
+}
+
+.v-overlay[class*="date"] .v-overlay__content,
+.v-overlay[class*="picker"] .v-overlay__content,
+.v-overlay[class*="persian"] .v-overlay__content,
+.v-overlay[class*="datetime"] .v-overlay__content {
+    z-index: 10020 !important;
+}
+
+.v-overlay[class*="date"] .v-card,
+.v-overlay[class*="picker"] .v-card,
+.v-overlay[class*="persian"] .v-card,
+.v-overlay[class*="datetime"] .v-card {
+    z-index: 10021 !important;
+}
+
+/* Force all date picker related elements to highest z-index */
+[data-vue3-persian-datetime-picker],
+[data-vue3-persian-datetime-picker] * {
+    z-index: 10022 !important;
+}
+
+/* Target any element with date picker in class name */
+[class*="vue3-persian"],
+[class*="persian-datetime"],
+[class*="datetime-picker"] {
+    z-index: 10023 !important;
+}
+
+[class*="vue3-persian"] .v-overlay,
+[class*="persian-datetime"] .v-overlay,
+[class*="datetime-picker"] .v-overlay {
+    z-index: 10023 !important;
+}
+
+[class*="vue3-persian"] .v-overlay__content,
+[class*="persian-datetime"] .v-overlay__content,
+[class*="datetime-picker"] .v-overlay__content {
+    z-index: 10024 !important;
+}
+
+[class*="vue3-persian"] .v-card,
+[class*="persian-datetime"] .v-card,
+[class*="datetime-picker"] .v-card {
+    z-index: 10025 !important;
+}

@@ -162,6 +162,19 @@ export default {
             </v-list-item-title>
           </v-list-item>
 
+          <!-- Start Date -->
+          <v-list-item v-if="customer.start_at" class="px-3 py-1">
+            <template v-slot:prepend>
+              <v-icon icon="mdi-calendar-start" size="16" color="medium-emphasis"></v-icon>
+            </template>
+            <v-list-item-title class="text-body-2">
+              <span class="text-medium-emphasis">شروع:</span>
+              <span class="font-weight-medium ms-1">
+                {{ this.$filters.date_jalali( customer.start_at,'jYYYY/jM/jD') }}
+              </span>
+            </v-list-item-title>
+          </v-list-item>
+
           <!-- Import Method and Tags Combined -->
           <v-list-item v-if="(customer.import_method && customer.import_method.name) || (customer.tags && customer.tags.length > 0)" class="px-3 py-1">
             <template v-slot:prepend>
