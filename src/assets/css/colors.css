@@ -78,38 +78,20 @@
     position: relative !important;
 }
 
-/* Table Z-Index Fix - Higher than normal content but lower than modals */
-.custom-table-responsive {
-    z-index: 10 !important;
-    position: relative !important;
-}
-
-/* Keep old class for backward compatibility */
+/* Table Z-Index Lower Than Modals */
 .table-responsive {
-    z-index: 10 !important;
+    z-index: 1 !important;
     position: relative !important;
 }
 
 .v-table {
-    z-index: 10 !important;
+    z-index: 1 !important;
     position: relative !important;
 }
 
 .v-table tbody tr {
-    z-index: 10 !important;
+    z-index: 1 !important;
     position: relative !important;
-}
-
-/* Fix table cell positioning */
-.v-table td {
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-/* Fix table header positioning */
-.v-table th {
-    position: relative !important;
-    z-index: 10 !important;
 }
 
 /* Ensure Date Picker Components Are Above Table */
@@ -268,4 +250,9 @@
 [class*="persian-datetime"] .v-card,
 [class*="datetime-picker"] .v-card {
     z-index: 10025 !important;
+}
+
+/* Fix v-card z-index to prevent stacking context issues */
+.v-card {
+    z-index: auto !important;
 }

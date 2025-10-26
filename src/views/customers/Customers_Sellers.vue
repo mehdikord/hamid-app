@@ -256,7 +256,7 @@ export default {
       const message = encodeURIComponent('سلام');
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
-    },
+    }
 
   }
 }
