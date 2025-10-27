@@ -82,7 +82,21 @@ export default {
     </template>
   </v-list-item>
   <v-spacer class="mt-2 mb-2" />
-  <!--  فاکتور ها و شماره های ثبت شده برای مشتریان -->
+  <v-list-item
+      :to="{name : 'reminders'}"
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-bell-outline" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">یاداور ها</span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
   <!-- <v-list-item
       active-color="deep-orange-darken-2"
 

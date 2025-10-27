@@ -4,6 +4,7 @@ import Index_Routes from "@/router/index/index.js";
 import Profile_Routes from "@/router/profile/profile.js";
 import Customers_Routes from "@/router/customers/customers.js";
 import Reports_Routes from "@/router/reports/reports.js";
+import Reminders_Routes from "@/router/reminders/reminders.js";
 import {Stores_Auth} from "@/stores/auth/auth.js";
 
 
@@ -15,6 +16,7 @@ const router = createRouter({
       ...Profile_Routes,
       ...Customers_Routes,
       ...Reports_Routes,
+      ...Reminders_Routes,
 
   ],
 })

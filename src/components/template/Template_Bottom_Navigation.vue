@@ -45,6 +45,15 @@
     </v-btn>
 
     <v-btn
+      :to="{ name: 'reminders' }"
+      value="reminders"
+      class="nav-item"
+    >
+      <v-icon size="24">mdi-bell-outline</v-icon>
+      <span class="nav-text">یاداور ها</span>
+    </v-btn>
+
+    <v-btn
       :to="{ name: 'profile' }"
       value="profile"
       class="nav-item"
