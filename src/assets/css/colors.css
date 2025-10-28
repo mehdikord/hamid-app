@@ -1,3 +1,13 @@
 .v-card {
     z-index: auto !important;
 }
+
+/* Custom color classes for auth page and other components */
+.color-dark-bg {
+    background-color: #1a1a1a !important;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
+}
+
+.color-orange-text {
+    color: #ff6f00 !important;
+}

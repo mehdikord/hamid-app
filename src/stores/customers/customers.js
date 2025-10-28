@@ -85,6 +85,13 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.date){data.append('date',params.date);}
                 if(params.messages){data.append('messages',JSON.stringify(params.messages));}
                 
+                // Add reminder fields
+                if(params.reminder_title){data.append('reminder_title',params.reminder_title);}
+                if(params.reminder_description){data.append('reminder_description',params.reminder_description);}
+                if(params.reminder_date){data.append('reminder_date',params.reminder_date);}
+                if(params.reminder_time){data.append('reminder_time',params.reminder_time);}
+                if(params.reminders_upcoming){data.append('reminders_upcoming',params.reminders_upcoming);}
+                
                 this.$axios.post('users/customers/'+params.customer_id+'/reports',data,{
                     headers: {'Content-Type': 'multipart/form-data'}
                 }).then(response =>{
@@ -198,6 +205,13 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
                 if(params.messages){data.append('messages',JSON.stringify(params.messages));}
+                
+                // Add reminder fields
+                if(params.reminder_title){data.append('reminder_title',params.reminder_title);}
+                if(params.reminder_description){data.append('reminder_description',params.reminder_description);}
+                if(params.reminder_date){data.append('reminder_date',params.reminder_date);}
+                if(params.reminder_time){data.append('reminder_time',params.reminder_time);}
+                if(params.reminders_upcoming){data.append('reminders_upcoming',params.reminders_upcoming);}
                 
                 this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/reports',data,{
                     headers: {'Content-Type': 'multipart/form-data'}

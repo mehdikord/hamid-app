@@ -46,7 +46,8 @@ export default {
       reminder_title: null,
       reminder_description: null,
       reminder_date: null,
-      reminder_time: null
+      reminder_time: null,
+      reminders_upcoming: null
     }
   },
   computed: {
@@ -57,6 +58,14 @@ export default {
     formattedReminderDate() {
       if (!this.reminder_date) return '';
       return moment(this.reminder_date).format('jYYYY-jMM-jDD');
+    },
+    quickTimeOptions() {
+      return [
+        { minutes: 15, label: '15 دقیقه قبل' },
+        { minutes: 30, label: '30 دقیقه قبل' },
+        { minutes: 45, label: '45 دقیقه قبل' },
+        { minutes: 60, label: '1 ساعت قبل' }
+      ];
     }
   },
   watch: {
@@ -120,6 +129,11 @@ export default {
         params.reminder_description = this.reminder_description;
         params.reminder_date = this.reminder_date;
         params.reminder_time = this.reminder_time;
+        
+        // Only add reminders_upcoming if it has a value
+        if (this.reminders_upcoming !== null && this.reminders_upcoming !== undefined) {
+          params.reminders_upcoming = this.reminders_upcoming;
+        }
       }
       
       Stores_Customer().Reports_Store(params).then(res=>{
@@ -196,6 +210,10 @@ export default {
       } else {
         delete this.selected_messages[messageId];
       }
+    },
+
+    setReminderOffset(minutes) {
+      this.reminders_upcoming = minutes;
     }
 
   }
@@ -285,7 +303,7 @@ export default {
       <v-checkbox
         v-model="add_reminder"
         color="blue"
-        label="افزون یاداور جدید"
+        label="افزودن یاداور جدید"
         hide-details
         class="custom-checkbox"
       ></v-checkbox>
@@ -357,6 +375,25 @@ export default {
           placeholder="انتخاب زمان یادآور"
           class="custom-time-picker"
         />
+      </div>
+
+      <!-- Reminder Offset Selection -->
+      <div class="mb-3">
+        <div class="quick-time-label mb-2">یادآوری چند دقیقه قبل:</div>
+        <div class="quick-time-buttons">
+          <v-btn
+            v-for="time in quickTimeOptions"
+            :key="time.minutes"
+            :variant="reminders_upcoming === time.minutes ? 'flat' : 'outlined'"
+            :color="reminders_upcoming === time.minutes ? 'blue' : 'grey'"
+            size="small"
+            rounded="lg"
+            class="quick-time-btn"
+            @click="setReminderOffset(time.minutes)"
+          >
+            {{ time.label }}
+          </v-btn>
+        </div>
       </div>
     </div>
     <div class="mb-3">
@@ -678,6 +715,34 @@ export default {
   font-size: 16px !important;
   background-color: rgb(var(--v-theme-surface)) !important;
   color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+/* Quick time buttons styling */
+.quick-time-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(var(--v-theme-primary));
+  margin-bottom: 8px;
+}
+
+.quick-time-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-time-btn {
+  min-width: 60px !important;
+  height: 36px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.quick-time-btn :deep(.v-btn__content) {
+  font-size: 12px !important;
+  font-weight: 500 !important;
 }
 
 </style>

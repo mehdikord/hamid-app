@@ -5,6 +5,7 @@ import Profile from '@/assets/images/icons/customer.svg'
 import Customer_Profile_Summery from "@/views/customers/components/Customer_Profile_Summery.vue";
 import Customer_Profile_Reports from "@/views/customers/components/Customer_Profile_Reports.vue";
 import Customer_Profile_Invoices from "@/views/customers/components/Customer_Profile_Invoices.vue";
+import Action_Customer_Reminder_Create from "@/components/actions/Action_Customer_Reminder_Create.vue";
 import { useTitle } from '@/composables/useTitle.js';
 
 export default {
@@ -13,6 +14,7 @@ export default {
     'profile_summery' : Customer_Profile_Summery,
     'profile_reports' : Customer_Profile_Reports,
     'profile_invoices' : Customer_Profile_Invoices,
+    'actions_customer_reminder_create' : Action_Customer_Reminder_Create,
   },
   setup() {
     const { updateCustomerTitle } = useTitle();
@@ -33,6 +35,7 @@ export default {
       edit_dialog:false,
       report_dialog:false,
       invoice_dialog:false,
+      reminder_dialog:false,
       summery_key:0,
       active_tab: 0,
     }
@@ -76,6 +79,11 @@ export default {
       this.summery_key ++;
       this.invoice_dialog=false;
       this.Notify_Success('فاکتور مورد نظر باموفقیت ثبت گردید')
+    },
+    Create_Reminder(){
+      this.summery_key ++;
+      this.reminder_dialog=false;
+      this.Notify_Success('یادآور مورد نظر باموفقیت ثبت گردید')
     },
     switchTab(tabIndex) {
       this.active_tab = tabIndex;
@@ -200,15 +208,26 @@ export default {
               </v-btn>
               
               <div class="secondary-buttons">
-                <v-btn 
-                  @click="report_dialog = true" 
-                  variant="flat" 
-                  color="teal" 
-                  class="action-btn secondary-btn"
-                  prepend-icon="mdi-text-box-edit"
-                >
-                  ثبت گزارش
-                </v-btn>
+                <div class="report-button-group">
+                  <v-btn 
+                    @click="report_dialog = true" 
+                    variant="flat" 
+                    color="teal" 
+                    class="action-btn secondary-btn"
+                    prepend-icon="mdi-text-box-edit"
+                  >
+                    ثبت گزارش
+                  </v-btn>
+                  <v-btn 
+                    @click="reminder_dialog = true" 
+                    variant="flat" 
+                    color="purple" 
+                    class="action-btn reminder-btn"
+                    icon="mdi-bell-outline"
+                    size="small"
+                  >
+                  </v-btn>
+                </div>
                 <v-btn 
                   @click="invoice_dialog = true" 
                   variant="flat" 
@@ -313,6 +332,54 @@ export default {
                     :customer="customer"
                     :onCancel="() => invoice_dialog = false"
                   ></actions_customer_project_invoice_create>
+                </v-card-item>
+              </v-card>
+            </v-dialog>
+
+            <!-- Reminder Dialog -->
+            <v-dialog
+                v-model="reminder_dialog"
+                :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
+                :fullscreen="$vuetify.display.smAndDown"
+                transition="dialog-bottom-transition"
+            >
+              <v-card 
+                variant="flat" 
+                rounded
+                :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                elevation="8"
+              >
+                <!-- Enhanced Header -->
+                <v-card-item class="pa-4 pa-sm-6">
+                  <div class="d-flex align-center justify-space-between">
+                    <div class="d-flex align-center">
+                      <v-icon
+                        icon="mdi-bell-outline"
+                        color="purple-darken-2"
+                        size="28"
+                        class="me-3"
+                      ></v-icon>
+                      <div>
+                        <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                          ثبت یادآور جدید
+                        </h3>
+                        <p class="text-grey-darken-1 mb-0 mt-1">
+                          یادآور جدید برای مشتری {{ customer.name || customer.phone }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </v-card-item>
+                
+                <v-divider class="mx-4 mx-sm-6"></v-divider>
+                
+                <!-- Content Area -->
+                <v-card-item class="pa-4 pa-sm-6 pt-0">
+                  <actions_customer_reminder_create 
+                    @Created="Create_Reminder" 
+                    :customer="customer"
+                    :onCancel="() => reminder_dialog = false"
+                  ></actions_customer_reminder_create>
                 </v-card-item>
               </v-card>
             </v-dialog>
@@ -636,6 +703,30 @@ export default {
   gap: 12px;
 }
 
+.report-button-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.report-button-group .secondary-btn {
+  flex: 1;
+}
+
+.reminder-btn {
+  background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important;
+  color: white !important;
+  border: none !important;
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.reminder-btn:hover {
+  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3) !important;
+  transform: translateY(-1px);
+}
+
 .secondary-btn {
   background: linear-gradient(135deg, var(--v-theme-surface) 0%, #f5f5f5 100%) !important;
   border: 1px solid #e0e0e0 !important;
@@ -760,6 +851,16 @@ export default {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
+  
+  .report-button-group {
+    gap: 6px;
+  }
+  
+  .reminder-btn {
+    min-width: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
 }
 
 /* Smooth transitions */
@@ -858,6 +959,16 @@ export default {
   .secondary-buttons {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+  }
+  
+  .report-button-group {
+    gap: 4px;
+  }
+  
+  .reminder-btn {
+    min-width: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
 }
 

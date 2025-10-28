@@ -38,14 +38,14 @@ export default {
 
 <template>
 
-  <div class="mt-16">
+  <div class="auth-container mt-16">
     <v-row justify="center">
       <v-col xs="12" sm="12" md="12" lg="10" xl="9">
-        <v-card flat class="mt-lg-10">
+        <v-card flat class="auth-card mt-lg-10">
           <v-card-item>
             <v-row>
               <v-col md="6" xs="12" sm="12" class="text-center">
-                <v-card  class="color-dark-bg rounded-xl">
+                <v-card class="auth-login-card color-dark-bg rounded-xl">
                   <v-card-item>
                     <div class="mt-14 mb-6">
                       <strong class="color-orange-text font-19">ورود به حساب کاربری</strong>
@@ -71,7 +71,7 @@ export default {
                 </v-card>
               </v-col>
               <v-col class="hidden-xs text-center" md="6" xs="12" sm="12">
-                <img src="@/assets/images/backgrounds/auth-bg.svg" width="100%" alt="">
+                <img src="@/assets/images/backgrounds/auth-bg.svg" width="100%" alt="" class="auth-image">
               </v-col>
             </v-row>
           </v-card-item>
@@ -82,5 +82,16 @@ export default {
 </template>
 
 <style scoped>
+/* Auth page specific styling */
+.auth-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 16px !important;
+}
 
+
+
+.auth-image {
+  border-radius: 16px;
+  overflow: hidden;
+}
 </style>

@@ -340,7 +340,7 @@ export default {
       <v-checkbox
         v-model="add_reminder"
         color="blue"
-        label="افزون یاداور جدید"
+        label="افزودن یاداور جدید"
         hide-details
         class="custom-checkbox"
       ></v-checkbox>
