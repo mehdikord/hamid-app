@@ -47,7 +47,7 @@ export default {
       items:[],
       show_filter:false,
       selected_card_id: null,
-
+      isSyncingURL: false, // Flag to prevent infinite loops when syncing URL
     }
   },
   computed: {
@@ -78,12 +78,23 @@ export default {
         this.items_loading = true;
         setTimeout(() => {
           this.query_params.search.phone = cleanValue;
+          this.syncToURL();
           this.Get_Items();
         }, 500);
       } else if (cleanValue.length === 0 && oldValue && oldValue.length > 0) {
         // Reset search when field becomes empty (user deleted all characters)
         this.query_params.search.phone = null;
+        this.syncToURL();
         this.Get_Items();
+      }
+    },
+    '$route'(to, from) {
+      // Watch for route changes to sync URL params back to component state
+      // Skip if we're the ones updating the URL to prevent infinite loops
+      if (to.path === '/customers/seller' && to.query !== from.query && !this.isSyncingURL) {
+        this.syncFromURL();
+        // Re-apply filters and re-fetch items when URL changes (e.g., browser back/forward)
+        this.Do_Search();
       }
     }
   },
@@ -105,15 +116,35 @@ export default {
     Get_Projects(){
       Stores_Projects().All().then(res =>{
         this.projects = res.data.result;
-        if(this.projects.length){
+        // Read URL params before setting default project
+        this.syncFromURL();
+        
+        if(this.projects.length && !this.project_id){
           // Sort projects by updated_at in descending order and select the most recent one
           const sortedProjects = this.projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
           this.project_id = sortedProjects[0].id
         }
-        this.Get_Statuses(this.project_id);
-        this.Get_Levels(this.project_id);
-        // Set initial search params and fetch items
+        
+        // Validate project_id exists in projects list
+        if (this.project_id && this.projects.find(p => p.id === this.project_id)) {
+          this.Get_Statuses(this.project_id);
+          this.Get_Levels(this.project_id);
+        } else if (this.projects.length) {
+          // If invalid project_id, use first project
+          const sortedProjects = this.projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+          this.project_id = sortedProjects[0].id;
+          this.Get_Statuses(this.project_id);
+          this.Get_Levels(this.project_id);
+        }
+        
+        // Set initial search params and apply filters from URL
         this.query_params.search.project_id = this.project_id;
+        // Apply filters from URL to query_params
+        this.query_params.search.status_id = this.status_id === 'no' ? null : this.status_id;
+        this.query_params.search.level_id = this.level_id === 'no' ? null : this.level_id;
+        if (this.query_params.search.phone) {
+          // Phone is already set by syncFromURL
+        }
         this.Get_Items();
       }).catch(error =>{
       })
@@ -130,6 +161,9 @@ export default {
           this.pagination.total = res.data.result.total;
           this.pagination.last_page = res.data.result.last_page;
           this.pagination.links = res.data.result.links;
+          // Sync pagination to URL after API response
+          this.query_params.page = res.data.result.current_page;
+          this.query_params.per_page = res.data.result.per_page;
         }
         this.items_loading=false;
       }).catch((error) => {
@@ -139,18 +173,21 @@ export default {
     Change_Per_Page(page){
       this.query_params.per_page = page;
       this.query_params.page = 1;
+      this.syncToURL();
       this.Get_Items();
     },
     Change_Page(page){
       this.query_params.page = page;
+      this.syncToURL();
       this.Get_Items();
     },
     Do_Search(){
       this.Get_Statuses(this.project_id);
       this.Get_Levels(this.project_id);
-      this.query_params.search.status_id = this.status_id;
+      // Handle 'no' values - convert to null for API
+      this.query_params.search.status_id = this.status_id === 'no' ? null : this.status_id;
       this.query_params.search.project_id = this.project_id;
-      this.query_params.search.level_id = this.level_id;
+      this.query_params.search.level_id = this.level_id === 'no' ? null : this.level_id;
       // Set date range parameters
       if (this.dateRange && Array.isArray(this.dateRange) && this.dateRange.length === 2) {
         this.query_params.search.from_date = this.dateRange[0];
@@ -159,11 +196,13 @@ export default {
         this.query_params.search.from_date = null;
         this.query_params.search.to_date = null;
       }
+      this.syncToURL();
       this.Get_Items();
     },
     Clear_phone(){
       this.search_phone = null;
       this.query_params.search.phone = null;
+      this.syncToURL();
       this.Get_Items();
     },
     Clear_All_Filters(){
@@ -178,6 +217,7 @@ export default {
       if (this.project_id) {
         this.query_params.search.project_id = this.project_id;
       }
+      this.syncToURL();
       this.Get_Items();
     },
     onDateRangeChange() {
@@ -256,6 +296,127 @@ export default {
       const message = encodeURIComponent('سلام');
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
+    },
+    syncFromURL() {
+      // Read URL query parameters and apply to component state
+      const query = this.$route.query;
+      const previousProjectId = this.project_id;
+      
+      // Parse pagination
+      if (query.page) {
+        const page = parseInt(query.page, 10);
+        if (!isNaN(page) && page > 0) {
+          this.query_params.page = page;
+          this.pagination.current = page;
+        }
+      }
+      
+      if (query.per_page) {
+        const perPage = parseInt(query.per_page, 10);
+        if (!isNaN(perPage) && perPage > 0) {
+          this.query_params.per_page = perPage;
+          this.pagination.per_page = perPage;
+        }
+      }
+      
+      // Parse filters
+      if (query.project_id) {
+        const projectId = query.project_id === 'null' ? null : parseInt(query.project_id, 10);
+        if (projectId === null || (!isNaN(projectId) && projectId > 0)) {
+          this.project_id = projectId;
+          // If project_id changed and we have projects loaded, reload statuses and levels
+          if (previousProjectId !== this.project_id && this.projects.length > 0 && this.project_id) {
+            this.Get_Statuses(this.project_id);
+            this.Get_Levels(this.project_id);
+          }
+        }
+      }
+      
+      if (query.level_id) {
+        const levelId = query.level_id === 'no' ? 'no' : (query.level_id === 'null' ? null : parseInt(query.level_id, 10));
+        if (levelId === 'no' || levelId === null || (!isNaN(levelId) && levelId > 0)) {
+          this.level_id = levelId;
+        }
+      }
+      
+      if (query.status_id) {
+        const statusId = query.status_id === 'no' ? 'no' : (query.status_id === 'null' ? null : parseInt(query.status_id, 10));
+        if (statusId === 'no' || statusId === null || (!isNaN(statusId) && statusId > 0)) {
+          this.status_id = statusId;
+        }
+      }
+      
+      if (query.phone) {
+        const phone = query.phone.toString().trim();
+        if (phone.length >= 4) {
+          this.search_phone = phone;
+          this.query_params.search.phone = phone;
+        }
+      } else if (query.phone === null || query.phone === '') {
+        this.search_phone = null;
+        this.query_params.search.phone = null;
+      }
+      
+      // Note: Date range is NOT synced from URL (as per requirements)
+    },
+    syncToURL() {
+      // Update URL query parameters with current filter/pagination state
+      const query = { ...this.$route.query };
+      
+      // Update pagination
+      if (this.query_params.page && this.query_params.page > 1) {
+        query.page = this.query_params.page.toString();
+      } else {
+        delete query.page;
+      }
+      
+      if (this.query_params.per_page && this.query_params.per_page !== 15) {
+        query.per_page = this.query_params.per_page.toString();
+      } else {
+        delete query.per_page;
+      }
+      
+      // Update filters
+      if (this.project_id) {
+        query.project_id = this.project_id.toString();
+      } else {
+        delete query.project_id;
+      }
+      
+      if (this.level_id) {
+        query.level_id = this.level_id.toString();
+      } else {
+        delete query.level_id;
+      }
+      
+      if (this.status_id) {
+        query.status_id = this.status_id.toString();
+      } else {
+        delete query.status_id;
+      }
+      
+      if (this.query_params.search.phone && this.query_params.search.phone.length >= 4) {
+        query.phone = this.query_params.search.phone;
+      } else {
+        delete query.phone;
+      }
+      
+      // Note: Date range is NOT synced to URL (as per requirements)
+      
+      // Set flag to prevent route watcher from triggering
+      this.isSyncingURL = true;
+      
+      // Update URL without adding to history
+      this.$router.replace({ query }).catch(() => {
+        // Ignore navigation duplicated errors
+      }).finally(() => {
+        // Reset flag after a short delay to allow route watcher to process
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.isSyncingURL = false;
+          }, 100);
+        });
+      });
     }
 
   }
