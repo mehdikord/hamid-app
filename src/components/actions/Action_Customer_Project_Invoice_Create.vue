@@ -34,6 +34,7 @@ export default {
       project_id:null,
       user_project:null,
       errors:[],
+      selected_products: [],
       // Reminder fields
       add_reminder: false,
       reminder_title: '',
@@ -51,6 +52,22 @@ export default {
     formattedReminderDate() {
       if (!this.reminder_date) return '';
       return moment(this.reminder_date).format('jYYYY-jMM-jDD');
+    },
+    selectedProject() {
+      if (!this.project_id || !this.projects || this.projects.length === 0) return null;
+      return this.projects.find(p => p.id === this.project_id) || null;
+    },
+    availableProducts() {
+      if (!this.selectedProject || !this.selectedProject.products) return [];
+      return Array.isArray(this.selectedProject.products) ? this.selectedProject.products : [];
+    }
+  },
+  watch: {
+    project_id() {
+      // Reset selected products when project changes
+      this.selected_products = [];
+      // Reload user project data for the new project
+      this.Get_User_Project();
     }
   },
   methods:{
@@ -140,6 +157,7 @@ export default {
         price : this.price,
         file : this.file,
         description : this.description,
+        products : this.selected_products,
       }
       
       // Add reminder data if enabled
@@ -220,6 +238,22 @@ export default {
       </v-select>
     </div>
     <template v-if="user_project && user_project.target_price">
+      <div v-if="availableProducts.length > 0" class="mb-3">
+        <v-select
+          v-model="selected_products"
+          :items="availableProducts"
+          item-title="name"
+          item-value="id"
+          multiple
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب محصولات"
+          rounded="lg"
+          class="custom-select"
+        >
+        </v-select>
+      </div>
       <div class="mb-4">
         <span>مبلغ معامله ثبت شده برای مشتری : </span> <strong class="text-indigo font-15">{{ this.$filters.number_format(this.user_project.target_price) }}</strong> <span class="text-grey font-12">تومان</span>
       </div>
@@ -239,6 +273,22 @@ export default {
       >
         برای ثبت فاکتور برای مشتری ، ابتدا باید مبلغ معامله مشتری را مشخص کنید و سپس فاکتور های مورد نظر را ثبت کنید
       </v-alert>
+      <div v-if="availableProducts.length > 0" class="mt-6 mb-3">
+        <v-select
+          v-model="selected_products"
+          :items="availableProducts"
+          item-title="name"
+          item-value="id"
+          multiple
+          color="blue"
+          variant="outlined"
+          density="comfortable"
+          label="انتخاب محصولات"
+          rounded="lg"
+          class="custom-select"
+        >
+        </v-select>
+      </div>
       <div class="mt-6">
         <v-text-field 
           v-model="formatted_target_price" 

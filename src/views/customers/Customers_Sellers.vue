@@ -6,7 +6,7 @@ import Customers_Seller_Item from "@/views/customers/components/Customers_Seller
 import consultant_item from "@/views/customers/components/Customers_Consultant_Item.vue";
 
 export default {
-  name: "Customers",
+  name: "Customers_Sellers",
   components:{
     consultant_item,
     'seller_item' : Customers_Seller_Item,
@@ -185,9 +185,9 @@ export default {
       this.Get_Statuses(this.project_id);
       this.Get_Levels(this.project_id);
       // Handle 'no' values - convert to null for API
-      this.query_params.search.status_id = this.status_id === 'no' ? null : this.status_id;
+      this.query_params.search.status_id = this.status_id;
       this.query_params.search.project_id = this.project_id;
-      this.query_params.search.level_id = this.level_id === 'no' ? null : this.level_id;
+      this.query_params.search.level_id = this.level_id;
       // Set date range parameters
       if (this.dateRange && Array.isArray(this.dateRange) && this.dateRange.length === 2) {
         this.query_params.search.from_date = this.dateRange[0];

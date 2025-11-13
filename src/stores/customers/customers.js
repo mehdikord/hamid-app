@@ -231,6 +231,21 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
                 if(params.description){data.append('description',params.description);}
+                if(params.products && Array.isArray(params.products)){
+                    params.products.forEach(productId => {
+                        data.append('products[]', productId);
+                    });
+                }
+                
+                // Add reminder fields
+                if(params.reminder){
+                    if(params.reminder.title){data.append('reminder_title',params.reminder.title);}
+                    if(params.reminder.description){data.append('reminder_description',params.reminder.description);}
+                    if(params.reminder.date){data.append('reminder_date',params.reminder.date);}
+                    if(params.reminder.time){data.append('reminder_time',params.reminder.time);}
+                    if(params.reminder.offset){data.append('reminder_offset',params.reminder.offset);}
+                }
+                
                 this.$axios.post('users/customers/'+params.customer_id+'/projects/'+params.project_id+'/invoices',data,{
                     headers: {'Content-Type': 'multipart/form-data'}
                 }).then(response =>{
