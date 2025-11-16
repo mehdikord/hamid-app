@@ -89,12 +89,77 @@ export default {
 .bottom-nav {
   border-top: 1px solid #e0e0e0;
   background-color: white !important;
+  width: 100%;
+  max-width: 100vw;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Ensure the bottom navigation container doesn't overflow */
+:deep(.v-bottom-navigation) {
+  width: 100% !important;
+  max-width: 100vw !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the content wrapper doesn't overflow */
+:deep(.v-bottom-navigation__content) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
 }
 
 .nav-item {
   flex-direction: column;
   min-width: 0;
-  padding: 8px 4px;
+  padding: 8px 2px;
+  flex: 1 1 0;
+  max-width: calc(100% / 6);
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Ensure first and last items don't overflow */
+.nav-item:first-child {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 4px;
+  padding-right: 2px;
+}
+
+.nav-item:last-child {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 4px;
+  padding-left: 2px;
+}
+
+/* RTL-specific adjustments */
+[dir="rtl"] .nav-item:first-child {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 4px;
+  padding-left: 2px;
+}
+
+[dir="rtl"] .nav-item:last-child {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 4px;
+  padding-right: 2px;
 }
 
 .nav-text {
@@ -102,6 +167,10 @@ export default {
   margin-top: 4px;
   color: #616161;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* Active state styling - matches the blue color from the design */
@@ -130,5 +199,27 @@ export default {
 
 .nav-item:hover .v-icon {
   color: #1976d2;
+}
+
+/* Mobile-specific fixes for very small screens */
+@media (max-width: 400px) {
+  .nav-item {
+    padding: 8px 1px;
+  }
+  
+  .nav-text {
+    font-size: 10px;
+  }
+  
+  :deep(.v-icon) {
+    font-size: 20px !important;
+  }
+}
+
+/* Ensure buttons don't overflow */
+:deep(.v-btn) {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
 }
 </style>

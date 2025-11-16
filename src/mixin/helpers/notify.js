@@ -13,10 +13,18 @@ export default {
                 iconColor : color,
                 background : background,
                 timerProgressBar: true,
-                zIndex: 99999,
+                zIndex: 999999,
                 didOpen: (toast) => {
                     toast.onmouseenter = this.$swal.stopTimer;
                     toast.onmouseleave = this.$swal.resumeTimer;
+                    // Ensure the toast container has the highest z-index
+                    // Use setTimeout to ensure DOM is ready
+                    setTimeout(() => {
+                        const swalContainer = document.querySelector('.swal2-container');
+                        if (swalContainer) {
+                            swalContainer.style.zIndex = '999999';
+                        }
+                    }, 10);
                 }
             });
             Toast.fire({

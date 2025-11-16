@@ -41,7 +41,7 @@ export default {
 
 <template>
 
-  <v-app-bar :elevation="0" class="color-dark-bg">
+  <v-app-bar :elevation="0" class="color-dark-bg app-bar-fixed" app>
     <v-icon icon="mdi-account ms-3 font-39" color="deep-orange"></v-icon>
     <v-app-bar-title>
       <strong class="text-grey-lighten-4">
@@ -72,5 +72,51 @@ export default {
 </template>
 
 <style scoped>
+.app-bar-fixed {
+  width: 100%;
+  max-width: 100%;
+}
 
+/* Ensure proper width on mobile devices */
+@media (max-width: 960px) {
+  .app-bar-fixed {
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  /* Prevent horizontal overflow */
+  :deep(.v-app-bar) {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Ensure content doesn't overflow */
+  :deep(.v-app-bar-title) {
+    max-width: calc(100vw - 120px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Ensure append slot doesn't cause overflow */
+  :deep(.v-app-bar__append) {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+}
+
+/* Additional mobile-specific fixes */
+@media (max-width: 600px) {
+  .app-bar-fixed {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  :deep(.v-app-bar-title) {
+    max-width: calc(100vw - 100px);
+  }
+}
 </style>

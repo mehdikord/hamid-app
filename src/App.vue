@@ -120,3 +120,14 @@ export default {
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
 }
 </style>
+
+<style>
+/* Ensure SweetAlert toasts appear above Vuetify modals */
+.swal2-container {
+  z-index: 999999 !important;
+}
+
+.swal2-toast-container {
+  z-index: 999999 !important;
+}
+</style>
