@@ -132,6 +132,12 @@ export const Stores_Customer = defineStore('customers',{
                 if(params.file){data.append('file',params.file,params.file.name);}
                 if(params.date){data.append('date',params.date);}
                 if(params.description){data.append('description',params.description);}
+                if(params.products && Array.isArray(params.products)){
+                    params.products.forEach(productId => {
+                        data.append('products[]', productId);
+                    });
+                }
+                
                 this.$axios.post('users/customers/'+params.customer_id+'/invoices',data,{
                     headers: {'Content-Type': 'multipart/form-data'}
                 }).then(response =>{
