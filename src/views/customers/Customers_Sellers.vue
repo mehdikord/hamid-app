@@ -20,17 +20,19 @@ export default {
       items_loading:true,
       add_report_dialog:[],
       add_invoice_dialog:[],
+      edit_dialog:[],
+      edit_customer_data: {},
       query_params:{
         sort_by : 'id',
         sort_type : 'desc',
-        per_page : 15,
+        per_page : 30,
         page : 1,
         search :{}
       },
       pagination: {
         current: 1,
         total: 0,
-        per_page: 15,
+        per_page: 30,
         last_page: 1,
         from: 1,
         to: 1,
@@ -289,6 +291,33 @@ export default {
         return get_items;
       })
     },
+    Open_Edit_Dialog(item) {
+      // Fetch full customer data before opening edit dialog
+      const customerId = item.customer.id;
+      this.edit_dialog[item.id] = true;
+      
+      // Fetch full customer data
+      Stores_Customer().Show({id: customerId}).then(res => {
+        this.edit_customer_data[item.id] = res.data.result;
+      }).catch(error => {
+        this.Notify_Error_Server();
+        this.edit_dialog[item.id] = false;
+      });
+    },
+    Update_Customer(item) {
+      // Update customer data in the list after edit
+      this.items = this.items.map(customer => {
+        if (customer.customer.id === item.id) {
+          customer.customer = item;
+          this.edit_dialog[customer.id] = false;
+          delete this.edit_customer_data[customer.id];
+        }
+        return customer;
+      });
+      this.Notify_Success('اطلاعات مشتری با موفقیت به‌روزرسانی شد');
+      // Refresh the list to show updated data
+      this.Get_Items();
+    },
     openWhatsApp(phoneNumber) {
       // Remove any non-digit characters and ensure it starts with country code
       const cleanPhone = phoneNumber.replace(/\D/g, '');
@@ -370,7 +399,7 @@ export default {
         delete query.page;
       }
       
-      if (this.query_params.per_page && this.query_params.per_page !== 15) {
+      if (this.query_params.per_page && this.query_params.per_page !== 30) {
         query.per_page = this.query_params.per_page.toString();
       } else {
         delete query.per_page;
@@ -702,7 +731,12 @@ export default {
               <th>وضعیت</th>
               <th>پروژه</th>
               <th>آخرین گزارش</th>
-              <th class="text-center" style="min-width: 120px;">عملیات</th>
+              <th class="text-center" style="min-width: 120px;">
+                <div class="d-flex align-center justify-center gap-2">
+                  <span>عملیات</span>
+                  <v-icon icon="mdi-pencil" size="16" color="grey-darken-1"></v-icon>
+                </div>
+              </th>
             </tr>
             </thead>
             <tbody>
@@ -771,6 +805,14 @@ export default {
                 <div class="operations-container">
                   <div class="operation-group">
                     <v-btn 
+                      @click="Open_Edit_Dialog(item)" 
+                      class="compact-operation-btn edit-action"
+                      size="x-small"
+                      variant="text"
+                    >
+                      <v-icon icon="mdi-pencil" size="14"></v-icon>
+                    </v-btn>
+                    <v-btn 
                       @click="add_report_dialog[item.id] = true" 
                       class="compact-operation-btn report-action"
                       size="x-small"
@@ -778,6 +820,67 @@ export default {
                     >
                       <span class="operation-label">گزارش</span>
                     </v-btn>
+                <v-dialog
+                    v-model="edit_dialog[item.id]"
+                    :max-width="$vuetify.display.mdAndUp ? '1280' : '95'"
+                    :fullscreen="$vuetify.display.smAndDown"
+                    transition="dialog-bottom-transition"
+                >
+                  <v-card 
+                    variant="flat" 
+                    rounded="lg"
+                    :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+                    elevation="8"
+                  >
+                    <!-- Enhanced Header -->
+                    <v-card-item class="pa-4 pa-sm-6">
+                      <div class="d-flex align-center justify-space-between">
+                        <div class="d-flex align-center">
+                          <v-icon 
+                            icon="mdi-account-edit" 
+                            color="blue-darken-2" 
+                            size="28"
+                            class="me-3"
+                          ></v-icon>
+                          <div>
+                            <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                              ویرایش اطلاعات مشتری
+                            </h3>
+                            <p class="text-grey-darken-1 mb-0 mt-1">
+                              ویرایش اطلاعات {{ item.customer.name || item.customer.phone }}
+                            </p>
+                          </div>
+                        </div>
+                        <v-btn 
+                          @click="edit_dialog[item.id] = false" 
+                          variant="text" 
+                          icon="mdi-close" 
+                          size="small" 
+                          color="grey-darken-1"
+                          class="rounded-circle"
+                        ></v-btn>
+                      </div>
+                    </v-card-item>
+                    
+                    <v-divider class="mx-4 mx-sm-6"></v-divider>
+                    
+                    <!-- Content Area -->
+                    <v-card-item class="pa-4 pa-sm-6 pt-0">
+                      <template v-if="edit_customer_data[item.id]">
+                        <actions_customer_edit 
+                          @Updated="(customer) => Update_Customer(customer)" 
+                          :customer="edit_customer_data[item.id]"
+                        ></actions_customer_edit>
+                      </template>
+                      <template v-else>
+                        <div class="text-center pa-8">
+                          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                          <p class="mt-4 text-grey">در حال بارگذاری اطلاعات مشتری...</p>
+                        </div>
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </v-dialog>
                 <v-dialog
                     v-model="add_report_dialog[item.id]"
                     :max-width="$vuetify.display.mdAndUp ? '600' : '95'"
@@ -900,6 +1003,7 @@ export default {
                 @Set_Invoice = "(get_item) => Create_Invoice(get_item)"
                 @change_status = "(get_item) => Change_Status(get_item)"
                 @select = "(card_id) => Select_Card(card_id)"
+                @update_customer = "(customer) => Update_Customer(customer)"
                 :customer="item"
                 :isSelected="selected_card_id === item.id"
               ></seller_item>
@@ -1156,6 +1260,22 @@ export default {
 .report-action:hover .operation-label {
   opacity: 1 !important;
   color: #047857 !important;
+}
+
+/* Edit Action Styling */
+.edit-action {
+  color: #2563eb !important;
+}
+
+.edit-action:hover {
+  background: rgba(37, 99, 235, 0.08) !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+}
+
+.edit-action:hover .v-icon {
+  color: #1d4ed8 !important;
 }
 
 /* Invoice Action Styling */

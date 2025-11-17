@@ -1,9 +1,10 @@
 <script>
 import Actions_Customer_Status from "@/components/actions/Actions_Customer_Status.vue";
+import {Stores_Customer} from "@/stores/customers/customers.js";
 
 export default {
   name: "Customers_Seller_Item",
-  emits: ['Set_Report', 'Set_Invoice', 'change_status', 'select'],
+  emits: ['Set_Report', 'Set_Invoice', 'change_status', 'select', 'update_customer'],
   components: {
     Actions_Customer_Status
   },
@@ -21,7 +22,13 @@ export default {
     return {
       add_report_dialog: false,
       add_invoice_dialog: false,
+      edit_dialog: false,
+      edit_customer_data: null,
+      edit_loading: false,
       show_buttons: false,
+      longPressTimer: null,
+      longPressProgress: 0,
+      isLongPressing: false,
     }
   },
   methods: {
@@ -33,6 +40,29 @@ export default {
       this.$emit('Set_Invoice', item)
       // Modal closing is now handled by the action component
     },
+    Open_Edit_Dialog() {
+      // Fetch full customer data before opening edit dialog
+      const customerId = this.customer.customer.id;
+      this.edit_dialog = true;
+      this.edit_loading = true;
+      this.edit_customer_data = null;
+      
+      // Fetch full customer data
+      Stores_Customer().Show({id: customerId}).then(res => {
+        this.edit_customer_data = res.data.result;
+        this.edit_loading = false;
+      }).catch(error => {
+        this.Notify_Error_Server();
+        this.edit_dialog = false;
+        this.edit_loading = false;
+      });
+    },
+    Update_Customer(customer) {
+      // Emit event to parent to update customer data
+      this.$emit('update_customer', customer);
+      this.edit_dialog = false;
+      this.edit_customer_data = null;
+    },
     Change_Status(item) {
       this.$emit('change_status', item);
     },
@@ -43,9 +73,58 @@ export default {
       this.add_invoice_dialog = true;
     },
     toggleButtons() {
-      this.show_buttons = !this.show_buttons;
-      // Emit selection event to parent
-      this.$emit('select', this.customer.id);
+      // Only toggle if not long pressing
+      if (!this.isLongPressing) {
+        this.show_buttons = !this.show_buttons;
+        // Emit selection event to parent
+        this.$emit('select', this.customer.id);
+      }
+    },
+    handleTouchStart(e) {
+      // Only on mobile
+      if (!this.$vuetify.display.mdAndUp) {
+        this.isLongPressing = false;
+        this.longPressProgress = 0;
+        
+        // Start long press timer (1 second = 1000ms)
+        const duration = 1000;
+        const startTime = Date.now();
+        const updateInterval = 50; // Update progress every 50ms
+        
+        this.longPressTimer = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          this.longPressProgress = Math.min((elapsed / duration) * 100, 100);
+          
+          if (elapsed >= duration) {
+            this.isLongPressing = true;
+            this.longPressProgress = 100;
+            this.Open_Edit_Dialog();
+            this.clearLongPress();
+          }
+        }, updateInterval);
+      }
+    },
+    handleTouchEnd(e) {
+      if (!this.$vuetify.display.mdAndUp) {
+        this.clearLongPress();
+      }
+    },
+    handleTouchMove(e) {
+      // Cancel long press if user moves finger
+      if (!this.$vuetify.display.mdAndUp) {
+        this.clearLongPress();
+      }
+    },
+    clearLongPress() {
+      if (this.longPressTimer) {
+        clearInterval(this.longPressTimer);
+        this.longPressTimer = null;
+      }
+      // Reset after a short delay to allow animation to complete
+      setTimeout(() => {
+        this.longPressProgress = 0;
+        this.isLongPressing = false;
+      }, 200);
     },
     makeCall() {
       // Open phone dialer with customer's phone number
@@ -84,9 +163,34 @@ export default {
         class="customer-card"
         variant="outlined"
         rounded="lg"
-        :class="{ 'show-buttons': isSelected, 'selected': isSelected }"
+        :class="{ 
+          'show-buttons': isSelected, 
+          'selected': isSelected,
+          'long-pressing': isLongPressing
+        }"
         @click="toggleButtons"
+        @touchstart="handleTouchStart"
+        @touchend="handleTouchEnd"
+        @touchmove="handleTouchMove"
+        @touchcancel="handleTouchEnd"
       >
+      <!-- Long Press Progress Indicator (Mobile Only) -->
+      <div v-if="!$vuetify.display.mdAndUp && longPressProgress > 0" class="long-press-indicator">
+        <v-progress-circular
+          :model-value="longPressProgress"
+          color="primary"
+          size="60"
+          width="4"
+          class="long-press-progress"
+        >
+          <v-icon icon="mdi-pencil" size="24" color="primary"></v-icon>
+        </v-progress-circular>
+        <div class="long-press-hint">
+          <v-icon icon="mdi-pencil" size="16" class="me-1"></v-icon>
+          <span>در حال باز کردن ویرایش...</span>
+        </div>
+      </div>
+      
       <!-- Compact Header -->
       <v-card-item class="pa-4">
         <div class="d-flex align-center justify-space-between">
@@ -99,7 +203,7 @@ export default {
             >
               <v-icon icon="mdi-account" size="20"></v-icon>
             </v-avatar>
-            <div class="mr-4">
+            <div class="mr-4 flex-grow-1">
               <router-link 
                 :to="{name:'customers_profile',params:{id:customer.customer.id}}"
                 class="text-decoration-none"
@@ -107,6 +211,11 @@ export default {
                 <h3 class="text-h6 font-weight-bold mb-2 text-primary">
                   {{ customer.customer.name }}
                 </h3>
+              </router-link>
+              <router-link 
+                :to="{name:'customers_profile',params:{id:customer.customer.id}}"
+                class="text-decoration-none"
+              >
                 <p class="text-body-2 text-medium-emphasis mb-0">
                   {{ customer.customer.phone }}
                 </p>
@@ -381,6 +490,67 @@ export default {
               </v-card-item>
             </v-card>
           </v-dialog>
+          <v-dialog
+              v-model="edit_dialog"
+              :max-width="$vuetify.display.mdAndUp ? '1280' : '95'"
+              :fullscreen="$vuetify.display.smAndDown"
+              transition="dialog-bottom-transition"
+          >
+            <v-card 
+              variant="flat" 
+              rounded="lg"
+              :class="$vuetify.display.smAndDown ? 'h-100' : ''"
+              elevation="8"
+            >
+              <!-- Enhanced Header -->
+              <v-card-item class="pa-4 pa-sm-6">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-icon 
+                      icon="mdi-account-edit" 
+                      color="blue-darken-2" 
+                      size="28"
+                      class="me-3"
+                    ></v-icon>
+                    <div>
+                      <h3 class="text-h5 font-weight-bold text-primary-darken-2 mb-0">
+                        ویرایش اطلاعات مشتری
+                      </h3>
+                      <p class="text-grey-darken-1 mb-0 mt-1">
+                        ویرایش اطلاعات {{ customer.customer.name || customer.customer.phone }}
+                      </p>
+                    </div>
+                  </div>
+                  <v-btn 
+                    @click="edit_dialog = false" 
+                    variant="text" 
+                    icon="mdi-close" 
+                    size="small" 
+                    color="grey-darken-1"
+                    class="rounded-circle"
+                  ></v-btn>
+                </div>
+              </v-card-item>
+              
+              <v-divider class="mx-4 mx-sm-6"></v-divider>
+              
+              <!-- Content Area -->
+              <v-card-item class="pa-4 pa-sm-6 pt-0">
+                <template v-if="edit_loading">
+                  <div class="text-center pa-8">
+                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                    <p class="mt-4 text-grey">در حال بارگذاری اطلاعات مشتری...</p>
+                  </div>
+                </template>
+                <template v-else-if="edit_customer_data">
+                  <actions_customer_edit 
+                    @Updated="(customer) => Update_Customer(customer)" 
+                    :customer="edit_customer_data"
+                  ></actions_customer_edit>
+                </template>
+              </v-card-item>
+            </v-card>
+          </v-dialog>
     </v-card>
   </template>
 
@@ -389,6 +559,8 @@ export default {
 <style scoped>
 /* Clean card styling with soft black border */
 .customer-card {
+  position: relative;
+  overflow: hidden;
   transition: all 0.15s ease;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
@@ -505,6 +677,43 @@ export default {
   font-weight: 700;
   color: rgb(var(--v-theme-primary));
   font-family: inherit !important;
+}
+
+/* Long Press Indicator */
+.long-press-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.long-press-progress {
+  margin-bottom: 12px;
+}
+
+.long-press-hint {
+  display: flex;
+  align-items: center;
+  color: rgb(var(--v-theme-primary));
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.customer-card.long-pressing {
+  border-color: rgba(var(--v-theme-primary), 0.5) !important;
+  background-color: rgba(var(--v-theme-primary), 0.05) !important;
+  transform: scale(0.98);
+  transition: all 0.2s ease;
 }
 
 /* Profile link styling */

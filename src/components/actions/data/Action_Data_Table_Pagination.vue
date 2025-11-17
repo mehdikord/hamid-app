@@ -9,7 +9,7 @@ export default {
   },
   data(){
     return {
-      show_items:[15,25,50,100,200],
+      show_items:[30,50,100,200],
       pagination: this.data,
     }
   },

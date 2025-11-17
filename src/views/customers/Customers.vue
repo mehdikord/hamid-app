@@ -21,14 +21,14 @@ export default {
       query_params:{
         sort_by : 'id',
         sort_type : 'desc',
-        per_page : 15,
+        per_page : 30,
         page : 1,
         search :{}
       },
       pagination: {
         current: 1,
         total: 0,
-        per_page: 15,
+        per_page: 30,
         last_page: 1,
         from: 1,
         to: 1,
