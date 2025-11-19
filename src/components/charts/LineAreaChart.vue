@@ -34,12 +34,27 @@ export default {
   components: {
     VChart
   },
+  props: {
+    chartData: {
+      type: Array,
+      default: () => []
+    }
+  },
   mounted() {
     this.setChartHeight();
     window.addEventListener('resize', this.setChartHeight);
+    this.updateChart();
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.setChartHeight);
+  },
+  watch: {
+    chartData: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true
+    }
   },
   data() {
     return {
@@ -52,6 +67,13 @@ export default {
             label: {
               backgroundColor: '#6a7985'
             }
+          },
+          formatter: (params) => {
+            if (params && params.length > 0) {
+              const param = params[0];
+              return `${param.axisValue}<br/>${param.seriesName}: ${this.formatAmount(param.value)} تومان`;
+            }
+            return '';
           }
         },
         grid: {
@@ -64,7 +86,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
+          data: [],
           axisLine: {
             lineStyle: {
               color: '#ddd'
@@ -73,15 +95,20 @@ export default {
           axisLabel: {
             color: '#666',
             fontSize: 12,
-            interval: 0,
-            rotate: 0
+            interval: 'auto',
+            rotate: 0,
+            formatter: (value) => {
+              // Truncate long dates if needed
+              if (value && value.length > 10) {
+                return value.substring(0, 10);
+              }
+              return value;
+            }
           }
         },
         yAxis: {
           type: 'value',
           min: 0,
-          max: 12,
-          interval: 4,
           axisLine: {
             lineStyle: {
               color: '#ddd'
@@ -90,8 +117,13 @@ export default {
           axisLabel: {
             color: '#666',
             fontSize: 12,
-            formatter: function(value) {
-              return value + ' م';
+            formatter: (value) => {
+              if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+              } else if (value >= 1000) {
+                return (value / 1000).toFixed(1) + 'K';
+              }
+              return value.toString();
             }
           },
           splitLine: {
@@ -102,7 +134,7 @@ export default {
         },
         series: [
           {
-            name: 'فروش',
+            name: 'مبلغ فروش',
             type: 'line',
             areaStyle: {
               opacity: 0.3,
@@ -125,13 +157,78 @@ export default {
             itemStyle: {
               color: '#64B5F6'
             },
-            data: [2, 4, 6, 8, 10, 12, 9]
+            data: []
           }
         ]
       }
     }
   },
   methods: {
+    formatAmount(amount) {
+      if (!amount) return '0';
+      return this.$filters ? this.$filters.number_format(amount) : amount.toLocaleString('fa-IR');
+    },
+    updateChart() {
+      if (!this.chartData || this.chartData.length === 0) {
+        this.chartOption.xAxis.data = [];
+        this.chartOption.series[0].data = [];
+        return;
+      }
+
+      // Extract dates and amounts from chartData
+      // Convert dates to Jalali format
+      const dates = this.chartData.map(item => {
+        if (!item.date) return '';
+        // Parse the date (format: "2025/11/10" or similar)
+        // Convert to Jalali using the helper
+        try {
+          // The date from API is in Gregorian format, parse it with moment
+          const dateObj = moment(item.date, 'YYYY/MM/DD');
+          // Format to Jalali using the helper
+          return this.$filters ? this.$filters.date_jalali(dateObj, 'jYYYY/jM/jD') : item.date;
+        } catch (e) {
+          // If parsing fails, return original date
+          return item.date;
+        }
+      });
+      const amounts = this.chartData.map(item => item.amount || 0);
+
+      // Update chart data
+      this.chartOption.xAxis.data = dates;
+      this.chartOption.series[0].data = amounts;
+      
+      // Adjust x-axis interval based on data count to prevent stacking
+      const dataCount = dates.length;
+      if (dataCount > 30) {
+        // For monthly data (30+ points), show every 5th label
+        this.chartOption.xAxis.axisLabel.interval = Math.floor(dataCount / 15);
+      } else if (dataCount > 15) {
+        // For 15-30 points, show every 3rd label
+        this.chartOption.xAxis.axisLabel.interval = Math.floor(dataCount / 10);
+      } else {
+        // For fewer points, show all labels
+        this.chartOption.xAxis.axisLabel.interval = 0;
+      }
+
+      // Calculate max value for y-axis (add 20% padding)
+      const maxAmount = Math.max(...amounts, 0);
+      const maxValue = maxAmount > 0 ? Math.ceil(maxAmount * 1.2) : 1000000;
+      
+      // Set reasonable intervals
+      let interval = maxValue / 5;
+      if (interval > 10000000) {
+        interval = Math.ceil(interval / 10000000) * 10000000;
+      } else if (interval > 1000000) {
+        interval = Math.ceil(interval / 1000000) * 1000000;
+      } else if (interval > 100000) {
+        interval = Math.ceil(interval / 100000) * 100000;
+      } else {
+        interval = Math.ceil(interval / 10000) * 10000;
+      }
+
+      this.chartOption.yAxis.max = maxValue;
+      this.chartOption.yAxis.interval = interval;
+    },
     setChartHeight() {
       if (window.innerWidth <= 768) {
         this.chartHeight = '300px';
@@ -147,21 +244,21 @@ export default {
     updateGridForMobile() {
       this.chartOption.grid.left = '8%';
       this.chartOption.grid.right = '8%';
-      this.chartOption.grid.bottom = '15%';
+      this.chartOption.grid.bottom = '20%';
       this.chartOption.grid.top = '8%';
       this.chartOption.xAxis.axisLabel.rotate = 45;
     },
     updateGridForTablet() {
       this.chartOption.grid.left = '6%';
       this.chartOption.grid.right = '6%';
-      this.chartOption.grid.bottom = '12%';
+      this.chartOption.grid.bottom = '15%';
       this.chartOption.grid.top = '6%';
       this.chartOption.xAxis.axisLabel.rotate = 30;
     },
     updateGridForDesktop() {
       this.chartOption.grid.left = '5%';
       this.chartOption.grid.right = '5%';
-      this.chartOption.grid.bottom = '10%';
+      this.chartOption.grid.bottom = '12%';
       this.chartOption.grid.top = '5%';
       this.chartOption.xAxis.axisLabel.rotate = 0;
     }

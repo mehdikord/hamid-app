@@ -2,8 +2,8 @@
   <v-card flat border rounded>
     <v-card-item>
       <div>
-        <v-icon icon="mdi mdi-text-box" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
-        <strong class="color-dark-text font-15">لیست گزارشات ثبت شده</strong>
+        <v-icon icon="mdi mdi-receipt" size="35" color="deep-orange-darken-2" class="me-2"></v-icon>
+        <strong class="color-dark-text font-15">لیست فاکتورهای ثبت شده</strong>
       </div>
       <div class="mt-4">
         <v-row>
@@ -19,7 +19,7 @@
                 color="deep-orange-darken-2"
                 density="comfortable"
                 clearable
-                @update:model-value="Get_Reports"
+                @update:model-value="Get_Invoices"
                 @click:clear="Clear_Project"
             >
             </v-select>
@@ -77,15 +77,9 @@
     </v-card-item>
   </v-card>
 
-  <!-- Chart Commented Out -->
-  <!-- <div class="mt-6">
-    <h3 class="color-dark-text font-15 mb-4">نمودار فروش</h3>
-    <LineAreaChart />
-  </div> -->
-
-  <!-- Reports List -->
+  <!-- Invoices List -->
   <div class="mt-6">
-    <v-card v-if="reports_loading" flat border rounded>
+    <v-card v-if="invoices_loading" flat border rounded>
       <v-card-item>
         <!-- Desktop Skeleton -->
         <template v-if="!$vuetify.display.smAndDown">
@@ -108,7 +102,7 @@
       </v-card-item>
     </v-card>
 
-    <div v-else-if="reports.length === 0" class="mt-6">
+    <div v-else-if="invoices.length === 0" class="mt-6">
       <Global_No_Items />
     </div>
 
@@ -125,39 +119,53 @@
               <th>تاریخ</th>
               <th>مشتری</th>
               <th>پروژه</th>
-              <th>گزارش</th>
+              <th>مبلغ</th>
+              <th>فایل</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="report in reports" :key="report.id" class="animate__animated animate__fadeIn">
+            <tr v-for="invoice in invoices" :key="invoice.id" class="animate__animated animate__fadeIn">
               <td class="pa-2">
-                <chips_date :date="report.created_at"></chips_date>
+                <chips_date :date="invoice.created_at"></chips_date>
               </td>
               <td class="pa-2">
                 <router-link 
-                  v-if="report.customer?.id"
-                  :to="{name:'customers_profile',params:{id:report.customer.id}}"
+                  v-if="invoice.customer?.id"
+                  :to="{name:'customers_profile',params:{id:invoice.customer.id}}"
                   class="text-decoration-none"
                 >
                   <div class="d-flex flex-column">
-                    <strong class="font-14 text-black">{{ report.customer?.phone || report.customer?.name || '-' }}</strong>
-                    <template v-if="report.customer?.phone && report.customer?.name">
-                      <span class="text-grey-darken-4 font-12 mt-1">{{ report.customer.name }}</span>
+                    <strong class="font-14 text-black">{{ invoice.customer?.phone || invoice.customer?.name || '-' }}</strong>
+                    <template v-if="invoice.customer?.phone && invoice.customer?.name">
+                      <span class="text-grey-darken-4 font-12 mt-1">{{ invoice.customer.name }}</span>
                     </template>
                   </div>
                 </router-link>
                 <div v-else class="d-flex flex-column">
-                  <strong class="font-14 text-black">{{ report.customer?.phone || report.customer?.name || '-' }}</strong>
-                  <template v-if="report.customer?.phone && report.customer?.name">
-                    <span class="text-grey-darken-4 font-12 mt-1">{{ report.customer.name }}</span>
+                  <strong class="font-14 text-black">{{ invoice.customer?.phone || invoice.customer?.name || '-' }}</strong>
+                  <template v-if="invoice.customer?.phone && invoice.customer?.name">
+                    <span class="text-grey-darken-4 font-12 mt-1">{{ invoice.customer.name }}</span>
                   </template>
                 </div>
               </td>
               <td class="pa-2">
-                <strong class="text-indigo-darken-1 font-12">{{ report.project?.name || '-' }}</strong>
+                <strong class="text-indigo-darken-1 font-12">{{ invoice.project?.name || '-' }}</strong>
               </td>
               <td class="pa-2">
-                <span class="font-12">{{ report.report || '-' }}</span>
+                <strong class="text-orange-darken-2 font-14">{{ $filters.number_format(invoice.amount) }} تومان</strong>
+              </td>
+              <td class="pa-2">
+                <v-btn 
+                  v-if="invoice.file_url"
+                  @click="Helper_Downloader(invoice.file_url, invoice.file_name)"
+                  variant="text" 
+                  color="deep-orange-darken-2" 
+                  size="small"
+                  prepend-icon="mdi-download"
+                >
+                  {{ Helper_Text_Shorter(invoice.file_name, 20) }}
+                </v-btn>
+                <span v-else class="font-12 text-grey">-</span>
               </td>
             </tr>
           </tbody>
@@ -166,9 +174,9 @@
 
       <!-- Mobile Card View -->
       <div v-else class="mobile-card-view">
-        <div v-for="report in reports" :key="report.id" class="animate__animated animate__fadeIn mb-6">
+        <div v-for="invoice in invoices" :key="invoice.id" class="animate__animated animate__fadeIn mb-6">
           <v-card 
-            class="report-card" 
+            class="invoice-card" 
             variant="outlined" 
             rounded="lg"
           >
@@ -182,74 +190,105 @@
                     variant="tonal"
                     class="me-3"
                   >
-                    <v-icon icon="mdi-text-box-edit" size="20"></v-icon>
+                    <v-icon icon="mdi-receipt" size="20"></v-icon>
                   </v-avatar>
                   <div class="mr-4 flex-grow-1">
                     <router-link 
-                      v-if="report.customer?.id"
-                      :to="{name:'customers_profile',params:{id:report.customer.id}}"
+                      v-if="invoice.customer?.id"
+                      :to="{name:'customers_profile',params:{id:invoice.customer.id}}"
                       class="text-decoration-none"
                     >
                       <h3 class="text-h6 font-weight-bold mb-2 text-primary">
-                        {{ report.customer?.name || report.customer?.phone || '-' }}
+                        {{ invoice.customer?.name || invoice.customer?.phone || '-' }}
                       </h3>
                     </router-link>
                     <h3 v-else class="text-h6 font-weight-bold mb-2 text-primary">
-                      {{ report.customer?.name || report.customer?.phone || '-' }}
+                      {{ invoice.customer?.name || invoice.customer?.phone || '-' }}
                     </h3>
                     <router-link 
-                      v-if="report.customer?.id && report.customer?.phone"
-                      :to="{name:'customers_profile',params:{id:report.customer.id}}"
+                      v-if="invoice.customer?.id && invoice.customer?.phone"
+                      :to="{name:'customers_profile',params:{id:invoice.customer.id}}"
                       class="text-decoration-none"
                     >
                       <p class="text-body-2 text-medium-emphasis mb-0">
-                        {{ report.customer.phone }}
+                        {{ invoice.customer.phone }}
                       </p>
                     </router-link>
-                    <p v-else-if="report.customer?.phone" class="text-body-2 text-medium-emphasis mb-0">
-                      {{ report.customer.phone }}
+                    <p v-else-if="invoice.customer?.phone" class="text-body-2 text-medium-emphasis mb-0">
+                      {{ invoice.customer.phone }}
                     </p>
                   </div>
                 </div>
-                <chips_date :date="report.created_at"></chips_date>
+                <chips_date :date="invoice.created_at"></chips_date>
               </div>
             </v-card-item>
 
               <!-- Compact Content -->
               <v-card-text class="pa-4 pt-0 pb-2">
                 <v-list density="compact" class="pa-0">
+                  <!-- Amount -->
+                  <v-list-item class="px-3 py-1">
+                    <template v-slot:prepend>
+                      <v-icon icon="mdi-cash" size="16" color="medium-emphasis"></v-icon>
+                    </template>
+                    <v-list-item-title class="text-body-2">
+                      <span class="text-medium-emphasis">مبلغ:</span>
+                      <span class="font-weight-bold ms-1 text-orange-darken-2">{{ $filters.number_format(invoice.amount) }} تومان</span>
+                    </v-list-item-title>
+                  </v-list-item>
+
                   <!-- Project -->
-                  <v-list-item v-if="report.project?.name" class="px-3 py-1">
+                  <v-list-item v-if="invoice.project?.name" class="px-3 py-1">
                     <template v-slot:prepend>
                       <v-icon icon="mdi-folder-outline" size="16" color="medium-emphasis"></v-icon>
                     </template>
                     <v-list-item-title class="text-body-2">
                       <span class="text-medium-emphasis">پروژه:</span>
-                      <span class="font-weight-medium ms-1 text-indigo-darken-1">{{ report.project.name }}</span>
+                      <span class="font-weight-medium ms-1 text-indigo-darken-1">{{ invoice.project.name }}</span>
                     </v-list-item-title>
                   </v-list-item>
 
-                  <!-- Report Content -->
-                  <v-list-item class="px-3 py-1">
+                  <!-- Description -->
+                  <v-list-item v-if="invoice.description" class="px-3 py-1">
                     <template v-slot:prepend>
                       <v-icon icon="mdi-text-box-outline" size="16" color="medium-emphasis"></v-icon>
                     </template>
                     <v-list-item-title class="text-body-2">
-                      <span class="text-medium-emphasis">گزارش:</span>
-                      <span class="font-weight-medium ms-1">{{ report.report || '-' }}</span>
+                      <span class="text-medium-emphasis">توضیحات:</span>
+                      <span class="font-weight-medium ms-1">{{ Helper_Text_Shorter(invoice.description, 50) }}</span>
+                    </v-list-item-title>
+                  </v-list-item>
+
+                  <!-- File -->
+                  <v-list-item v-if="invoice.file_url" class="px-3 py-1">
+                    <template v-slot:prepend>
+                      <v-icon icon="mdi-attachment" size="16" color="medium-emphasis"></v-icon>
+                    </template>
+                    <v-list-item-title class="text-body-2">
+                      <span class="text-medium-emphasis">فایل:</span>
+                      <v-btn 
+                        @click.stop="Helper_Downloader(invoice.file_url, invoice.file_name)"
+                        variant="text" 
+                        color="deep-orange-darken-2" 
+                        size="x-small"
+                        class="ms-1"
+                        prepend-icon="mdi-download"
+                      >
+                        {{ Helper_Text_Shorter(invoice.file_name, 20) }}
+                      </v-btn>
                     </v-list-item-title>
                   </v-list-item>
 
                   <!-- User Info -->
-                  <v-list-item v-if="report.user?.name" class="px-3 py-1">
+                  <v-list-item v-if="invoice.user?.name" class="px-3 py-1">
                     <template v-slot:prepend>
                       <v-icon icon="mdi-account-circle-outline" size="16" color="medium-emphasis"></v-icon>
                     </template>
                     <v-list-item-title class="text-body-2">
                       <span class="text-medium-emphasis">کاربر:</span>
-                      <span class="font-weight-medium ms-1">{{ report.user.name }}</span>
-                      <template v-if="report.user.phone">
-                        <span class="text-grey-darken-4 font-12 ms-2">({{ report.user.phone }})</span>
+                      <span class="font-weight-medium ms-1">{{ invoice.user.name }}</span>
+                      <template v-if="invoice.user.phone">
+                        <span class="text-grey-darken-4 font-12 ms-2">({{ invoice.user.phone }})</span>
                       </template>
                     </v-list-item-title>
                   </v-list-item>
@@ -273,15 +312,13 @@
 
 <script>
 import {Stores_Projects} from "@/stores/projects/projects.js";
-import {Stores_Reports} from "@/stores/reports/reports.js";
-// import LineAreaChart from "@/components/charts/LineAreaChart.vue";
+import {Stores_Invoices} from "@/stores/invoices/invoices.js";
 import Action_Data_Table_Pagination from "@/components/actions/data/Action_Data_Table_Pagination.vue";
 import Global_No_Items from "@/components/global/Global_No_Items.vue";
 
 export default {
-  name: 'Reports',
+  name: 'Invoices',
   components: {
-    // LineAreaChart,
     Action_Data_Table_Pagination,
     Global_No_Items
   },
@@ -290,14 +327,14 @@ export default {
   },
   watch: {
     'query_params.project_id'() {
-      this.Get_Reports();
+      this.Get_Invoices();
     }
   },
   data() {
     return {
       projects: [],
-      reports: [],
-      reports_loading: true,
+      invoices: [],
+      invoices_loading: true,
       from_date: null,
       to_date: null,
       query_params: {
@@ -339,15 +376,14 @@ export default {
     Get_Projects() {
       Stores_Projects().All().then(res => {
         this.projects = res.data.result;
-        // Don't auto-select first project - allow user to select "All Projects" or a specific project
-        // Load reports with no project_id initially to show all reports
-        this.Get_Reports();
+        // Load invoices with no project_id initially to show all invoices
+        this.Get_Invoices();
       }).catch(error => {
         console.error('Error loading projects data:', error);
       })
     },
-    Get_Reports() {
-      this.reports_loading = true;
+    Get_Invoices() {
+      this.invoices_loading = true;
 
       // Build query params
       const params = {
@@ -368,9 +404,9 @@ export default {
         params.to_date = this.to_date;
       }
 
-      Stores_Reports().Index(params).then(res => {
+      Stores_Invoices().Index(params).then(res => {
         if (res.data && res.data.result) {
-          this.reports = res.data.result.data || [];
+          this.invoices = res.data.result.data || [];
           
           if (res.data.result) {
             this.pagination.current = res.data.result.current_page;
@@ -382,30 +418,30 @@ export default {
             this.pagination.links = res.data.result.links;
           }
         }
-        this.reports_loading = false;
+        this.invoices_loading = false;
       }).catch(error => {
-        console.error('Error loading reports:', error);
-        this.reports_loading = false;
+        console.error('Error loading invoices:', error);
+        this.invoices_loading = false;
       })
     },
     onFromDateChange() {
-      this.Get_Reports();
+      this.Get_Invoices();
     },
     onToDateChange() {
-      this.Get_Reports();
+      this.Get_Invoices();
     },
     Clear_Project() {
       this.query_params.project_id = null;
-      this.Get_Reports();
+      this.Get_Invoices();
     },
     Change_Per_Page(page) {
       this.query_params.per_page = page;
       this.query_params.page = 1;
-      this.Get_Reports();
+      this.Get_Invoices();
     },
     Change_Page(page) {
       this.query_params.page = page;
-      this.Get_Reports();
+      this.Get_Invoices();
     }
   }
 }
@@ -507,7 +543,13 @@ export default {
 
 .desktop-table-view .v-table thead th:nth-child(4),
 .desktop-table-view .v-table tbody td:nth-child(4) {
-  width: 45%;
+  width: 20%;
+  min-width: 120px;
+}
+
+.desktop-table-view .v-table thead th:nth-child(5),
+.desktop-table-view .v-table tbody td:nth-child(5) {
+  width: 25%;
 }
 
 .desktop-table-view .v-table tbody tr:hover {
@@ -527,8 +569,8 @@ export default {
   color: rgb(var(--v-theme-primary-darken-1)) !important;
 }
 
-/* Report Card Styling */
-.report-card {
+/* Invoice Card Styling */
+.invoice-card {
   position: relative;
   overflow: hidden;
   transition: all 0.15s ease;
@@ -536,78 +578,78 @@ export default {
   border-radius: 12px !important;
 }
 
-.report-card:hover {
+.invoice-card:hover {
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Mobile Card Styling */
-.mobile-card-view .report-card {
+.mobile-card-view .invoice-card {
   margin-bottom: 24px;
 }
 
-.mobile-card-view .report-card .v-card-item {
+.mobile-card-view .invoice-card .v-card-item {
   padding: 16px !important;
 }
 
-.mobile-card-view .report-card .v-card-text {
+.mobile-card-view .invoice-card .v-card-text {
   padding: 16px !important;
   padding-top: 0 !important;
 }
 
 /* Fix alignment issues */
-.report-card .v-avatar {
+.invoice-card .v-avatar {
   margin-left: 0 !important;
 }
 
-.report-card .v-list-item {
+.invoice-card .v-list-item {
   align-items: flex-start !important;
 }
 
-.report-card .v-list-item__prepend {
+.invoice-card .v-list-item__prepend {
   margin-top: 2px !important;
 }
 
 /* Font consistency */
-.report-card,
-.report-card *,
-.report-card .v-card-item,
-.report-card .v-card-text,
-.report-card .v-list,
-.report-card .v-list-item,
-.report-card .v-list-item-title,
-.report-card h3,
-.report-card p,
-.report-card span {
+.invoice-card,
+.invoice-card *,
+.invoice-card .v-card-item,
+.invoice-card .v-card-text,
+.invoice-card .v-list,
+.invoice-card .v-list-item,
+.invoice-card .v-list-item-title,
+.invoice-card h3,
+.invoice-card p,
+.invoice-card span {
   font-family: inherit !important;
 }
 
 /* Typography improvements */
-.report-card h3 {
+.invoice-card h3 {
   font-weight: 600 !important;
   line-height: 1.25 !important;
 }
 
-.report-card .text-body-2 {
+.invoice-card .text-body-2 {
   line-height: 1.4 !important;
 }
 
 /* Profile link styling */
-.report-card .router-link {
+.invoice-card .router-link {
   transition: all 0.15s ease !important;
 }
 
-.report-card .router-link:hover h3 {
+.invoice-card .router-link:hover h3 {
   color: rgb(var(--v-theme-primary-darken-1)) !important;
   transform: translateX(-2px) !important;
 }
 
-.report-card .router-link:hover p {
+.invoice-card .router-link:hover p {
   color: rgb(var(--v-theme-primary)) !important;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .report-card {
+  .invoice-card {
     margin-bottom: 12px;
   }
   
@@ -629,3 +671,4 @@ export default {
   }
 }
 </style>
+

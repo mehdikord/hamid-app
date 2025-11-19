@@ -97,6 +97,21 @@ export default {
     </template>
   </v-list-item>
   <v-spacer class="mt-2 mb-2" />
+  <v-list-item
+      :to="{name : 'invoices'}"
+      active-color="deep-orange-darken-2"
+  >
+    <template v-slot:prepend>
+      <v-icon icon="mdi mdi-receipt" size="30">
+      </v-icon>
+    </template>
+    <template v-slot:title>
+      <div class="mt-1">
+        <span class="font-14">فاکتور ها</span>
+      </div>
+    </template>
+  </v-list-item>
+  <v-spacer class="mt-2 mb-2" />
   <!-- <v-list-item
       active-color="deep-orange-darken-2"
 

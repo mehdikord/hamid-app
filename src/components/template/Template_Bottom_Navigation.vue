@@ -45,6 +45,15 @@
     </v-btn>
 
     <v-btn
+      :to="{ name: 'invoices' }"
+      value="invoices"
+      class="nav-item"
+    >
+      <v-icon size="24">mdi-receipt</v-icon>
+      <span class="nav-text">فاکتور ها</span>
+    </v-btn>
+
+    <v-btn
       :to="{ name: 'reminders' }"
       value="reminders"
       class="nav-item"
@@ -126,7 +135,7 @@ export default {
   min-width: 0;
   padding: 8px 2px;
   flex: 1 1 0;
-  max-width: calc(100% / 6);
+  max-width: calc(100% / 7);
   overflow: hidden;
   box-sizing: border-box;
   margin: 0;
